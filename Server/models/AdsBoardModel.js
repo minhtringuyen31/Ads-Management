@@ -8,11 +8,9 @@ const AdsBoardSchema = new Schema({
         ref: 'Location',
     },
     type: {
-        type: String,
-        required: true,
-        enum: ['hiflex_banner_stand', 'led', 'lightbox_stand', 'wall_mounted_hiflex_banner',
-            'wall_mounted_led_screen', 'vertical_banner_hanging_stand', 'horizontal_banner_hanging_stand',
-            'billboard_stand', 'cluster', 'welcome_gate', 'shopping_center'],
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'AdsBoardType',
     },
     width: {
         type: Number,
@@ -34,7 +32,8 @@ const AdsBoardSchema = new Schema({
     },
     company: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Company' // Assuming you have a Company model
+        ref: 'Company', // Assuming you have a Company model
+        required: true,
     }
 },
 
