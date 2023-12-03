@@ -2,6 +2,7 @@ import createError from 'http-errors';
 
 const notFound = (req, res, next) => {
     next(createError.NotFound('This route does not exist'));
+
 };
 
 const errorHandler = (error, req, res, next) => {

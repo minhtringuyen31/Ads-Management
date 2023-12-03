@@ -24,7 +24,7 @@ const LocationSchema = new Schema({
         required: false,
         ref: 'Ward',
     },
-    area_type: {
+    location_type: {
         type: Schema.Types.ObjectId,
         required: false,
         ref: 'LocationType',
