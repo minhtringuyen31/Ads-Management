@@ -8,11 +8,14 @@ import locationTypeRoute from './routes/locationtype.route.js';
 import wardRoute from './routes/ward.route.js';
 import districtRoute from './routes/district.route.js';
 import adstypeRoute from './routes/ads_type.route.js';
+import reportRoute from './routes/report.route.js';
+import editRequestRoute from './routes/editRequest.route.js';
+import authorizeRequestRoute from './routes/authorizeRequest.route.js';
 dotenv.config();
 
 const app = express();
 const corsOptions = {
-    origin: 'http://localhost:' + process.env.PORT,
+    origin: "http://localhost:" + process.env.PORT,
 };
 db();
 const initializeExpress = (app) => {
@@ -32,11 +35,14 @@ app.use(adstypeRoute);
 app.use(locationTypeRoute);
 
 
+app.use(reportRoute);
+app.use(editRequestRoute);
+app.use(authorizeRequestRoute);
 app.use(notFound);
 app.use(errorHandler);
 
 
 app.listen(process.env.PORT, () => {
-    console.log('Server is running on port: ' + process.env.PORT);
-    console.log('http://localhost:' + process.env.PORT);
+    console.log("Server is running on port: " + process.env.PORT);
+    console.log("http://localhost:" + process.env.PORT);
 });

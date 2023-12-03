@@ -23,4 +23,4 @@ const RefreshTokenSchema = new Schema(
   }
 );
 
-export const Report = mongoose.model("RefreshToken", RefreshTokenSchema);
+export const RefreshToken = mongoose.model("RefreshToken", RefreshTokenSchema);
