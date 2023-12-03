@@ -25,7 +25,7 @@ const AuthorizeRequestSchema = new Schema(
   }
 );
 
-export const Report = mongoose.model(
+export const AuthorizeRequest = mongoose.model(
   "AuthorizeRequest",
   AuthorizeRequestSchema
 );

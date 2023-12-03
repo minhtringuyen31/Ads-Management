@@ -5,6 +5,7 @@ const ReportSchema = new Schema(
   {
     report_form: {
       type: String,
+      enum: ["denounce", "register", "feedback", "question"],
       required: true,
     },
     username: {
@@ -26,10 +27,6 @@ const ReportSchema = new Schema(
     related_to: {
       type: Number,
       required: true,
-    },
-    type: {
-      type: String,
-      enum: ["denounce", "register", "feedback", "question"],
     },
     status: {
       type: String,

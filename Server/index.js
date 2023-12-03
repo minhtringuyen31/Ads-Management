@@ -4,6 +4,9 @@ import express from 'express';
 import { errorHandler, notFound } from './helper/errorHandler.js';
 import db from './configs/db.js';
 import locationRoute from './routes/location.route.js';
+import reportRoute from './routes/report.route.js';
+import editRequestRoute from './routes/editRequest.route.js';
+import authorizeRequestRoute from './routes/authorizeRequest.route.js';
 dotenv.config();
 
 const app = express();
@@ -22,6 +25,9 @@ initializeExpress(app);
 
 
 app.use(locationRoute);
+app.use(reportRoute);
+app.use(editRequestRoute);
+app.use(authorizeRequestRoute);
 app.use(notFound);
 app.use(errorHandler);
 
