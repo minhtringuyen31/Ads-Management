@@ -3,22 +3,20 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const AuthorizeRequestSchema = new Schema(
   {
-    authorizeRequests: {
-      locationId: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "Location",
-      },
-      newInformation: {
-        type: Object,
-        required: true,
-      },
-      status: {
-        type: String,
-        enum: ["Pending", "Complete", "Cancelled"],
-        default: "Pending",
-        required: true,
-      },
+    locationId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "Location",
+    },
+    newInformation: {
+      type: Object,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "completed", "cancelled"],
+      default: "pending",
+      required: true,
     },
   },
 
@@ -28,6 +26,6 @@ const AuthorizeRequestSchema = new Schema(
 );
 
 export const Report = mongoose.model(
-  "Authorize Request",
+  "AuthorizeRequest",
   AuthorizeRequestSchema
 );

@@ -17,30 +17,31 @@ const LocationSchema = new Schema({
                 required: true,
             },
         },
-        ward_id: {
-            type: Schema.Types.ObjectId,
-            required: false,
-            ref: 'Ward',
-        },
-        area_type: {
-            type: String,
-            required: true,
-            enum: ['Motorbike', 'Car'],
-        },
-        ads_type: {
-            type: String,
-            required: true,
-            enum: ['Motorbike', 'Car'],
-        },
-        image: {
-            type: Array,
-            required: true,
-        },
-        is_planned: {
-            type: Boolean,
-            default: false,
-        },
-    }
+
+    },
+    ward_id: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'Ward',
+    },
+    area_type: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'LocationType',
+    },
+    ads_type: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'AdsType',
+    },
+    image: {
+        type: [String],
+        required: true,
+    },
+    is_planned: {
+        type: Boolean,
+        default: false,
+    },
 },
 
     {
