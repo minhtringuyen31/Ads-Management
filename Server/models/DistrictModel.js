@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 const DistrictSchema = new Schema({
-    name: {
+    label: {
         type: String,
         required: true,
 

@@ -4,6 +4,10 @@ import express from 'express';
 import { errorHandler, notFound } from './helper/errorHandler.js';
 import db from './configs/db.js';
 import locationRoute from './routes/location.route.js';
+import locationTypeRoute from './routes/locationtype.route.js';
+import wardRoute from './routes/ward.route.js';
+import districtRoute from './routes/district.route.js';
+import adstypeRoute from './routes/ads_type.route.js';
 dotenv.config();
 
 const app = express();
@@ -22,6 +26,12 @@ initializeExpress(app);
 
 
 app.use(locationRoute);
+app.use(wardRoute);
+app.use(districtRoute);
+app.use(adstypeRoute);
+app.use(locationTypeRoute);
+
+
 app.use(notFound);
 app.use(errorHandler);
 

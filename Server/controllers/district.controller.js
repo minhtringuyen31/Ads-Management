@@ -1,15 +1,15 @@
 import createError from "http-errors";
-import LocationService from "../services/location.service.js";
-const LocationController = {
+import DistrictService from "../services/district.service.js";
+const DistrictController = {
     getAll: async (req, res, next) => {
         try {
             const filter = req.body
-            const users = await LocationService.getAll(filter, '-password -refreshToken');
+            const users = await DistrictService.getAll(filter, '');
             if (!users) {
-                return next(createError.BadRequest("Location list not found"))
+                return next(createError.BadRequest("District list not found"))
             }
             res.json({
-                message: "Get location list successfully",
+                message: "Get district list successfully",
                 status: 200,
                 data: users
             })
@@ -22,12 +22,13 @@ const LocationController = {
         try {
 
             const data = req.body
-            const location = await LocationService.create(data);
+            console.log(data);
+            const location = await DistrictService.create(data);
             if (!location) {
-                return next(createError.BadRequest("Location not found"))
+                return next(createError.BadRequest("District not found"))
             }
             res.json({
-                message: "Create location successfully",
+                message: "Create District successfully",
                 status: 200,
                 data: location
             })
@@ -41,4 +42,4 @@ const LocationController = {
 
 };
 
-export default LocationController;
+export default DistrictController;

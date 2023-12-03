@@ -2,22 +2,19 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 const LocationSchema = new Schema({
-    locations: {
-        address: {
-            type: String,
+    address: {
+        type: String,
+        required: true,
+    },
+    coordinate: {
+        lat: { // x
+            type: Number,
             required: true,
         },
-        coordinate: {
-            lat: { // x
-                type: Number,
-                required: true,
-            },
-            lng: { // y
-                type: Number,
-                required: true,
-            },
+        lng: { // y
+            type: Number,
+            required: true,
         },
-
     },
     ward_id: {
         type: Schema.Types.ObjectId,
@@ -43,7 +40,6 @@ const LocationSchema = new Schema({
         default: false,
     },
 },
-
     {
         timestamps: true,
     }

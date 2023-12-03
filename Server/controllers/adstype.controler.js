@@ -1,15 +1,15 @@
 import createError from "http-errors";
-import LocationService from "../services/location.service.js";
-const LocationController = {
+import AdsTypeService from "../services/ads_type.service.js";
+const AdsTypeController = {
     getAll: async (req, res, next) => {
         try {
             const filter = req.body
-            const users = await LocationService.getAll(filter, '-password -refreshToken');
+            const users = await AdsTypeService.getAll(filter, '');
             if (!users) {
-                return next(createError.BadRequest("Location list not found"))
+                return next(createError.BadRequest("AdsType list not found"))
             }
             res.json({
-                message: "Get location list successfully",
+                message: "Get AdsType list successfully",
                 status: 200,
                 data: users
             })
@@ -22,12 +22,12 @@ const LocationController = {
         try {
 
             const data = req.body
-            const location = await LocationService.create(data);
+            const location = await AdsTypeService.create(data);
             if (!location) {
-                return next(createError.BadRequest("Location not found"))
+                return next(createError.BadRequest("AdsType not found"))
             }
             res.json({
-                message: "Create location successfully",
+                message: "Create AdsType successfully",
                 status: 200,
                 data: location
             })
@@ -41,4 +41,4 @@ const LocationController = {
 
 };
 
-export default LocationController;
+export default AdsTypeController;
