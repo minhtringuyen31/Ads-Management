@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Box } from "@mui/material";
+import Map from "./ui-components/MapContainer/Map";
+import Drawer from "./ui-components/Drawer/Drawer";
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [shape, setShape] = useState(0);
+  const [locationInfo, setLocationInfo] = useState({});
+  const [adsPanelList, setAdsPanelList] = useState([]);
+  const [reportList, setReportList] = useState([]);
+  const [isDrawerOpen, setisDrawerOpen] = useState(false);
+  const [content, setContent] = useState({});
+  console.log(isDrawerOpen);
 
+  const openDrawer = () => {
+    setisDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setisDrawerOpen(false);
+  };
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Box>
+      <Map setShape={setShape} openDrawer={openDrawer} />
+      <Drawer
+        shape={shape}
+        content={content}
+        openDrawer={openDrawer}
+        closeDrawer={closeDrawer}
+        isDrawerOpen={isDrawerOpen}
+      />
+    </Box>
+  );
 }
 
-export default App
+export default App;
