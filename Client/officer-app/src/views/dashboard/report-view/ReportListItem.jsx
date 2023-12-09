@@ -3,7 +3,7 @@ import { Box, Grid, IconButton, Typography } from '@mui/material';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import MainCard from 'ui-component/cards/MainCard';
-import { adsBoardTestData } from './DashboardData/data';
+import { adsBoardTestData } from '../DashboardData/data';
 
 const ReportListItem = (props) => {
   const handleClick = () => {
@@ -16,8 +16,8 @@ const ReportListItem = (props) => {
       props.handleToggle(location[0].location_id);
     }
   };
-  
-  const getBackgroundColor = (reportForm) => {
+
+  const getBorderColor = (reportForm) => {
     if (reportForm === 'troubleshooting') {
       return '#a2d2ff';
     } else if (reportForm === 'report') {
@@ -39,10 +39,9 @@ const ReportListItem = (props) => {
   return (
     <MainCard
       style={{
+        border: '2px solid #000000',
         margin: '30px',
-        borderWidth: 'thick',
-        borderColor: 'black',
-        backgroundColor: getBackgroundColor(props.data.report_form),
+        borderColor: getBorderColor(props.data.report_form),
       }}
     >
       <Grid item lg={12} xs={12}>

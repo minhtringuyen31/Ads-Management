@@ -1,16 +1,12 @@
 import { Grid, Typography } from '@mui/material';
-import {
-  GoogleMap,
-  InfoWindow,
-  Marker,
-  useJsApiLoader,
-} from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
 
 const MapBox = (props) => {
+  console.log(typeof props.onOpenDetail);
   const [centerPosition, setCenterPosition] = useState({
     lat: 0,
     lng: 0,
@@ -21,7 +17,6 @@ const MapBox = (props) => {
     googleMapsApiKey: 'AIzaSyA98VCnr7mnpaKlZcq0RN6JoWlz1PmdKV8',
     libraries: ['places'],
   });
-
 
   const originRef = useRef();
   const destinationRef = useRef();
@@ -67,68 +62,8 @@ const MapBox = (props) => {
           <Grid container alignItems='center' justifyContent='space-between'>
             <Grid item>
               <Grid container spacing={3}>
-                <Grid item xs={12} lg={3.5}>
-                  <Typography variant='h3'>Map</Typography>
-                </Grid>
-                <Grid item xs={12} lg={8.5}>
-                  {/* <Box
-                    p={4}
-                    borderRadius='lg'
-                    m={4}
-                    bgColor='white'
-                    boxShadow='-moz-initial'
-                    minWidth='container.md'
-                    zIndex='1'
-                  >
-                    <Stack
-                      spacing={2}
-                      display='flex'
-                      flexDirection='row'
-                      justifyContent='center'
-                      alignItems='center'
-                    >
-                      <Box flexGrow={1}>
-                        <Autocomplete>
-                          <Input
-                            type='text'
-                            placeholder='Origin'
-                            ref={originRef}
-                          />
-                        </Autocomplete>
-                      </Box>
-                      <Box flexGrow={1}>
-                        <Autocomplete>
-                          <Input
-                            type='text'
-                            placeholder='Destination'
-                            ref={destinationRef}
-                          />
-                        </Autocomplete>
-                      </Box>
-                      <ButtonGroup>
-                        <Button
-                          colorScheme='pink'
-                          type='submit'
-                          onClick={calculateRoute}
-                        >
-                          Calculate Route
-                        </Button>
-                        <IconButton
-                          aria-label='center back'
-                          onClick={clearRoute}
-                        >
-                          <Close />
-                        </IconButton>
-                      </ButtonGroup>
-                    </Stack>
-                    <Stack spacing={4} mt={4} justifyContent='space-between'>
-                      <Typography>Distance: </Typography>
-                      <Typography>Duration: </Typography>
-                      <IconButton aria-label='center back' onClick={() => {}}>
-                        <NearMe />
-                      </IconButton>
-                    </Stack>
-                  </Box> */}
+                <Grid item xs={12}>
+                  <Typography variant='h3'>Bản đồ</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -163,7 +98,7 @@ const MapBox = (props) => {
                   icon={{
                     path: window.google.maps.SymbolPath.CIRCLE,
                     scale: 12,
-                    fillColor: `${location.isSolvedAll ? 'blue': 'red'}`,
+                    fillColor: `${location.isSolvedAll ? 'blue' : 'red'}`,
                     fillOpacity: 1,
                     strokeWeight: 0,
                   }}
@@ -171,6 +106,7 @@ const MapBox = (props) => {
                     text: 'QC',
                     color: 'white',
                   }}
+                  onClick={() => props.onOpenDetail(location.id)}
                 />
               ))}
             </GoogleMap>
@@ -192,6 +128,7 @@ MapBox.propTypes = {
     ),
   }),
   togglePosition: PropTypes.object,
+  onOpenDetail: PropTypes.func,
 };
 
 export default MapBox;

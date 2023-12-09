@@ -167,11 +167,11 @@ const locationTestData = {
       longtitude: 106.6824931286189,
       address: '227 Đ. Nguyễn Văn Cừ',
       ward_id: 4,
-      area_type: '',
-      ads_type: '',
+      area_type: 'Đất công/Công viên/Hành lang an toàn giao thông',
+      ads_type: 'Cổ động chính trị',
       image:
         'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
-      is_planned: false,
+      is_planned: true,
       isSolvedAll: false,
     },
     {
@@ -180,8 +180,8 @@ const locationTestData = {
       longtitude: 106.68632355086243,
       address: '252 Đ. Nguyễn Trãi',
       ward_id: 4,
-      area_type: '',
-      ads_type: '',
+      area_type: 'Đất công/Công viên/Hành lang an toàn giao thông',
+      ads_type: 'Quảng cáo thương mại',
       image:
         'https://lh5.googleusercontent.com/p/AF1QipMfSoB9juvelPtNK6XMFDxhM7Fj89SNSvrJA4gq=w408-h306-k-no',
       is_planned: false,
@@ -193,8 +193,8 @@ const locationTestData = {
       longtitude: 106.68220011223177,
       address: '280 Đ. An Dương Vương',
       ward_id: 6,
-      area_type: '',
-      ads_type: '',
+      area_type: 'Đất công/Công viên/Hành lang an toàn giao thông',
+      ads_type: 'Xã hội hóa',
       image:
         'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
       is_planned: false,
@@ -239,7 +239,7 @@ const wardTestData = {
 };
 
 const districtTestData = {
-  district: [
+  districts: [
     {
       id: 1,
       name: 'Quận 1',
@@ -268,32 +268,46 @@ const adsBoardTestData = {
     {
       id: 1,
       location_id: 1,
-      type: '',
+      type: 'Trụ, cụm pano',
       width: 100,
       height: '100',
       contract_end_date: '2023-05-05T02:57:31Z',
       contract_start_date: '2023-05-05T02:57:31Z',
       company: 1,
+      amount: '1 trụ/bảng',
     },
     {
       id: 2,
       location_id: 2,
-      type: '',
-      width: 100,
-      height: '100',
-      contract_end_date: '2023-05-05T02:57:31Z',
-      contract_start_date: '2023-05-05T02:57:31Z',
+      type: 'Trụ',
+      width: 90,
+      height: '15',
+      contract_end_date: '2023-05-08T02:57:31Z',
+      contract_start_date: '2023-05-08T02:57:31Z',
       company: 1,
+      amount: '2 trụ/bảng',
     },
     {
       id: 3,
       location_id: 3,
-      type: '',
+      type: 'Trụ, cụm pano',
       width: 100,
       height: '100',
       contract_end_date: '2023-05-05T02:57:31Z',
       contract_start_date: '2023-05-05T02:57:31Z',
       company: 1,
+      amount: '1 trụ/bảng',
+    },
+    {
+      id: 4,
+      location_id: 1,
+      type: 'Trụ',
+      width: 90,
+      height: '15',
+      contract_end_date: '2023-11-23T02:57:31Z',
+      contract_start_date: '2023-05-05T02:57:31Z',
+      company: 1,
+      amount: '1 trụ/bảng',
     },
   ],
 };
