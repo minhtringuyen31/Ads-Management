@@ -6,9 +6,11 @@ import Loadable from "ui-component/Loadable";
 
 //utilities routing
 const UtilsCustomer = Loadable(
-  lazy(() => import("../views/utilities/Customer"))
+  lazy(() => import("../views/utilities/LocationManagement"))
 );
-const UtilsDriver = Loadable(lazy(() => import("../views/utilities/Driver")));
+const UtilsDriver = Loadable(
+  lazy(() => import("../views/utilities/BoardManagement"))
+);
 const UtilsConsultant = Loadable(
   lazy(() => import("../views/utilities/Consultant"))
 );

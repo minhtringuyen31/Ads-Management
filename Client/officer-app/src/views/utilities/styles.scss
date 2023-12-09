@@ -1,0 +1,137 @@
+// $greenAccent-200: #00FF00;
+$greenAccent-300: #2e7c67;
+$blueAccent-700: #a4a9fc;
+$primary-400: #f2f0f0;
+$grey-100: #141414;
+$grey-500: #697586;
+
+.data-grid-container {
+    .MuiDataGrid-root {
+        border: none;
+    }
+
+    .MuiDataGrid-cell {
+        border-bottom: none;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    .name-column--cell {
+        color: $greenAccent-300;
+        // background-color: aqua;
+    }
+
+    .MuiDataGrid-columnHeaders {
+        background-color: $blueAccent-700;
+        border-bottom: none;
+    }
+
+    .MuiDataGrid-virtualScroller {
+        background-color: $primary-400;
+    }
+
+    .MuiDataGrid-footerContainer {
+        border-top: none;
+        background-color: $blueAccent-700;
+    }
+
+    .MuiDataGrid-toolbarContainer .MuiButton-text {
+        color: $grey-100 !important;
+    }
+}
+
+//------------------------------------ MODAL ------------------------------------
+.dialog {
+   
+
+    & .MuiDialogContent-root {
+        padding-left: 5px;
+        padding-right: 2.5px;
+        padding-top: 0;
+        
+        max-width: 750px;
+        min-width: 600px;
+        width: auto;
+    }
+
+    & .MuiDialogActions-root {
+        padding: 8px;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    &__close-button {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+        color: $grey-500;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        // width: 100%;
+        // width: auto;
+
+        &__detail {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            min-width: 250px;
+            width: auto;
+        
+            &__typo {
+                font-size: 17.5px;
+            }
+        }
+    }
+    // &__contentMap {
+    //     display: flex;
+    //     justify-content: center;
+    //     align-items: center;
+    // }
+}
+
+//------------------------------------ CARD DETAIL ------------------------------------
+.card {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 0.25rem;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 35px;
+
+    &__box {
+        display: flex;
+        flex-direction: column;
+
+        &__content {
+            flex: 1 0 auto;
+
+            &__typo {
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    }
+
+    &__cardMedia {
+        width: 400px;
+        height: 400px;
+        border-radius: 0.25rem;
+    }
+}
