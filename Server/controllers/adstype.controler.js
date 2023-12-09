@@ -90,10 +90,6 @@ const AdsTypeController = {
         }
 
     }
-
-
-
-
 };
 
 export default AdsTypeController;
