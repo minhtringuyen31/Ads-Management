@@ -1,39 +1,28 @@
-import { List } from "@mui/material";
-import React from "react";
+import { List, Box, Typography } from "@mui/material";
 import AdsItem from "./AdsItem";
-
-// const items = [
-//   {
-//     id: "",
-//     location: {
-//       lat: "",
-//       lng: "",
-//       address: "",
-//       area_type: "",
-//       image: [],
-//       is_planed: "",
-//     },
-//     type: "",
-//     width: "",
-//     height: "",
-//     contract_start_date: "",
-//     contract_end_date: "",
-//   },
-// ];
-
-const items = [
-  { id: 1, content: "aaaa" },
-  { id: 2, content: "aaaa" },
-  { id: 3, content: "aaaa" },
-];
+import { items } from "../../mockData";
 
 const AdsList = () => {
   return (
-    <List>
-      {items.map((item) => (
-        <AdsItem key={item.id} item={item} />
-      ))}
-    </List>
+    <Box height="100%" display="flex" flexDirection="column">
+      <Box
+        height="50px"
+        display="flex"
+        alignItems="center"
+        margin="15px 15px 0px 15px"
+      >
+        <Typography color="#70757a" fontSize="14px">
+          3 bài đánh giá
+        </Typography>
+      </Box>
+      <Box bgcolor="white" height="100%">
+        <List>
+          {items.map((item) => (
+            <AdsItem key={item.id} item={item} />
+          ))}
+        </List>
+      </Box>
+    </Box>
   );
 };
 
