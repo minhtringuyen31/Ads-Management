@@ -28,23 +28,25 @@ const initializeExpress = (app) => {
 
 initializeExpress(app);
 
+// Tạo một router riêng cho tất cả các API
+const apiRouter = express.Router();
 
+apiRouter.use('/location', locationRoute);
+apiRouter.use('/ward', wardRoute);
+apiRouter.use('/district', districtRoute);
+apiRouter.use('/adsBoard', adsBoardRoute);
+apiRouter.use('/adstype', adstypeRoute);
+apiRouter.use('/locationType', locationTypeRoute);
+apiRouter.use('/adsBoardType', adsBoardTypeRoute);
+apiRouter.use('/report', reportRoute);
+apiRouter.use('/editRequest', editRequestRoute);
+apiRouter.use('/authorizeRequest', authorizeRequestRoute);
 
-app.use(locationRoute);
-app.use(wardRoute);
-app.use(districtRoute);
-app.use(adsBoardRoute);
-app.use(adstypeRoute);
-app.use(locationTypeRoute);
-app.use(adsBoardTypeRoute);
+// Gắn tiền tố "/api" cho router API
+app.use('/api', apiRouter);
 
-
-app.use(reportRoute);
-app.use(editRequestRoute);
-app.use(authorizeRequestRoute);
 app.use(notFound);
 app.use(errorHandler);
-
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running on port: " + process.env.PORT);
