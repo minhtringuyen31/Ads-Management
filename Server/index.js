@@ -11,6 +11,8 @@ import adstypeRoute from './routes/ads_type.route.js';
 import reportRoute from './routes/report.route.js';
 import editRequestRoute from './routes/editRequest.route.js';
 import authorizeRequestRoute from './routes/authorizeRequest.route.js';
+import adsBoardRoute from './routes/ads_board.route.js';
+import adsBoardTypeRoute from './routes/ads_board_type.route.js';
 dotenv.config();
 
 const app = express();
@@ -31,8 +33,10 @@ initializeExpress(app);
 app.use(locationRoute);
 app.use(wardRoute);
 app.use(districtRoute);
+app.use(adsBoardRoute);
 app.use(adstypeRoute);
 app.use(locationTypeRoute);
+app.use(adsBoardTypeRoute);
 
 
 app.use(reportRoute);

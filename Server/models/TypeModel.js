@@ -10,7 +10,7 @@ const TypeSchema = new Schema({
         required: true,
     }
 });
-// AdsBoardTypeSchema: enum: ['hiflex_banner_stand', 'led', 'lightbox_stand', 'wall_mounted_hiflex_banner', 'wall_mounted_led_screen', 'vertical_banner_hanging_stand', 'horizontal_banner_hanging_stand', 'billboard_stand', 'cluster', 'welcome_gate', 'shopping_center'],
+// AdsBoardTypeSchema: enum: ['hiflex_banner_stand', 'led', 'lightbox_stand', 'wall_mounted_hiflex_banner', 'wall_mounted_led_screen', 'vertical_banner_hanging_stand', 'horizontal_banner_hanging_stand', 'billboard_stand', 'welcome_gate', 'shopping_center'],
 const AdsBoardTypeSchema = new Schema(TypeSchema);
 // Add more field here if needed reference to UserModel.js
 

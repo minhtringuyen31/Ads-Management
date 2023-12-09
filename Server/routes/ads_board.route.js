@@ -1,16 +1,16 @@
 import express from 'express';
-import AdsTypeController from '../controllers/adstype.controler.js';
+import AdsBoardController from '../controllers/adsboard.controller.js';
 
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/adstypes', AdsTypeController.getAll);
+router.get('/adsboards', AdsBoardController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
 // router.get('/location/:id', AdsTypeController.getLocationById);
 
 // // Tạo mới một Location
-router.post('/adstype', AdsTypeController.create);
+router.post('/adsboard', AdsBoardController.create);
 
 // // Cập nhật một Location bằng ID
 // router.put('/location/:id', AdsTypeController.updateLocation);

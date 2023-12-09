@@ -7,10 +7,9 @@ const AdsBoardSchema = new Schema({
         required: false,
         ref: 'Location',
     },
-    type: {
-        type: Schema.Types.ObjectId,
-        required: false,
-        ref: 'AdsBoardType',
+    adsboard_type: {
+        type: String,
+        required: true,
     },
     width: {
         type: Number,
@@ -30,10 +29,9 @@ const AdsBoardSchema = new Schema({
         required: true,
 
     },
-    company: {
+    company_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company', // Assuming you have a Company model
-        required: true,
     }
 },
 

@@ -4,7 +4,7 @@ import WardController from '../controllers/ward.controller.js';
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/ward', WardController.getAll);
+router.get('/wards', WardController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
 // router.get('/location/:id', WardController.getLocationById);
@@ -13,7 +13,7 @@ router.get('/ward', WardController.getAll);
 router.post('/ward', WardController.create);
 
 // // Cập nhật một Location bằng ID
-// router.put('/location/:id', WardController.updateLocation);
+router.put('/ward/:id', WardController.update);
 
 // // Xóa một Location bằng ID
 // router.delete('/location/:id', WardController.deleteLocation);

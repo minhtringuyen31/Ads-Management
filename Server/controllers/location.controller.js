@@ -36,6 +36,75 @@ const LocationController = {
         }
 
     },
+    update: async (req, res, next) => {
+        try {
+
+            const data = req.body
+            const { id } = req.params;
+            const location = await LocationService.update(id, data);
+            if (!location) {
+                return next(createError.BadRequest("Location not found"))
+            }
+            res.json({
+                message: "Create location successfully",
+                status: 200,
+                data: location
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
+    getDetail: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const location = await LocationService.getById(id);
+            if (!location) {
+                return next(createError.BadRequest("Location not found"))
+            }
+            res.json({
+                message: "Get location detail successfully",
+                status: 200,
+                data: location
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
+    delete: async (req, res, next) => {
+        try {
+
+            const { id } = req.params;
+            const location = await LocationService.delete(id);
+            if (!location) {
+                return next(createError.BadRequest("Location not found"))
+            }
+            res.json({
+                message: "Delete location successfully",
+                status: 200,
+                data: location
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
+    healthCheck: async (req, res, next) => {
+        try {
+            const healthCheck = await LocationService.healthCheck();
+            console.log(healthCheck);
+            res.json({
+                message: "Ok",
+                status: 200,
+                data: healthCheck
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    }
+
 
 
 

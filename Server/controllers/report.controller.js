@@ -11,11 +11,6 @@ const ReportController = {
       if (!lists) {
         return next(createError.BadRequest(ModelName + " list not found"));
       }
-
-    //   const users = await LocationService.getAllLocation(
-    //     filter,
-    //     "-password -refreshToken"
-    //   );
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
@@ -32,7 +27,7 @@ const ReportController = {
       const object = await ReportService.getById(id)
 
       if (!object) {
-        return next(createError.NotFound(ModelName +` with id ${id} not found`));
+        return next(createError.NotFound(ModelName + ` with id ${id} not found`));
       }
 
       res.json({

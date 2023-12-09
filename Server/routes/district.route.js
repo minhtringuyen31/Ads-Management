@@ -4,7 +4,7 @@ import DistrictController from '../controllers/district.controller.js';
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/district', DistrictController.getAll);
+router.get('/districts', DistrictController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
 // router.get('/location/:id', LocationType.getLocationById);

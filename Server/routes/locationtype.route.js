@@ -4,7 +4,7 @@ import LocationTypeController from '../controllers/locationtype.controller.js';
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/locationtype', LocationTypeController.getAll);
+router.get('/locationtypes', LocationTypeController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
 // router.get('/location/:id', LocationTypeController.getLocationById);

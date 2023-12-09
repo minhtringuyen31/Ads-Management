@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const DistrictSchema = new Schema({
     label: {
         type: String,
-        required: true,
 
     },
     ward_ids: {

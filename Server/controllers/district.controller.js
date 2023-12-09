@@ -37,6 +37,61 @@ const DistrictController = {
         }
 
     },
+    update: async (req, res, next) => {
+        try {
+
+            const data = req.body
+            const { id } = req.params;
+            const location = await DistrictService.update(id, data);
+            if (!location) {
+                return next(createError.BadRequest("District not found"))
+            }
+            res.json({
+                message: "Create District successfully",
+                status: 200,
+                data: location
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
+    getDetail: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const location = await DistrictService.getDetail(id);
+            if (!location) {
+                return next(createError.BadRequest("District not found"))
+            }
+            res.json({
+                message: "Get District successfully",
+                status: 200,
+                data: location
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
+    delete: async (req, res, next) => {
+        try {
+
+            const { id } = req.params;
+            const location = await DistrictService.delete(id);
+            if (!location) {
+                return next(createError.BadRequest("District not found"))
+            }
+            res.json({
+                message: "Delete District successfully",
+                status: 200,
+                data: location
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    }
+
 
 
 
