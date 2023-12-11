@@ -235,7 +235,7 @@ const AdsItem = () => {
           style={style}
           bgcolor={"white"}
           width="40%"
-          height="85%"
+          height="90%"
           padding={3}
         >
           <Box display="flex" flexDirection="column" alignItems="center">

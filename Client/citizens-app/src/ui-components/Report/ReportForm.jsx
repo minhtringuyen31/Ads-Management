@@ -11,9 +11,9 @@ import {
 import React, { useState, useRef } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
+import ReCAPTCHA from "react-google-recaptcha";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
 const validateSchema = Yup.object().shape({
@@ -72,6 +72,10 @@ const ReportForm = () => {
       fileReader.readAsDataURL(selectedFile);
     }
   };
+
+  function onChangeReCaptcha(value) {
+    console.log("Captcha value:", value);
+  }
 
   return (
     <Box
@@ -132,7 +136,7 @@ const ReportForm = () => {
             <FormControl
               fullWidth
               error={Boolean(touched.email) && errors.email}
-              sx={{ marginTop: "10px" }}
+              sx={{ marginTop: "15px" }}
             >
               <InputLabel htmlFor="outlined-adornment-email">
                 Địa chỉ email
@@ -157,7 +161,7 @@ const ReportForm = () => {
             <FormControl
               fullWidth
               error={Boolean(touched.phoneNumber) && errors.phoneNumber}
-              sx={{ marginTop: "10px" }}
+              sx={{ marginTop: "15px" }}
             >
               <InputLabel htmlFor="outlined-adornment-phoneNumber">
                 Số điện thoại
@@ -182,7 +186,7 @@ const ReportForm = () => {
               )}
             </FormControl>
 
-            <FormControl fullWidth sx={{ marginTop: "10px" }}>
+            <FormControl fullWidth sx={{ marginTop: "15px" }}>
               <InputLabel htmlFor="outlined-adornment-report-type">
                 Hình thức báo cáo
               </InputLabel>
@@ -205,7 +209,7 @@ const ReportForm = () => {
             <FormControl
               fullWidth
               error={Boolean(touched.content) && errors.content}
-              sx={{ marginTop: "10px" }}
+              sx={{ marginTop: "15px" }}
             >
               <Field name="content">
                 {({ field, form }) => (
@@ -232,7 +236,7 @@ const ReportForm = () => {
             </FormControl>
 
             {/* <ImageUploader /> */}
-            <Box width="80%" marginTop={3}>
+            <Box width="80%" marginTop={2}>
               <Button
                 variant="outlined"
                 startIcon={<AddAPhotoIcon />}
@@ -258,7 +262,7 @@ const ReportForm = () => {
                 onChange={handleBrowseImageChange}
                 multiple
               />
-              <Box marginTop={2} display="flex" flexDirection="row" gap={1}>
+              <Box marginTop={1} display="flex" flexDirection="row" gap={1}>
                 {/* <img
                   srcSet={`${preview}?w=90&h=90&fit=crop&auto=format&dpr=2 2x`}
                   src={`${preview}?w=90&h=90&fit=crop&auto=format`}
@@ -275,6 +279,13 @@ const ReportForm = () => {
                   </Box>
                 ))}
               </Box>
+            </Box>
+
+            <Box marginTop={1}>
+              <ReCAPTCHA
+                sitekey="Your client site key"
+                onChange={onChangeReCaptcha}
+              />
             </Box>
             <Box
               display="flex"

@@ -34,7 +34,12 @@ const ReportItem = () => {
       borderRadius="20px"
       style={boxStyle}
     >
-      <Box display="flex" flexDirection="row" alignItems="center">
+      <Box
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <Box display="flex" flexDirection="column">
           <Typography fontSize="16px" fontWeight="bold">
             Trại Heo Ala
@@ -57,7 +62,7 @@ const ReportItem = () => {
             </Button>
           </Box>
         </Box>
-        <Box marginLeft="10px">
+        <Box>
           <Avatar src="/assets/tieu.jpg" sx={{ width: 60, height: 60 }} />
         </Box>
       </Box>
@@ -80,7 +85,7 @@ const ReportItem = () => {
           </Typography>
         </Box>
       </Box>
-      <Box>
+      <Box marginTop={1}>
         <ImageList sx={{ width: 200, height: 90 }} cols={2}>
           {imageList.map((item) => (
             <ImageListItem key={item.img}>
