@@ -1,6 +1,7 @@
 import { Box, Typography, Button, Modal } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
 import React, { useState } from "react";
+import ReportForm from "../Report/ReportForm";
 
 const boxStyle = {
   margin: "10px",
@@ -24,23 +25,33 @@ const style = {
 const imageUrl =
   "https://tourscanner.com/blog/wp-content/uploads/2022/06/fun-things-to-do-in-Ho-Chi-Minh-City-Vietnam.jpg";
 const AdsItem = () => {
-  const [open, setOpen] = useState(false);
+  const [currentItemId, setCurrentItemId] = useState();
+  const [adsDetailModalOpen, setAdsDetailModalOpen] = useState(false);
+  const [reportModelOpen, setReportModalOpen] = useState(false);
   const handleOpenDetailModal = () => {
-    setOpen(true);
+    setReportModalOpen(false);
+    setAdsDetailModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setAdsDetailModalOpen(false);
+    setReportModalOpen(false);
+  };
+  const handleOpenReportModal = () => {
+    setAdsDetailModalOpen(false);
+    setReportModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setOpen(false);
+  const handleAdsItemOnClick = () => {
+    handleOpenDetailModal();
   };
+
+  const handleReportBtnOnclick = () => {
+    handleOpenReportModal();
+  };
+
   return (
     <div>
-      <Box
-        margin="10px"
-        padding="25px"
-        borderRadius="20px"
-        style={boxStyle}
-        onClick={handleOpenDetailModal}
-      >
+      <Box margin="10px" padding="25px" borderRadius="20px" style={boxStyle}>
         <Box>
           <Typography fontSize="18px" fontWeight="bold">
             Trụ, cụm pano
@@ -48,42 +59,59 @@ const AdsItem = () => {
         </Box>
         <Box marginY="5px">
           <Typography fontSize="16px" color="#70757a">
-            Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thẻ thao), Phường Bến Nghé,
+            Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé,
             Quận 1
           </Typography>
         </Box>
         <Box marginY="5px">
-          <Typography>Kích thước: 2.5m x 1.2m</Typography>
+          <Typography style={{ marginRight: "8px" }}>
+            Kích thước: 2.5m x 1.2m
+          </Typography>
           <Box display="flex" flexDirection="row">
-            <Typography>Số lượng:</Typography>
+            <Typography style={{ marginRight: "8px" }}>Số lượng:</Typography>
             <Typography fontWeight="bold"> 1 trụ/bảng</Typography>
           </Box>
           <Box display="flex" flexDirection="row">
-            <Typography>Hình thức: </Typography>
+            <Typography style={{ marginRight: "8px" }}>Hình thức: </Typography>
             <Typography fontWeight="bold">Cổ động chính trị</Typography>
           </Box>
           <Box display="flex" flexDirection="row">
-            <Typography>Phân loại:</Typography>
-            <Typography fontWeight="bold">
+            <Typography style={{ marginRight: "8px" }}>Phân loại:</Typography>
+            <Typography fontWeight="bold" display="inline">
               Đất công/Công viên/Hành lang an toàn giao thông
             </Typography>
           </Box>
         </Box>
         <Box
           display="flex"
+          flexDirection="row"
           bottom="10px"
           marginX="auto"
-          justifyContent="end"
+          justifyContent="space-between"
           width="100%"
           marginTop={2}
         >
           <Button
             variant="outlined"
             startIcon={<ReportIcon />}
-            color="error"
+            color="primary"
+            size="small"
             sx={{
               fontWeight: "bold",
             }}
+            onClick={handleAdsItemOnClick}
+          >
+            Chi tiết
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<ReportIcon />}
+            color="error"
+            size="small"
+            sx={{
+              fontWeight: "bold",
+            }}
+            onClick={handleReportBtnOnclick}
           >
             Báo cáo vi phạm
           </Button>
@@ -91,7 +119,7 @@ const AdsItem = () => {
       </Box>
 
       <Modal
-        open={open}
+        open={adsDetailModalOpen}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -133,7 +161,7 @@ const AdsItem = () => {
             </Box>
             <Box marginY="5px">
               <Typography fontSize="16px" color="#70757a">
-                Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thẻ thao), Phường Bến Nghé,
+                Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé,
                 Quận 1
               </Typography>
             </Box>
@@ -191,6 +219,36 @@ const AdsItem = () => {
                 </Button>
               </Box>
             </Box>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={reportModelOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          style={style}
+          bgcolor={"white"}
+          width="40%"
+          height="85%"
+          padding={3}
+        >
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Typography fontSize={20} fontWeight="bold" color="#475569">
+              Trụ, cụm pano
+            </Typography>
+            <Typography fontSize={12} color="#70757a">
+              Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé,
+              Quận 1
+            </Typography>
+          </Box>
+          <Box>
+            <ReportForm />
           </Box>
         </Box>
       </Modal>

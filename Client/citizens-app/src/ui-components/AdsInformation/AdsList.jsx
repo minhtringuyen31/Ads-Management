@@ -12,7 +12,7 @@ const AdsList = () => {
         margin="15px 15px 0px 15px"
       >
         <Typography color="#70757a" fontSize="14px">
-          3 bài đánh giá
+          3 bảng quảng cáo
         </Typography>
       </Box>
       <Box bgcolor="white" height="100%">
