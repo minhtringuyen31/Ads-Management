@@ -8,7 +8,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -304,7 +304,6 @@ const ReportForm = () => {
                 // disabled={isSubmitting}
                 fullWidth
                 size="small"
-                type="submit"
                 variant="outlined"
                 color="primary"
                 sx={{

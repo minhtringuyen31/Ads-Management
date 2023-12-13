@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import PropTypes from "prop-types";
 
 // import dotenv from "dotenv";
 
@@ -11,7 +12,7 @@ const Map = ({ setShape, openDrawer }) => {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null));
   const { isLoaded } = useLoadScript({
     // googleMapsApiKey: process.env.GOOGLE_MAP_API_KEY,
-    googleMapsApiKey: "AIzaSyA98VCnr7mnpaKlZcq0RN6JoWlz1PmdKV8",
+    googleMapsApiKey: "AIzaSyA98VCnr7mnpa KlZcq0RN6JoWlz1PmdKV8",
   });
 
   const handleButtonClicked = (value) => () => {
@@ -44,7 +45,7 @@ const Map = ({ setShape, openDrawer }) => {
       >
         {isLoaded ? (
           <GoogleMap
-            zoom={10}
+            zoom={15}
             center={center}
             mapContainerStyle={{ width: "100%", height: "100%" }}
             options={{
@@ -87,3 +88,8 @@ const Map = ({ setShape, openDrawer }) => {
 };
 
 export default Map;
+
+Map.propTypes = {
+  setShape: PropTypes.func.isRequired,
+  openDrawer: PropTypes.func.isRequired,
+};

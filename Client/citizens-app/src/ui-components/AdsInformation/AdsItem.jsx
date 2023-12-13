@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Modal } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
-import React, { useState } from "react";
+import { useState } from "react";
 import ReportForm from "../Report/ReportForm";
 
 const boxStyle = {
@@ -25,7 +25,7 @@ const style = {
 const imageUrl =
   "https://tourscanner.com/blog/wp-content/uploads/2022/06/fun-things-to-do-in-Ho-Chi-Minh-City-Vietnam.jpg";
 const AdsItem = () => {
-  const [currentItemId, setCurrentItemId] = useState();
+  // const [currentItemId, setCurrentItemId] = useState();
   const [adsDetailModalOpen, setAdsDetailModalOpen] = useState(false);
   const [reportModelOpen, setReportModalOpen] = useState(false);
   const handleOpenDetailModal = () => {
@@ -222,6 +222,8 @@ const AdsItem = () => {
           </Box>
         </Box>
       </Modal>
+
+      {/* <ReportModal isOpen={reportModelOpen} /> */}
 
       <Modal
         open={reportModelOpen}

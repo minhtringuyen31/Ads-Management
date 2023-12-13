@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Box, SwipeableDrawer } from "@mui/material";
+import { SwipeableDrawer } from "@mui/material";
 import LocationInformation from "../LocationInformation/LocationInformation";
 import AdsList from "../AdsInformation/AdsList";
 import ReportList from "../Report/ReportList";
+import PropTypes from "prop-types";
 
 export default function Drawer({
   shape,
@@ -46,3 +47,11 @@ export default function Drawer({
     </div>
   );
 }
+
+Drawer.propTypes = {
+  shape: PropTypes.number.isRequired,
+  content: PropTypes.object.isRequired,
+  openDrawer: PropTypes.func.isRequired,
+  closeDrawer: PropTypes.func.isRequired,
+  isDrawerOpen: PropTypes.bool.isRequired,
+};
