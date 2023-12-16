@@ -63,7 +63,7 @@ const AdsBoardController = {
                 return next(createError.BadRequest("AdsBoard not found"))
             }
             res.json({
-                message: "Create AdsBoard successfully",
+                message: "Update AdsBoard successfully",
                 status: 200,
                 data: location
             })

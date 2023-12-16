@@ -9,15 +9,15 @@ router.get('/adsboards', AdsBoardController.getAll);
 router.get('/adboardsByLocation/:id', AdsBoardController.getAllAdBoardByLocation);
 
 // // Đọc một Location cụ thể bằng ID
-// router.get('/location/:id', AdsTypeController.getLocationById);
+router.get('/adsboard/:id', AdsBoardController.getDetail);
 
 // // Tạo mới một Location
 router.post('/adsboard', AdsBoardController.create);
 
 // // Cập nhật một Location bằng ID
-// router.put('/location/:id', AdsTypeController.updateLocation);
+router.put('/adsboard/:id', AdsBoardController.update);
 
 // // Xóa một Location bằng ID
-// router.delete('/location/:id', AdsTypeController.deleteLocation);
+router.delete('/adsboard/:id', AdsBoardController.delete);
 
 export default router;

@@ -47,7 +47,7 @@ const AdsBoardTypeController = {
                 return next(createError.BadRequest("AdsBoardType not found"))
             }
             res.json({
-                message: "Create AdsBoardType successfully",
+                message: "Update AdsBoardType successfully",
                 status: 200,
                 data: location
             })
