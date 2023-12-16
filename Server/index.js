@@ -12,7 +12,7 @@ import reportRoute from './routes/report.route.js';
 import editRequestRoute from './routes/editRequest.route.js';
 import authorizeRequestRoute from './routes/authorizeRequest.route.js';
 import adsBoardRoute from './routes/ads_board.route.js';
-import adsBoardTypeRoute from './routes/ads_board_type.route.js';
+import adsBoarTypedRoute from './routes/ads_board_type.route.js';
 dotenv.config();
 
 const app = express();
@@ -21,32 +21,30 @@ const corsOptions = {
 };
 db();
 const initializeExpress = (app) => {
-    app.use(cors(corsOptions));
+    app.use(cors);
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 };
 
 initializeExpress(app);
 
-// Tạo một router riêng cho tất cả các API
-const apiRouter = express.Router();
 
-apiRouter.use('/location', locationRoute);
-apiRouter.use('/ward', wardRoute);
-apiRouter.use('/district', districtRoute);
-apiRouter.use('/adsBoard', adsBoardRoute);
-apiRouter.use('/adstype', adstypeRoute);
-apiRouter.use('/locationType', locationTypeRoute);
-apiRouter.use('/adsBoardType', adsBoardTypeRoute);
-apiRouter.use('/report', reportRoute);
-apiRouter.use('/editRequest', editRequestRoute);
-apiRouter.use('/authorizeRequest', authorizeRequestRoute);
 
-// Gắn tiền tố "/api" cho router API
-app.use('/api', apiRouter);
+app.use(locationRoute);
+app.use(wardRoute);
+app.use(districtRoute);
+app.use(adsBoardRoute);
+app.use(adstypeRoute);
+app.use(locationTypeRoute);
+app.use(adsBoarTypedRoute);
 
+
+app.use(reportRoute);
+app.use(editRequestRoute);
+app.use(authorizeRequestRoute);
 app.use(notFound);
 app.use(errorHandler);
+
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running on port: " + process.env.PORT);

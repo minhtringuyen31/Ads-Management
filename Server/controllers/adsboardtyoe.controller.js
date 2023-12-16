@@ -18,6 +18,7 @@ const AdsBoardTypeController = {
         }
 
     },
+
     create: async (req, res, next) => {
         try {
 

@@ -23,16 +23,33 @@ const LocationService = {
                     }
                 },
                 {
+                    $lookup: {
+                        from: "types", // Tên collection của AdsType trong MongoDB
+                        localField: "ads_type", // Trường trong Location để join
+                        foreignField: "key", // Trường trong AdsType để join
+                        as: "adsTypeInfo" // Tên trường kết quả sau khi join
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "types", // Tên collection của AdsType trong MongoDB
+                        localField: "location_type", // Trường trong Location để join
+                        foreignField: "key", // Trường trong AdsType để join
+                        as: "locationInfo" // Tên trường kết quả sau khi join
+                    }
+                },
+                {
                     $project: {
                         coordinate: 1,
-                        ward_label: { $arrayElemAt: ["$wardInfo.label", 0] }, // Chọn trường label từ collection Ward
-                        district_label: { $arrayElemAt: ["$districtInfo.label", 0] },// Chọn trường label từ collection Ward
-                        ads_type: 1,
-                        location_type: 1,
+                        ward: { $arrayElemAt: ["$wardInfo.label", 0] }, // Chọn trường label từ collection Ward
+                        district: { $arrayElemAt: ["$districtInfo.label", 0] },// Chọn trường label từ collection Ward
+                        ads_type: { $arrayElemAt: ["$adsTypeInfo.label", 0] },
+                        location_type: { $arrayElemAt: ["$locationInfo.label", 0] },
                         image: 1,
                         is_planned: 1,
                     }
-                }
+                },
+
             ]);
             return locations;
         } catch (error) {
