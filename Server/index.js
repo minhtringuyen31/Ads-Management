@@ -47,12 +47,6 @@ app.use(editRequestRoute);
 app.use(authorizeRequestRoute);
 app.use(notFound);
 app.use(errorHandler);
-<<<<<<< HEAD
-=======
-app.use('/', (req, res) => {
-    res.send('API from Backend :) ');
-});
->>>>>>> 2ec5bde452a0ccd55fe058412408c8bbf352bb2f
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running on port: " + process.env.PORT);
