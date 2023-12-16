@@ -6,6 +6,8 @@ const router = express.Router();
 // Đọc danh sách tất cả các đối tượng Location
 router.get('/adsboards', AdsBoardController.getAll);
 
+router.get('/adboardsByLocation/:id', AdsBoardController.getAllAdBoardByLocation);
+
 // // Đọc một Location cụ thể bằng ID
 // router.get('/location/:id', AdsTypeController.getLocationById);
 

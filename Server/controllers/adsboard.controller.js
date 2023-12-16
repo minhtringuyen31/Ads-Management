@@ -4,7 +4,24 @@ const AdsBoardController = {
     getAll: async (req, res, next) => {
         try {
             const filter = req.body
-            const users = await AdsBoardService.getAll(filter, '');
+            const users = await AdsBoardService.getAll(filter);
+            if (!users) {
+                return next(createError.BadRequest("AdsBoard list not found"))
+            }
+            res.json({
+                message: "Get AdsBoard list successfully",
+                status: 200,
+                data: users
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
+    getAllAdBoardByLocation: async (req, res, next) => {
+        try {
+            const id = req.params.id
+            const users = await AdsBoardService.getAllAdBoardbyLocation(id);
             if (!users) {
                 return next(createError.BadRequest("AdsBoard list not found"))
             }
