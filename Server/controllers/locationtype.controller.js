@@ -46,7 +46,7 @@ const LocationTypeController = {
                 return next(createError.BadRequest("LocationType not found"))
             }
             res.json({
-                message: "Create LocationType successfully",
+                message: "Update LocationType successfully",
                 status: 200,
                 data: location
             })

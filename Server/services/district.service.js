@@ -1,5 +1,6 @@
 import { District } from '../models/DistrictModel.js'
-
+import { Ward } from '../models/WardModel.js';
+import mongoose from "mongoose";
 const DistrictService = {
     async getAll(filter, projection) {
         try {
@@ -9,6 +10,27 @@ const DistrictService = {
             throw error;
         }
     },
+    async getWardsOfDistrict(id) {
+        try {
+            const wards = await Ward.aggregate([
+                {
+                    $match: {
+                        district_id: new mongoose.Types.ObjectId(id)
+                    }
+                },
+                {
+                    $project: {
+                        label: 1,
+                    }
+                }
+            ]);
+            return wards;
+        } catch (error) {
+            throw error;
+        }
+
+    },
+
     async create(data) {
         try {
             const district = new District(data);

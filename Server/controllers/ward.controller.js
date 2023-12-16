@@ -62,7 +62,7 @@ const WardController = {
                 return next(createError.BadRequest("Ward not found"))
             }
             res.json({
-                message: "Update Ward successfully",
+                message: "Delete Ward successfully",
                 status: 200,
                 data: location
             })

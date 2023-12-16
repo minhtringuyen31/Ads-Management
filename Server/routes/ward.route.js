@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/wards', WardController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
-// router.get('/location/:id', WardController.getLocationById);
+router.get('/ward/:id', WardController.getDetail);
 
 // // Tạo mới một Location
 router.post('/ward', WardController.create);
@@ -16,7 +16,7 @@ router.post('/ward', WardController.create);
 router.put('/ward/:id', WardController.update);
 
 // // Xóa một Location bằng ID
-// router.delete('/location/:id', WardController.deleteLocation);
+router.delete('/ward/:id', WardController.delete);
 
 export default router;
 
