@@ -56,7 +56,8 @@ const AdsBoardService = {
                         height: 1,
                         contract_end_date: 1,
                         contract_start_date: 1,
-                        company_id: 1
+                        company_id: 1,
+                        image: 1
 
                     }
                 }

@@ -1,3 +1,4 @@
+import { AdsBoard } from '../models/AdsBoardModel.js';
 import { Location } from '../models/LocationModel.js'
 import mongoose from "mongoose";
 const ObjectId = mongoose.Types.ObjectId;
@@ -91,18 +92,71 @@ const LocationService = {
                     }
                 },
                 {
+                    $lookup: {
+                        from: "types", // Tên collection của AdsType trong MongoDB
+                        localField: "ads_type", // Trường trong Location để join
+                        foreignField: "key", // Trường trong AdsType để join
+                        as: "adsTypeInfo" // Tên trường kết quả sau khi join
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "types", // Tên collection của AdsType trong MongoDB
+                        localField: "location_type", // Trường trong Location để join
+                        foreignField: "key", // Trường trong AdsType để join
+                        as: "locationInfo" // Tên trường kết quả sau khi join
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "adsboards", // Tên của collection AdsBoard
+                        localField: "_id", // Trường trong Location dùng để ghép nối
+                        foreignField: "location_id", // Trường trong AdsBoard dùng để ghép nối
+                        pipeline: [
+                            {
+                                $lookup: {
+                                    from: "types", // Sử dụng collection types
+                                    localField: "adsboard_type", // Trường trong adsboard để nối
+                                    foreignField: "key", // Trường trong types để nối
+                                    as: "adsboardTypeInfo" // Kết quả sau khi nối
+                                }
+                            },
+                            {
+                                $unwind: "$adsboardTypeInfo" // Phẳng hóa kết quả nối
+                            },
+                            {
+                                $addFields: {
+                                    "adsboard_type": "$adsboardTypeInfo.label" // Thêm nhãn vào adsboard
+                                }
+                            },
+                            {
+                                $project: {
+                                    adsboardTypeInfo: 0, // Loại bỏ trường adsboardTypeInfo
+                                    location_id: 0,
+
+                                    // Bạn cần liệt kê tất cả các trường khác mà bạn muốn giữ lại ở đây
+                                }
+                            }
+                        ],
+                        as: "adsboard" // Tên cho trường mới sau khi ghép nối
+                    }
+                },
+
+                {
                     $project: {
                         coordinate: 1,
-                        ward_label: { $arrayElemAt: ["$wardInfo.label", 0] }, // Chọn trường label từ collection Ward
-                        district_label: { $arrayElemAt: ["$districtInfo.label", 0] },// Chọn trường label từ collection Ward
-                        ads_type: 1,
-                        location_type: 1,
-                        image: 1
-
+                        ward: { $arrayElemAt: ["$wardInfo.label", 0] }, // Chọn trường label từ collection Ward
+                        district: { $arrayElemAt: ["$districtInfo.label", 0] },// Chọn trường label từ collection Ward
+                        ads_type: { $arrayElemAt: ["$adsTypeInfo.label", 0] },
+                        location_type: { $arrayElemAt: ["$locationInfo.label", 0] },
+                        image: 1,
+                        adsboard: 1,// Thêm trường adsboards vào kết quả
+                        is_planned: 1,
                     }
-                }
+                },
             ]);
-            return location;
+
+            return location[0] || null;
         } catch (error) {
             throw error;
         }
@@ -139,10 +193,12 @@ const LocationService = {
             // };
 
             // // Sử dụng phương thức updateMany() để cập nhật
-            // const result = await Location.updateMany({}, { ads_type_id: "political_propaganda" })
+            const result = await AdsBoard.updateMany({}, {
+                image: ['https://shojiki.vn/template/uploads/2021/09/tru-quang-cao-ket-hop-mock-uo-tai-tphcm.jpg']
+            })
 
             // Add by Quang Thanh on 07.12.2023 to rename all document in collection
-            const result = await Location.updateMany({}, { $rename: { "location_type_id": "location_type" } });
+            // const result = await Location.updateMany({}, { $rename: { "location_type_id": "location_type" } });
             console.log("!23");
 
             return result;

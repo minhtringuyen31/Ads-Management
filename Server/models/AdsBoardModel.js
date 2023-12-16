@@ -29,10 +29,14 @@ const AdsBoardSchema = new Schema({
         required: true,
 
     },
+    image: {
+        type: [String],
+    },
     company_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company', // Assuming you have a Company model
-    }
+    },
+
 },
 
     {
