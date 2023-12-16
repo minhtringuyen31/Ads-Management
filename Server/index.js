@@ -38,15 +38,15 @@ app.use(adstypeRoute);
 app.use(locationTypeRoute);
 app.use(adsBoarTypedRoute);
 
+app.use('/', (req, res) => {
+    res.send('API from Backend :) ');
+});
 
 app.use(reportRoute);
 app.use(editRequestRoute);
 app.use(authorizeRequestRoute);
 app.use(notFound);
 app.use(errorHandler);
-app.use('/', (req, res) => {
-    res.send('API from Backend :) ');
-});
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running on port: " + process.env.PORT);
