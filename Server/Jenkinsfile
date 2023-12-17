@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'Nodejs'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Bước này để pull mã nguồn từ kho Git
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Bước này để cài đặt các dependencies của Node.js
+                script {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Bước này để thực hiện các bước build hoặc compile (nếu cần)
+                script {
+                    sh 'npm start'
+                }
+            }
+        }
+
+        
+
+        stage('Deploy') {
+            steps {
+                // Bước này để triển khai ứng dụng (nếu cần)
+                script {
+                    // Thay thế lệnh dưới đây bằng lệnh triển khai thực tế của bạn
+                    echo 'Deployment step...'
+                }
+            }
+        }
+    }
+
+    
+}
