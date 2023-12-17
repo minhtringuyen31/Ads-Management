@@ -29,10 +29,10 @@ const BussinessVehicle = Loadable(
 const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
 
 const ReportList = Loadable(
-  lazy(() => import('../views/report-process/ReportList'))
+  lazy(() => import('../views/utilities/report-process/ReportList'))
 );
 const ReportDetail = Loadable(
-  lazy(() => import('../views/report-process/ReportDetail'))
+  lazy(() => import('../views/utilities/report-process/ReportDetail'))
 );
 
 const MainRoutes = {
@@ -42,19 +42,6 @@ const MainRoutes = {
     {
       path: 'dashboard',
       element: <Home />,
-    },
-    {
-      path: 'report',
-      children: [
-        {
-          path: 'list',
-          element: <ReportList />,
-        },
-        {
-          path: 'detail',
-          element: <ReportDetail />,
-        },
-      ],
     },
     {
       path: 'utils',
@@ -80,6 +67,24 @@ const MainRoutes = {
         {
           path: 'consultant',
           element: <UtilsConsultant />,
+        },
+      ],
+    },
+    {
+      path: 'utils',
+      children: [
+        {
+          path: 'report',
+          children: [
+            {
+              path: 'list',
+              element: <ReportList />,
+            },
+            {
+              path: 'detail',
+              element: <ReportDetail />,
+            },
+          ],
         },
       ],
     },

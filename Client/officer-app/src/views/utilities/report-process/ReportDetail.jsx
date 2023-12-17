@@ -1,11 +1,13 @@
+import CloseIcon from '@mui/icons-material/Close';
 import {
   Box,
+  Button,
   Divider,
   Grid,
+  IconButton,
   ImageList,
   ImageListItem,
-  MenuItem,
-  Select,
+  Slide,
   Typography,
 } from '@mui/material';
 import { Fragment, useState } from 'react';
@@ -13,19 +15,34 @@ import MainCard from 'ui-component/cards/MainCard';
 import { reportTestData } from 'views/dashboard/DashboardData/data';
 
 const ReportDetail = () => {
-  const [status, setStatus] = useState(reportTestData.reports[0].status);
+  const [formOpen, setFormOpen] = useState({
+    isOpened: false,
+    lg1: 5,
+    lg2: 7,
+    lg3: 0,
+  });
 
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value);
+  const handleFormOpen = () => {
+    setFormOpen({
+      isOpened: true,
+      lg1: 3,
+      lg2: 5,
+      lg3: 4,
+    });
   };
 
-  const updateStatus = () => {
-    // Update the status in your data here
-    console.log(`Updated status: ${status}`);
+  const handleFormClose = () => {
+    setFormOpen({
+      isOpened: false,
+      lg1: 5,
+      lg2: 7,
+      lg3: 0,
+    });
   };
+
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} lg={5}>
+      <Grid item xs={12} lg={formOpen.lg1}>
         <MainCard>
           <ImageList
             sx={{
@@ -67,7 +84,7 @@ const ReportDetail = () => {
           </ImageList>
         </MainCard>
       </Grid>
-      <Grid item xs={12} lg={7}>
+      <Grid item xs={12} lg={formOpen.lg2}>
         <MainCard>
           <Box sx={{ p: 3 }}>
             <Grid container spacing={3} sx={{ height: '10vh' }}>
@@ -77,15 +94,24 @@ const ReportDetail = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6} container justifyContent='flex-end'>
-                <Select
-                  value={status}
-                  onChange={handleStatusChange}
-                  sx={{ height: '30px' }}
+                <Button
+                  variant='contained'
+                  color='primary'
+                  sx={{
+                    backgroundColor: '#1976d2',
+                    '&:hover': {
+                      backgroundColor: '#115293',
+                    },
+                    padding: '10px',
+                    fontSize: '16px',
+                    fontWeight: 'bold',
+                    borderRadius: '5px',
+                    height: '30px',
+                  }}
+                  onClick={handleFormOpen}
                 >
-                  <MenuItem value={'pending'}>Pending</MenuItem>
-                  <MenuItem value={'solved'}>Solved</MenuItem>
-                  <MenuItem value={'not_solved'}>Not Solved</MenuItem>
-                </Select>
+                  Xử lý báo cáo
+                </Button>
               </Grid>
             </Grid>
             <Divider />
@@ -132,8 +158,8 @@ const ReportDetail = () => {
               <Typography variant='body1' gutterBottom>
                 {reportTestData.reports[0].report_content
                   .split('\n')
-                  .map((line, index) => (
-                    <Fragment key={index}>
+                  .map((line) => (
+                    <Fragment key={line}>
                       {line}
                       <br />
                     </Fragment>
@@ -143,6 +169,25 @@ const ReportDetail = () => {
           </Box>
         </MainCard>
       </Grid>
+      <Slide
+        direction={formOpen ? 'left' : 'right'}
+        in={formOpen.isOpened}
+        mountOnEnter
+        unmountOnExit
+      >
+        <Grid item xs={12} lg={formOpen.lg3}>
+          <MainCard>
+            <IconButton
+              sx={{
+                position: 'absolute',
+              }}
+              onClick={handleFormClose}
+            >
+              <CloseIcon />
+            </IconButton>
+          </MainCard>
+        </Grid>
+      </Slide>
     </Grid>
   );
 };
