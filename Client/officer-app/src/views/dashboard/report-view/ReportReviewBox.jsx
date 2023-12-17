@@ -5,15 +5,13 @@ import { useState } from 'react';
 import ReportList from './ReportList';
 
 const ReportReviewBox = (props) => {
-  const [value, setValue] = useState('not-resolved');
+  const [value, setValue] = useState('not-solved');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  console.log(typeof props.handleToggle);
-
-  const notResolvedData = props.data.reports.filter(
-    (report) => report.status === 'not_resolved'
+  const notSolvedData = props.data.reports.filter(
+    (report) => report.status === 'not_solved'
   );
   const solvedData = props.data.reports.filter(
     (report) => report.status === 'solved'
@@ -41,19 +39,19 @@ const ReportReviewBox = (props) => {
           >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleChange} centered>
-                <Tab label='Chưa giải quyết' value='not-resolved' />
+                <Tab label='Chưa giải quyết' value='not-solved' />
                 <Tab label='Đã giải quyết' value='solved' />
               </TabList>
             </Box>
             <TabPanel
-              value='not-resolved'
+              value='not-solved'
               sx={{
                 padding: 0,
                 width: '100%',
               }}
             >
               <ReportList
-                data={notResolvedData}
+                data={notSolvedData}
                 handleToggle={props.handleToggle}
               />
             </TabPanel>

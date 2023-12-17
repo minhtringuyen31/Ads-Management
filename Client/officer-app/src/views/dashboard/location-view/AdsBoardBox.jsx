@@ -12,7 +12,7 @@ const AdsBoardBox = (props) => {
         marginBottom: '10px',
       }}
     >
-      <Grid xs={12} lg={12}>
+      <Grid item xs={12} lg={12}>
         <Box
           display='flex'
           flexDirection='column'

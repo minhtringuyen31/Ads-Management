@@ -6,12 +6,17 @@ const reportTestData = {
       username: 'Nguyen Van A',
       email: 'nguyenvana@gmail.com',
       phone_number: '0912345678',
-      report_content: 'Can giup do',
+      report_content:
+        "New York City, often considered the world's advertising capital, is home to a vast array of advertising boards that contribute significantly to the city's vibrant and dynamic atmosphere.\n\nThese boards, ranging from traditional billboards to digital screens, are strategically placed in high-traffic areas such as Times Square, Broadway, and along major highways, capturing the attention of millions of residents and tourists daily.\n\nThe advertising boards in New York are as diverse as the city itself. They display a wide variety of content, from promotions for the latest Broadway shows to advertisements for global brands.\n\nThe rise of digital advertising boards has further revolutionized the industry, allowing for more dynamic, interactive, and time-sensitive content. However, the proliferation of advertising boards also raises concerns about visual pollution and energy consumption.\n\nThe city's authorities have implemented regulations to control the size, location, and brightness of these boards to mitigate their impact on the urban landscape and environment. Despite these challenges, advertising boards remain an integral part of New York's cityscape. They not only serve as a platform for businesses to reach their target audience but also contribute to the city's reputation as a global advertising hub.",
       related_to: 1,
       type: 'location',
-      status: 'not_resolved',
+      status: 'not_solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 2,
@@ -22,9 +27,13 @@ const reportTestData = {
       report_content: 'Can giup do',
       related_to: 2,
       type: 'location',
-      status: 'not_resolved',
+      status: 'not_solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 3,
@@ -35,9 +44,13 @@ const reportTestData = {
       report_content: 'Can giup do',
       related_to: 3,
       type: 'location',
-      status: 'not_resolved',
+      status: 'not_solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 4,
@@ -51,6 +64,10 @@ const reportTestData = {
       status: 'solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 5,
@@ -64,6 +81,10 @@ const reportTestData = {
       status: 'solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 6,
@@ -77,6 +98,10 @@ const reportTestData = {
       status: 'solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 7,
@@ -87,9 +112,13 @@ const reportTestData = {
       report_content: 'Can giup do',
       related_to: 1,
       type: 'ads_board',
-      status: 'not_resolved',
+      status: 'not_solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 8,
@@ -100,9 +129,13 @@ const reportTestData = {
       report_content: 'Can giup do',
       related_to: 2,
       type: 'ads_board',
-      status: 'not_resolved',
+      status: 'not_solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 9,
@@ -113,9 +146,13 @@ const reportTestData = {
       report_content: 'Can giup do',
       related_to: 3,
       type: 'ads_board',
-      status: 'not_resolved',
+      status: 'not_solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 10,
@@ -129,6 +166,10 @@ const reportTestData = {
       status: 'solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 11,
@@ -142,6 +183,10 @@ const reportTestData = {
       status: 'solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
     {
       id: 12,
@@ -155,6 +200,10 @@ const reportTestData = {
       status: 'solved',
       operation: '',
       created_at: '2023-05-05T02:57:31Z',
+      images: [
+        'https://lh5.googleusercontent.com/p/AF1QipMclCpI1Ksxue8H_vB566QeSpmA1USCh4CFprFc=w408-h306-k-no',
+        'https://lh5.googleusercontent.com/p/AF1QipORTOmaH25ZBHXe1GDWkosGGB4VwYzo7iqfqBHj=w408-h307-k-no',
+      ],
     },
   ],
 };

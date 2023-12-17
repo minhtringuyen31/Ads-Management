@@ -2,19 +2,18 @@ import { ExploreOutlined } from '@mui/icons-material';
 import { Box, Grid, IconButton, Typography } from '@mui/material';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import MapContext from 'store/dashboard/map-context';
 import MainCard from 'ui-component/cards/MainCard';
-import { adsBoardTestData } from '../DashboardData/data';
 
 const ReportListItem = (props) => {
+  const mapCtx = useContext(MapContext);
   const handleClick = () => {
-    if (props.data.report_form === 'location') {
-      props.handleToggle(props.data.related_to);
-    } else {
-      const location = adsBoardTestData.ads_boards.filter(
-        (ads_board) => ads_board.id === props.data.related_to
-      );
-      props.handleToggle(location[0].location_id);
-    }
+    mapCtx.setZoom({
+      lat: props.data.lat,
+      lng: props.data.lng,
+      zoom: 18,
+    });
   };
 
   const getBorderColor = (reportForm) => {
@@ -36,6 +35,7 @@ const ReportListItem = (props) => {
       return 'Đóng góp ý kiến';
     }
   };
+
   return (
     <MainCard
       style={{

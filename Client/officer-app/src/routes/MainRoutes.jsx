@@ -1,65 +1,84 @@
-import React from "react";
-import { lazy } from "react";
+import { lazy } from 'react';
 
-import MainLayout from "../layout/MainLayout/MainLayout";
-import Loadable from "ui-component/Loadable";
+import Loadable from 'ui-component/Loadable';
+import MainLayout from '../layout/MainLayout/MainLayout';
 
 //utilities routing
 const UtilsCustomer = Loadable(
-  lazy(() => import("../views/utilities/Customer"))
+  lazy(() => import('../views/utilities/Customer'))
 );
-const UtilsDriver = Loadable(lazy(() => import("../views/utilities/Driver")));
+const UtilsDriver = Loadable(lazy(() => import('../views/utilities/Driver')));
 const UtilsConsultant = Loadable(
-  lazy(() => import("../views/utilities/Consultant"))
+  lazy(() => import('../views/utilities/Consultant'))
 );
-const UtilsSalary = Loadable(lazy(() => import("../views/utilities/Salary")));
+const UtilsSalary = Loadable(lazy(() => import('../views/utilities/Salary')));
 const BussinessUnitPrice = Loadable(
-  lazy(() => import("../views/bussiness/unit-price/UnitPrice"))
+  lazy(() => import('../views/bussiness/unit-price/UnitPrice'))
 );
 const BussinessEditUnitPrice = Loadable(
-  lazy(() => import("../views/bussiness/unit-price/EditUnitPrice"))
+  lazy(() => import('../views/bussiness/unit-price/EditUnitPrice'))
 );
 
 const BussinessRuleList = Loadable(
-  lazy(() => import("../views/bussiness/rules/RuleList"))
+  lazy(() => import('../views/bussiness/rules/RuleList'))
 );
 
 const BussinessVehicle = Loadable(
-  lazy(() => import("../views/bussiness/vehicles/vehicleList"))
+  lazy(() => import('../views/bussiness/vehicles/vehicleList'))
 );
-const Home = Loadable(lazy(() => import("../views/dashboard/DashboardHome")));
+const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
+
+const ReportList = Loadable(
+  lazy(() => import('../views/report-process/ReportList'))
+);
+const ReportDetail = Loadable(
+  lazy(() => import('../views/report-process/ReportDetail'))
+);
 
 const MainRoutes = {
-  path: "/",
+  path: '/',
   element: <MainLayout />,
   children: [
     {
-      path: "dashboard",
+      path: 'dashboard',
       element: <Home />,
     },
     {
-      path: "utils",
+      path: 'report',
       children: [
         {
-          path: "customer",
+          path: 'list',
+          element: <ReportList />,
+        },
+        {
+          path: 'detail',
+          element: <ReportDetail />,
+        },
+      ],
+    },
+    {
+      path: 'utils',
+      children: [
+        {
+          path: 'customer',
           element: <UtilsCustomer />,
         },
       ],
     },
     {
-      path: "utils",
+      path: 'utils',
       children: [
         {
-          path: "driver",
+          path: 'driver',
           element: <UtilsDriver />,
         },
       ],
     },
     {
-      path: "utils",
+      path: 'utils',
       children: [
         {
-          path: "consultant",
+          path: 'consultant',
           element: <UtilsConsultant />,
         },
       ],
@@ -75,22 +94,22 @@ const MainRoutes = {
     // },
 
     {
-      path: "bussiness",
+      path: 'bussiness',
       children: [
         {
-          path: "unit_price",
+          path: 'unit_price',
           element: <BussinessUnitPrice />,
         },
         {
-          path: "unit_price/edit",
+          path: 'unit_price/edit',
           element: <BussinessEditUnitPrice />,
         },
         {
-          path: "rules",
+          path: 'rules',
           element: <BussinessRuleList />,
         },
         {
-          path: "vehicles",
+          path: 'vehicles',
           element: <BussinessVehicle />,
         },
       ],
