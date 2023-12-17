@@ -55,14 +55,19 @@ const LocationService = {
                     select: 'label -_id' // Select only the label field and exclude the _id
                 })
                 .populate({
+                    path: "district",
+                    model: "District", // Replace with the actual name of the Location model
+                    select: "label"
+                })
+                .populate({
                     path: 'ads_type',
                     model: 'Type', // Replace with the actual name of the AdsType model
-                    select: 'label -_id' // Select only the label field and exclude the _id
+                    select: 'label -_id -__t' // Select only the label field and exclude the _id
                 })
                 .populate({
                     path: 'location_type',
                     model: 'Type', // Replace with the actual name of the LocationType model
-                    select: 'label -_id' // Select only the label field and exclude the _id
+                    select: 'label -_id -__t' // Select only the label field and exclude the _id
                 }).exec();
 
 
@@ -87,7 +92,12 @@ const LocationService = {
                         path: "ads_type",
                         model: "Type", // Replace with the actual name of the Location model
                         select: "label"
-                    }],
+                    }, {
+                        path: "district",
+                        model: "District", // Replace with the actual name of the Location model
+                        select: "label"
+                    }
+                    ],
                 })
                 .exec();
 
