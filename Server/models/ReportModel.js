@@ -24,13 +24,24 @@ const ReportSchema = new Schema(
       type: String,
       required: true,
     },
-    related_to: {
-      type: Number,
+    type: {
+      type: String,
+      enum: ["location", "board"],
       required: true,
+    },
+    location: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: "Location"
+    },
+    board: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: "AdsBoard"
     },
     status: {
       type: String,
-      enum: ["pending", "complete"],
+      enum: ["pending", "completed"],
       default: "pending",
       required: true,
     },
