@@ -40,20 +40,5 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            // Bước này sẽ được thực hiện sau mỗi stage, dù có lỗi hay không
-            // Bạn có thể thực hiện các công việc dọn dẹp ở đây
-        }
-
-        success {
-            // Bước này sẽ được thực hiện chỉ khi toàn bộ pipeline chạy thành công
-            echo 'Pipeline ran successfully!'
-        }
-
-        failure {
-            // Bước này sẽ được thực hiện chỉ khi có lỗi trong quá trình chạy pipeline
-            echo 'Pipeline failed!'
-        }
-    }
+    
 }
