@@ -10,23 +10,27 @@ dotenv.config();
 const LocationController = {
     getAll: async (req, res, next) => {
         try {
-            const { filters, sort } = req.query
-            const filters_value = createMongooseQuery(fromJson(filters));
-            const sort_value = createMongooseSortObject(fromJson(sort));
-            console.log(filters_value, sort_value)
-            const users = await LocationService.getAll(filters_value, sort_value);
+            const { filters, sort } = req.query;
+
+            // Initialize default values if filters or sort are null or undefined
+            const filtersValue = filters ? createMongooseQuery(fromJson(filters)) : {};
+            const sortValue = sort ? createMongooseSortObject(fromJson(sort)) : {};
+
+            console.log(filtersValue, sortValue);
+
+            const users = await LocationService.getAll(filtersValue, sortValue);
             if (!users) {
-                return next(createError.BadRequest("Location list not found"))
+                return next(createError.BadRequest("Location list not found"));
             }
+
             res.json({
                 message: "Get location list successfully",
                 status: 200,
                 data: users
-            })
+            });
         } catch (error) {
-            next(createError.InternalServerError(error.message))
+            next(createError.InternalServerError(error.message));
         }
-
     },
     revereGeocode: async (req, res, next) => {
         const lat = req.query.lat; // Lấy giá trị của tham số 'lat' từ URL

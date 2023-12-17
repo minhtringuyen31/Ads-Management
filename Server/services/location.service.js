@@ -56,7 +56,7 @@ const LocationService = {
                     }
                 },
 
-            ]).sort(sort);
+            ]);
             return locations;
         } catch (error) {
             throw error;
