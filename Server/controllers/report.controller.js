@@ -28,7 +28,7 @@ const ReportController = {
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
-        data: reportsWithCoordinates,
+        data: lists,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));

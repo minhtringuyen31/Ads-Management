@@ -16,6 +16,7 @@ pipeline {
             steps {
                 // Bước này để cài đặt các dependencies của Node.js
                 script {
+                    sh 'cd Server'
                     sh 'npm install'
                 }
             }
