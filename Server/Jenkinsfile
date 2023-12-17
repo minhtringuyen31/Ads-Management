@@ -16,7 +16,6 @@ pipeline {
             steps {
                 // Bước này để cài đặt các dependencies của Node.js
                 script {
-                    env.PATH = "${tool 'NodeJS'}/bin:${env.PATH}"
                     sh 'npm install'
                 }
             }
