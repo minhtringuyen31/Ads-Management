@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Mở cổng 3000 cho ứng dụng
-EXPOSE 80
+EXPOSE 5001
 
 # Lệnh để chạy ứng dụng khi container khởi chạy
 CMD ["npm", "start"]

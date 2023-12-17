@@ -7,8 +7,15 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Bước này để pull mã nguồn từ kho Git
-                checkout scm
+                // Thực hiện git pull từ nhánh feature/init-server
+                script {
+                    checkout([$class: 'GitSCM',
+                            branches: [[name: 'feature/init-server']],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [[$class: 'CleanCheckout']],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[url: 'https://github.com/minhtringuyen31/Ads-Management.git']]])
+                }
             }
         }
 
@@ -28,9 +35,11 @@ pipeline {
             steps {
                 // Bước này để thực hiện các bước build hoặc compile (nếu cần)
                 script {
-                    sh 'pm2 delete index'
+                    
                     dir('Server') {
-                        sh 'npm start index.js'
+                        sh 'docker build -t web .'
+                        sh 'docker rm -f web .'
+                        sh 'docker run -p 80:5001 -d --name web web .'
                     }
                 }
             }
