@@ -8,55 +8,23 @@ const ObjectId = mongoose.Types.ObjectId;
 const LocationService = {
     async getAll(filter, sort) {
         try {
-            const locations = await Location.aggregate([
-                {
-                    $match: filter
-                },
-                {
-                    $lookup: {
-                        from: "wards", // Tên của collection Ward
-                        localField: "ward_id", // Trường trong Location dùng để ghép nối
-                        foreignField: "_id", // Trường trong Ward dùng để ghép nối
-                        as: "wardInfo" // Tên cho trường mới sau khi ghép nối
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "districts", // Tên của collection District
-                        localField: "wardInfo.district_id", // Trường trong Location dùng để ghép nối
-                        foreignField: "_id", // Trường trong District dùng để ghép nối
-                        as: "districtInfo" // Tên cho trường mới sau khi ghép nối
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "ads_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "adsTypeInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "location_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "locationInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $project: {
-                        coordinate: 1,
-                        ward: { $arrayElemAt: ["$wardInfo.label", 0] }, // Chọn trường label từ collection Ward
-                        district: { $arrayElemAt: ["$districtInfo.label", 0] },// Chọn trường label từ collection Ward
-                        ads_type: { $arrayElemAt: ["$adsTypeInfo.label", 0] },
-                        location_type: { $arrayElemAt: ["$locationInfo.label", 0] },
-                        image: 1,
-                        is_planned: 1,
-                    }
-                },
-
-            ]);
+            const locations = await Location.find({})
+                .populate({
+                    path: "ward",
+                    model: "Ward", // Replace with the actual name of the Location model
+                    select: "label"
+                })
+                .populate({
+                    path: "location_type",
+                    model: "Type", // Replace with the actual name of the Location model
+                    select: "label -__t"
+                }).
+                populate({
+                    path: "ads_type",
+                    model: "Type", // Replace with the actual name of the Location model
+                    select: "label -__t"
+                })
+                .exec();
             return locations;
         } catch (error) {
             throw error;
@@ -74,94 +42,40 @@ const LocationService = {
     },
     async getById(id) {
         try {
-            const location = await Location.aggregate([
-                {
-                    $match: {
-                        _id: new ObjectId(id),
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "wards", // Tên của collection Ward
-                        localField: "ward_id", // Trường trong Location dùng để ghép nối
-                        foreignField: "_id", // Trường trong Ward dùng để ghép nối
-                        as: "wardInfo" // Tên cho trường mới sau khi ghép nối
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "districts", // Tên của collection District
-                        localField: "wardInfo.district_id", // Trường trong Location dùng để ghép nối
-                        foreignField: "_id", // Trường trong District dùng để ghép nối
-                        as: "districtInfo" // Tên cho trường mới sau khi ghép nối
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "ads_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "adsTypeInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "location_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "locationInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "adsboards", // Tên của collection AdsBoard
-                        localField: "_id", // Trường trong Location dùng để ghép nối
-                        foreignField: "location_id", // Trường trong AdsBoard dùng để ghép nối
-                        pipeline: [
-                            {
-                                $lookup: {
-                                    from: "types", // Sử dụng collection types
-                                    localField: "adsboard_type", // Trường trong adsboard để nối
-                                    foreignField: "key", // Trường trong types để nối
-                                    as: "adsboardTypeInfo" // Kết quả sau khi nối
-                                }
-                            },
-                            {
-                                $unwind: "$adsboardTypeInfo" // Phẳng hóa kết quả nối
-                            },
-                            {
-                                $addFields: {
-                                    "adsboard_type": "$adsboardTypeInfo.label" // Thêm nhãn vào adsboard
-                                }
-                            },
-                            {
-                                $project: {
-                                    adsboardTypeInfo: 0, // Loại bỏ trường adsboardTypeInfo
-                                    location_id: 0,
 
-                                    // Bạn cần liệt kê tất cả các trường khác mà bạn muốn giữ lại ở đây
-                                }
-                            }
-                        ],
-                        as: "adsboard" // Tên cho trường mới sau khi ghép nối
-                    }
-                },
+            var location = await Location.findOne({ _id: new ObjectId(id) })
+                .populate({
+                    path: 'ward',
+                    model: 'Ward',
+                    select: 'label -_id' // Select only the label field and exclude the _id
+                })
+                .populate({
+                    path: 'ads_type',
+                    model: 'Type', // Replace with the actual name of the AdsType model
+                    select: 'label -_id' // Select only the label field and exclude the _id
+                })
+                .populate({
+                    path: 'location_type',
+                    model: 'Type', // Replace with the actual name of the LocationType model
+                    select: 'label -_id' // Select only the label field and exclude the _id
+                }).exec();
 
-                {
-                    $project: {
-                        coordinate: 1,
-                        ward: { $arrayElemAt: ["$wardInfo.label", 0] }, // Chọn trường label từ collection Ward
-                        district: { $arrayElemAt: ["$districtInfo.label", 0] },// Chọn trường label từ collection Ward
-                        ads_type: { $arrayElemAt: ["$adsTypeInfo.label", 0] },
-                        location_type: { $arrayElemAt: ["$locationInfo.label", 0] },
-                        image: 1,
-                        adsboard: 1,// Thêm trường adsboards vào kết quả
-                        is_planned: 1,
-                    }
-                },
-            ]);
 
-            return location[0] || null;
+            const adsboards = await AdsBoard.find({ location: new ObjectId(location._id) })
+                .populate({
+                    path: "adsboard_type",
+                    model: "Type", // Replace with the actual name of the Location model
+                    select: "label -__t"
+                })
+                .exec();
+
+            // Now combine the adsboards with the location
+            if (location) {
+                location = location.toObject(); // Convert the mongoose document to a plain object if necessary
+                location.adsboards = adsboards; // Add the adsboards array to the location object
+            }
+
+            return location || null;
         } catch (error) {
             throw error;
         }
