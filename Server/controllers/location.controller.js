@@ -2,14 +2,19 @@ import createError from "http-errors";
 import LocationService from "../services/location.service.js";
 import axios from 'axios';
 import dotenv from 'dotenv';
+import { fromJson } from "../helper/dto.js";
+import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
 
 dotenv.config();
 
 const LocationController = {
     getAll: async (req, res, next) => {
         try {
-            const filter = req.body
-            const users = await LocationService.getAll(filter, '-password -refreshToken');
+            const { filters, sort } = req.query
+            const filters_value = createMongooseQuery(fromJson(filters));
+            const sort_value = createMongooseSortObject(fromJson(sort));
+            console.log(filters_value, sort_value)
+            const users = await LocationService.getAll(filters_value, sort_value);
             if (!users) {
                 return next(createError.BadRequest("Location list not found"))
             }
