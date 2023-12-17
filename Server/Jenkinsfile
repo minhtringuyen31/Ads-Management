@@ -3,6 +3,9 @@ pipeline {
     tools {
         nodejs 'Nodejs'
     }
+    environment {
+        GITHUB_TOKEN = credentials('github_token')
+    }
 
     stages {
         stage('Checkout') {
