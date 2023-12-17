@@ -9,6 +9,26 @@ const AdsBoardService = {
                     model: "Type", // Replace with the actual name of the Location model
                     select: "label -__t"
                 })
+                .populate({
+                    path: "location",
+                    model: "Location", // Replace with the actual name of the Location model
+                    populate: [{
+                        path: "location_type",
+                        model: "Type", // Replace with the actual name of the Location model
+                        select: "label -__t"
+                    }, {
+                        path: "ward",
+                        model: "Ward", // Replace with the actual name of the Location model
+                        select: "label"
+                    }, {
+                        path: "ads_type",
+                        model: "Type", // Replace with the actual name of the Location model
+                        select: "label"
+                    }],
+
+
+
+                })
                 .exec();
             return adsBoard;
         } catch (error) {
