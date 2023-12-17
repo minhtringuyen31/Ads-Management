@@ -21,6 +21,11 @@ const LocationSchema = new Schema({
         required: true,
         ref: 'Ward',
     },
+    district: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'District',
+    },
     location_type: {
         type: Schema.Types.ObjectId,
         required: true,
