@@ -1,17 +1,74 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-// import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import PropTypes from "prop-types";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import axiosClient from "../../axiosConfig/axiosClient";
 
 // import dotenv from "dotenv";
 
 // dotenv.config();
 
+const PopupLocationInfo = (info) => {
+  return (
+    <Popup>
+      <Box>
+        {console.log(info)}
+        <Typography fontWeight="bold"></Typography>
+        <Typography>
+          Đất công/ Công viên/ Hành lang an toàn giao thông
+        </Typography>
+        <Typography>
+          Đồng khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé, Quận
+          1
+        </Typography>
+        <Typography fontWeight="bold" fontStyle="italic">
+          ĐÃ QUY HOẠCH
+        </Typography>
+      </Box>
+    </Popup>
+  );
+};
+
 const Map = ({ setShape, openDrawer }) => {
+  const [locationList, setLocationList] = useState([]);
+  const [hoveredMarker, setHoveredMarker] = useState(null);
+
+  const handleMouseOver = (markerIndex) => {
+    setHoveredMarker(markerIndex);
+  };
+
+  const handleMouseOut = () => {
+    setHoveredMarker(null);
+  };
+
+  const handleButtonClick = (value) => {
+    console.log(`Button clicked with value: ${value}`);
+    // Do something with the click event, e.g., call handleButtonClicked(value)
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // setLoading(true);
+        const response = await axiosClient.get("locations");
+        console.log("Location List: ", response.data.data);
+        // if (response.status == 200) {
+        //   dispatch(updateTodoList(response.data));
+        //   setTimeout(() => {
+        //     setLoading(false);
+        //   }, 2000);
+        // }
+        setLocationList(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
   const markerIcon = new L.divIcon({
     className: "custom-svg-marker",
     iconSize: [32, 32],
@@ -58,10 +115,39 @@ const Map = ({ setShape, openDrawer }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <Marker position={center} icon={markerIcon}>
-            <Popup>Your location</Popup>
-          </Marker>
+
+          {locationList.map((item, index) => (
+            <Marker
+              key={item._id}
+              position={item.coordinate}
+              icon={markerIcon}
+              // onMouseOver={() => handleMouseOver(index)}
+              // onMouseOut={handleMouseOut}
+              // onClick={() => handleButtonClick(3)}
+            >
+              {/* {hoveredMarker === index && <PopupLocationInfo item={item} />} */}
+
+              <Popup>
+                <Box>
+                  <Typography fontWeight="bold">
+                    {item.ads_type.label}
+                  </Typography>
+                  <Typography>{item.location_type.label}</Typography>
+                  <Typography>
+                    {item.address}, {item.ward.label}
+                  </Typography>
+                  <Typography fontWeight="bold" fontStyle="italic">
+                    {item.is_planned ? " ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
+                  </Typography>
+                </Box>
+              </Popup>
+            </Marker>
+          ))}
         </MapContainer>
+
+        {/* {todoList.map((todo) => (
+          <Todo key={todo._id} todo={todo} />
+        ))} */}
       </Box>
       <Box
         display="flex"
