@@ -7,6 +7,7 @@ const ReportService = {
         .populate({
           path: "location",
           model: "Location", // Replace with the actual name of the Location model
+          //ads_type
         })
         .populate({
           path: "board",

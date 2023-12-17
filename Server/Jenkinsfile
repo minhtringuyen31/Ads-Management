@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Bước này để pull mã nguồn từ kho Git
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Bước này để cài đặt các dependencies của Node.js
+                script {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Bước này để thực hiện các bước build hoặc compile (nếu cần)
+                script {
+                    sh 'npm start'
+                }
+            }
+        }
+
+        
+
+        stage('Deploy') {
+            steps {
+                // Bước này để triển khai ứng dụng (nếu cần)
+                script {
+                    // Thay thế lệnh dưới đây bằng lệnh triển khai thực tế của bạn
+                    echo 'Deployment step...'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Bước này sẽ được thực hiện sau mỗi stage, dù có lỗi hay không
+            // Bạn có thể thực hiện các công việc dọn dẹp ở đây
+        }
+
+        success {
+            // Bước này sẽ được thực hiện chỉ khi toàn bộ pipeline chạy thành công
+            echo 'Pipeline ran successfully!'
+        }
+
+        failure {
+            // Bước này sẽ được thực hiện chỉ khi có lỗi trong quá trình chạy pipeline
+            echo 'Pipeline failed!'
+        }
+    }
+}
