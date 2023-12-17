@@ -28,7 +28,10 @@ pipeline {
             steps {
                 // Bước này để thực hiện các bước build hoặc compile (nếu cần)
                 script {
-                    sh 'npm start'
+                    sh 'pm2 delete index'
+                    dir('Server') {
+                        sh 'npm start index.js'
+                    }
                 }
             }
         }
