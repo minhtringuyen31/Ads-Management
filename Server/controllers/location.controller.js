@@ -1,5 +1,10 @@
 import createError from "http-errors";
 import LocationService from "../services/location.service.js";
+import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const LocationController = {
     getAll: async (req, res, next) => {
         try {
@@ -17,6 +22,25 @@ const LocationController = {
             next(createError.InternalServerError(error.message))
         }
 
+    },
+    revereGeocode: async (req, res, next) => {
+        const lat = req.query.lat; // Lấy giá trị của tham số 'lat' từ URL
+        const lng = req.query.lng; // Lấy giá trị của tham số 'lng' từ URL
+        const options = {
+            method: 'GET',
+            url: `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`,
+        };
+
+        try {
+            const response = await axios(options);
+            res.json({
+                message: "Reverse geocoding location successfully",
+                status: 200,
+                data: response.data
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
     },
     create: async (req, res, next) => {
         try {

@@ -9,6 +9,8 @@ router.get('/location/healthCheck', LocationController.healthCheck);
 // Đọc danh sách tất cả các đối tượng Location
 router.get('/locations', LocationController.getAll);
 
+router.get('/location/reverse-geocoding', LocationController.revereGeocode);
+
 //Đọc một Location cụ thể bằng ID
 router.get('/location/:id', LocationController.getDetail);
 

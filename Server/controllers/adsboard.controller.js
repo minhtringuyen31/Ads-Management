@@ -75,7 +75,7 @@ const AdsBoardController = {
     getDetail: async (req, res, next) => {
         try {
             const { id } = req.params;
-            const location = await AdsBoardService.getDetail(i);
+            const location = await AdsBoardService.getById(id);
             if (!location) {
                 return next(createError.BadRequest("Record not found"))
             }
