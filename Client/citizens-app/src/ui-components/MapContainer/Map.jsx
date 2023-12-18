@@ -34,26 +34,10 @@ const PopupLocationInfo = (info) => {
 
 const Map = ({ setShape, openDrawer }) => {
   const [locationList, setLocationList] = useState([]);
-  const [hoveredMarker, setHoveredMarker] = useState(null);
-
-  const handleMouseOver = (markerIndex) => {
-    console.log("Hover: ", markerIndex);
-    setHoveredMarker(markerIndex);
-  };
-
-  const handleMouseOut = () => {
-    setHoveredMarker(null);
-  };
-
-  const handleButtonClick = (value) => {
-    console.log(`Button clicked with value: ${value}`);
-    // Do something with the click event, e.g., call handleButtonClicked(value)
-  };
 
   useEffect(() => {
     async function fetchData() {
       try {
-        // setLoading(true);
         const response = await axiosClient.get("locations");
         console.log("Location List: ", response.data.data);
         // if (response.status == 200) {
@@ -118,26 +102,11 @@ const Map = ({ setShape, openDrawer }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
 
-          {/* <Marker
-            position={center}
-            icon={markerIcon}
-            onMouseOver={() => {
-              console.log("Mouse over event");
-            }}
-          >
-            <Popup>Your location</Popup>
-          </Marker> */}
-
           {locationList.map((item, index) => (
             <Marker
               key={item._id}
               position={item.coordinate}
               icon={markerIcon}
-              // onMouseOver={() => {
-              //   console.log("Mouse over event");
-              //   handleMouseOver(index);
-              // }}
-              // onMouseOut={handleMouseOut}
               eventHandlers={{
                 dblclick: () => handleButtonClicked(3),
               }}
