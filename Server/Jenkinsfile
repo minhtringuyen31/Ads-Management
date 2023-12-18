@@ -32,6 +32,7 @@ pipeline {
                     dir('Server') {
                         sh 'docker build -t web .'
                         sh 'docker ps -a'
+                        sh 'docker stop web'
                         sh 'docker rm web -f'
                         sh 'docker images'
                         sh 'docker run -p 80:5001 -d --name web web:latest'
