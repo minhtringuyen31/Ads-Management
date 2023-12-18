@@ -51,6 +51,9 @@ pipeline {
                 script {
                     // Thay thế lệnh dưới đây bằng lệnh triển khai thực tế của bạn
                     echo 'Deployment step...'
+                    dir('Server') {
+                        sh 'docker ps -a'
+                    }
                 }
             }
         }
