@@ -8,8 +8,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Thực hiện git pull từ nhánh feature/init-server
-                git branch: 'feature/init-server', url: 'https://github.com/minhtringuyen31/Ads-Management.git'
-                credentialsId: "web"
+                git branch: 'feature/init-server', url: 'https://github.com/minhtringuyen31/Ads-Management.git', credentialsId: "web"
                 script {
                 sh 'git log'
     }
