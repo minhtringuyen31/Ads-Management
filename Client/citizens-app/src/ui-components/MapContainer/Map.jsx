@@ -37,6 +37,7 @@ const Map = ({ setShape, openDrawer }) => {
   const [hoveredMarker, setHoveredMarker] = useState(null);
 
   const handleMouseOver = (markerIndex) => {
+    console.log("Hover: ", markerIndex);
     setHoveredMarker(markerIndex);
   };
 
@@ -79,6 +80,7 @@ const Map = ({ setShape, openDrawer }) => {
   const center = useMemo(() => ({ lat: 10.823099, lng: 106.629662 }), []);
 
   const handleButtonClicked = (value) => () => {
+    console.log("Onclick event: ", value);
     switch (value) {
       case 1:
         setShape(1);
@@ -116,25 +118,38 @@ const Map = ({ setShape, openDrawer }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
 
+          {/* <Marker
+            position={center}
+            icon={markerIcon}
+            onMouseOver={() => {
+              console.log("Mouse over event");
+            }}
+          >
+            <Popup>Your location</Popup>
+          </Marker> */}
+
           {locationList.map((item, index) => (
             <Marker
               key={item._id}
               position={item.coordinate}
               icon={markerIcon}
-              // onMouseOver={() => handleMouseOver(index)}
+              // onMouseOver={() => {
+              //   console.log("Mouse over event");
+              //   handleMouseOver(index);
+              // }}
               // onMouseOut={handleMouseOut}
-              // onClick={() => handleButtonClick(3)}
+              eventHandlers={{
+                dblclick: () => handleButtonClicked(3),
+              }}
             >
-              {/* {hoveredMarker === index && <PopupLocationInfo item={item} />} */}
-
               <Popup>
-                <Box>
+                <Box display="flex" flexDirection="column">
                   <Typography fontWeight="bold">
                     {item.ads_type.label}
                   </Typography>
                   <Typography>{item.location_type.label}</Typography>
                   <Typography>
-                    {item.address}, {item.ward.label}
+                    {item.address}, {item.ward.label}, {item.district.label}
                   </Typography>
                   <Typography fontWeight="bold" fontStyle="italic">
                     {item.is_planned ? " ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
