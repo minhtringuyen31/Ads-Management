@@ -3,22 +3,16 @@ pipeline {
     tools {
         nodejs 'Nodejs'
     }
-    environment {
-        GITHUB_TOKEN = credentials('111')
-    }
 
     stages {
         stage('Checkout') {
             steps {
                 // Thực hiện git pull từ nhánh feature/init-server
+                git branch: 'feature/init-server', url: 'https://github.com/minhtringuyen31/Ads-Management.git'
+                credentialsId: "web"
                 script {
-                    checkout([$class: 'GitSCM',
-                            branches: [[name: 'feature/init-server']],
-                            doGenerateSubmoduleConfigurations: false,
-                            extensions: [[$class: 'CleanCheckout']],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[url: 'https://github.com/minhtringuyen31/Ads-Management.git']]])
-                }
+                sh 'git log'
+    }
             }
         }
 
