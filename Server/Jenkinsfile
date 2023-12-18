@@ -37,7 +37,7 @@ pipeline {
                         sh 'docker rm -f web .'
                         sh 'docker run -p 80:5001 -d --name web web:latest'
                         sh 'docker ps -a'
-                        sh 'docker logs web'
+                        sh 'docker logs cicd'
                     }
                 }
             }
