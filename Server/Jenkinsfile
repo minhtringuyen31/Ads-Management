@@ -11,7 +11,7 @@ pipeline {
                 git branch: 'feature/init-server', url: 'https://github.com/minhtringuyen31/Ads-Management.git', credentialsId: "web"
                 script {
                 sh 'git log'
-    }
+                }
             }
         }
 
@@ -35,7 +35,7 @@ pipeline {
                     dir('Server') {
                         sh 'docker build -t web .'
                         sh 'docker rm -f web .'
-                        sh 'docker run -p 80:5001 -d --name web web .'
+                        sh 'docker run -p 80:5001 -d --name web web:latest'
                     }
                 }
             }
