@@ -32,10 +32,10 @@ pipeline {
                     dir('Server') {
                         sh 'docker build -t web .'
                         sh 'docker rm -f web .'
-                        sh 'docker run -p 80:5001 -d --name web web:latest'
                         sh 'docker ps -a'
                         sh 'docker images'
-                        sh 'docker logs cicd'
+                        sh 'docker run -p 80:5001 -d --name web web:latest'
+                        sh 'docker logs web'
                     }
                 }
             }
