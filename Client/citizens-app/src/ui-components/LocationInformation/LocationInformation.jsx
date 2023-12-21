@@ -1,8 +1,9 @@
 import { Box, Typography, Button, Divider } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PropTypes from "prop-types";
 
-const LocationInformation = () => (
+const LocationInformation = ({ content }) => (
   <Box
     position="relative"
     display="flex"
@@ -16,7 +17,7 @@ const LocationInformation = () => (
       height="225px"
     ></img>
     <Box margin="10px">
-      <Typography variant="h6">Tòa nhà Bitexco</Typography>
+      <Typography variant="h6">{content.name}</Typography>
       <Divider />
       <Box display="flex" alignItems="center" marginTop="5px">
         <LocationOnIcon />
@@ -25,7 +26,7 @@ const LocationInformation = () => (
             fontSize: "12px",
           }}
         >
-          Bến Nghé, Quận 1, Thành phố Hồ Chí Minh
+          {content.display_name}
         </Typography>
       </Box>
     </Box>
@@ -52,3 +53,7 @@ const LocationInformation = () => (
 );
 
 export default LocationInformation;
+
+LocationInformation.propTypes = {
+  content: PropTypes.object.isRequired,
+};
