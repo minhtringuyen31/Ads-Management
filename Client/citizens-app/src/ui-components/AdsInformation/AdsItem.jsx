@@ -2,6 +2,7 @@ import { Box, Typography, Button, Modal } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
 import { useState } from "react";
 import ReportForm from "../Report/ReportForm";
+import PropTypes from "prop-types";
 
 const boxStyle = {
   margin: "10px",
@@ -22,9 +23,7 @@ const style = {
   borderRadius: 10,
 };
 
-const imageUrl =
-  "https://tourscanner.com/blog/wp-content/uploads/2022/06/fun-things-to-do-in-Ho-Chi-Minh-City-Vietnam.jpg";
-const AdsItem = () => {
+const AdsItem = ({ item }) => {
   // const [currentItemId, setCurrentItemId] = useState();
   const [adsDetailModalOpen, setAdsDetailModalOpen] = useState(false);
   const [reportModelOpen, setReportModalOpen] = useState(false);
@@ -54,18 +53,18 @@ const AdsItem = () => {
       <Box margin="10px" padding="25px" borderRadius="20px" style={boxStyle}>
         <Box>
           <Typography fontSize="18px" fontWeight="bold">
-            Trụ, cụm pano
+            {item.adsboard_type.label}
           </Typography>
         </Box>
         <Box marginY="5px">
           <Typography fontSize="16px" color="#70757a">
-            Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé,
-            Quận 1
+            {item.location.address}, {item.location.ward.label},{" "}
+            {item.location.district.label}
           </Typography>
         </Box>
         <Box marginY="5px">
           <Typography style={{ marginRight: "8px" }}>
-            Kích thước: 2.5m x 1.2m
+            Kích thước: {item.width}m x {item.height}m
           </Typography>
           <Box display="flex" flexDirection="row">
             <Typography style={{ marginRight: "8px" }}>Số lượng:</Typography>
@@ -73,12 +72,14 @@ const AdsItem = () => {
           </Box>
           <Box display="flex" flexDirection="row">
             <Typography style={{ marginRight: "8px" }}>Hình thức: </Typography>
-            <Typography fontWeight="bold">Cổ động chính trị</Typography>
+            <Typography fontWeight="bold">
+              {item.location.ads_type.label}
+            </Typography>
           </Box>
           <Box display="flex" flexDirection="row">
             <Typography style={{ marginRight: "8px" }}>Phân loại:</Typography>
             <Typography fontWeight="bold" display="inline">
-              Đất công/Công viên/Hành lang an toàn giao thông
+              {item.location.location_type.label}
             </Typography>
           </Box>
         </Box>
@@ -134,8 +135,8 @@ const AdsItem = () => {
         >
           <Box width="50%">
             <img
-              srcSet={`${imageUrl}?w=20&h=20&fit=crop&auto=format&dpr=2 2x`}
-              src={`${imageUrl}?w=20&h=20&fit=crop&auto=format`}
+              srcSet={`${item.image[0]}?w=20&h=20&fit=crop&auto=format&dpr=2 2x`}
+              src={`${item.image[0]}?w=20&h=20&fit=crop&auto=format`}
               alt="ads-detail-image"
               loading="lazy"
               style={{
@@ -156,18 +157,18 @@ const AdsItem = () => {
           >
             <Box>
               <Typography fontSize="18px" fontWeight="bold">
-                Trụ, cụm pano
+                {item.adsboard_type.label}
               </Typography>
             </Box>
             <Box marginY="5px">
               <Typography fontSize="16px" color="#70757a">
-                Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé,
-                Quận 1
+                {item.location.address}, {item.location.ward.label},{" "}
+                {item.location.district.label}
               </Typography>
             </Box>
             <Box marginY="5px">
               <Typography style={{ marginRight: "8px" }}>
-                Kích thước: 2.5m x 1.2m
+                Kích thước: {item.width}m x {item.height}m
               </Typography>
               <Box display="flex" flexDirection="row">
                 <Typography style={{ marginRight: "8px" }}>
@@ -179,14 +180,17 @@ const AdsItem = () => {
                 <Typography style={{ marginRight: "8px" }}>
                   Hình thức:{" "}
                 </Typography>
-                <Typography fontWeight="bold">Cổ động chính trị</Typography>
+                <Typography fontWeight="bold">
+                  {" "}
+                  {item.location.ads_type.label}
+                </Typography>
               </Box>
               <Box display="flex" flexDirection="row" flexWrap="wrap">
                 <Typography style={{ marginRight: "8px" }}>
                   Phân loại:
                 </Typography>
                 <Typography fontWeight="bold" display="inline">
-                  Đất công/Công viên/Hành lang an toàn giao thông
+                  {item.location.location_type.label}
                 </Typography>
               </Box>
 
@@ -195,7 +199,7 @@ const AdsItem = () => {
                   Thời hạn hợp đồng:
                 </Typography>
                 <Typography fontWeight="bold" display="inline">
-                  01/01/2023 - 01/01/2025
+                  {item.contract_start_date} - {item.contract_end_date}
                 </Typography>
               </Box>
 
@@ -242,11 +246,11 @@ const AdsItem = () => {
         >
           <Box display="flex" flexDirection="column" alignItems="center">
             <Typography fontSize={20} fontWeight="bold" color="#475569">
-              Trụ, cụm pano
+              {item.adsboard_type.label}
             </Typography>
             <Typography fontSize={12} color="#70757a">
-              Đồng Khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé,
-              Quận 1
+              {item.location.address}, {item.location.ward.label},{" "}
+              {item.location.district.label}
             </Typography>
           </Box>
           <Box>
@@ -259,3 +263,7 @@ const AdsItem = () => {
 };
 
 export default AdsItem;
+
+AdsItem.propTypes = {
+  item: PropTypes.object.isRequired,
+};

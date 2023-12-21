@@ -1,8 +1,31 @@
 import { List, Box, Typography } from "@mui/material";
 import AdsItem from "./AdsItem";
-import { items } from "../../mockData";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import axiosClient from "../../axiosConfig/axiosClient";
 
-const AdsList = () => {
+const AdsList = ({ content }) => {
+  const [adsList, setAdsList] = useState([]);
+  // const [locationInfo, setLocationInfo] = useState({});
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axiosClient.get(
+          `location/${content.locationId}`
+        );
+        if (response.status == 200) {
+          console.log("LocationDetail: ", response.data);
+          // setLocationInfo(response.data.data);
+          setAdsList(response.data.data.adsboards);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <Box height="100%" display="flex" flexDirection="column">
       <Box
@@ -12,13 +35,13 @@ const AdsList = () => {
         margin="15px 15px 0px 15px"
       >
         <Typography color="#70757a" fontSize="14px">
-          3 bảng quảng cáo
+          {adsList.length} bảng quảng cáo
         </Typography>
       </Box>
       <Box bgcolor="white" height="100%">
         <List>
-          {items.map((item) => (
-            <AdsItem key={item.id} item={item} />
+          {adsList.map((item) => (
+            <AdsItem key={item._id} item={item} />
           ))}
         </List>
       </Box>
@@ -27,3 +50,7 @@ const AdsList = () => {
 };
 
 export default AdsList;
+
+AdsList.propTypes = {
+  content: PropTypes.object.isRequired,
+};
