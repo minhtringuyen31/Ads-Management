@@ -36,6 +36,11 @@ const ReportService = {
             },
           },
         })
+        .populate({
+          path: "operation.userId",
+          model: "User", // Replace with the actual name of the User model
+          select: "-password",
+        })
         .exec();
   
       return reports;
