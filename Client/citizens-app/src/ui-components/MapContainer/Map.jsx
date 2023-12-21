@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -11,28 +10,41 @@ import axiosClient from "../../axiosConfig/axiosClient";
 
 // dotenv.config();
 
-const PopupLocationInfo = (info) => {
-  return (
-    <Popup>
-      <Box>
-        {console.log(info)}
-        <Typography fontWeight="bold"></Typography>
-        <Typography>
-          Đất công/ Công viên/ Hành lang an toàn giao thông
-        </Typography>
-        <Typography>
-          Đồng khởi - Nguyễn Du (Sở Văn hóa và Thể thao), Phường Bến Nghé, Quận
-          1
-        </Typography>
-        <Typography fontWeight="bold" fontStyle="italic">
-          ĐÃ QUY HOẠCH
-        </Typography>
-      </Box>
-    </Popup>
+const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
+  const [position, setPosition] = useState(null);
+  const map = useMapEvents({
+    click: (e) => {
+      console.log(e.latlng);
+      setPosition(e.latlng);
+      map.flyTo(e.latlng, map.getZoom(16));
+      handleMapClick(e);
+    },
+  });
+
+  const handleMapClick = async (e) => {
+    const { lat, lng } = e.latlng;
+    const address = await reverseGeocode(lat, lng);
+    setLocationInfo(address);
+    handleButtonClicked(1);
+    console.log("here");
+  };
+
+  const reverseGeocode = async (lat, lng) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
+    );
+    const data = await response.json();
+    return data;
+  };
+
+  return position === null ? null : (
+    <Marker position={position}>
+      <Popup>You are here</Popup>
+    </Marker>
   );
 };
 
-const Map = ({ setShape, openDrawer }) => {
+const Map = ({ setShape, openDrawer, setDrawerContent }) => {
   const [locationList, setLocationList] = useState([]);
 
   useEffect(() => {
@@ -101,38 +113,41 @@ const Map = ({ setShape, openDrawer }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-
-          {locationList.map((item, index) => (
+          {locationList.map((location) => (
             <Marker
-              key={item._id}
-              position={item.coordinate}
+              position={location.coordinate}
+              key={location._id}
               icon={markerIcon}
-              eventHandlers={{
-                dblclick: () => handleButtonClicked(3),
-              }}
             >
               <Popup>
-                <Box display="flex" flexDirection="column">
-                  <Typography fontWeight="bold">
-                    {item.ads_type.label}
-                  </Typography>
-                  <Typography>{item.location_type.label}</Typography>
-                  <Typography>
-                    {item.address}, {item.ward.label}, {item.district.label}
-                  </Typography>
-                  <Typography fontWeight="bold" fontStyle="italic">
-                    {item.is_planned ? " ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
-                  </Typography>
-                </Box>
+                <Typography fontWeight="bold">
+                  {location.ads_type.label}
+                </Typography>
+                <Typography>{location.location_type.label}</Typography>
+                <Typography>
+                  {location.address}, {location.ward.label},{" "}
+                  {location.district.label}
+                </Typography>
+
+                <Typography fontWeight="bold" fontStyle="italic">
+                  {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
+                </Typography>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleButtonClicked(3)}
+                >
+                  Chi tiết
+                </Button>
               </Popup>
             </Marker>
           ))}
+          <LocationMarker
+            setLocationInfo={setDrawerContent}
+            handleButtonClicked={handleButtonClicked}
+          />
         </MapContainer>
-
-        {/* {todoList.map((todo) => (
-          <Todo key={todo._id} todo={todo} />
-        ))} */}
       </Box>
+
       <Box
         display="flex"
         justifyContent="end"
@@ -141,16 +156,16 @@ const Map = ({ setShape, openDrawer }) => {
         // width="100vw"
         // height="100vh"
         bgcolor="#e2e8f0"
-        position="absolute"
+        position={"absolute"}
         right={2}
       >
-        <Button variant="outlined" onClick={handleButtonClicked(1)}>
+        <Button variant="outlined" onClick={() => handleButtonClicked(1)}>
           Location
         </Button>
-        <Button variant="contained" onClick={handleButtonClicked(2)}>
+        <Button variant="contained" onClick={() => handleButtonClicked(2)}>
           Report
         </Button>
-        <Button variant="outlined" onClick={handleButtonClicked(3)}>
+        <Button variant="outlined" onClick={() => handleButtonClicked(3)}>
           Ads Panel
         </Button>
       </Box>
@@ -163,4 +178,10 @@ export default Map;
 Map.propTypes = {
   setShape: PropTypes.func.isRequired,
   openDrawer: PropTypes.func.isRequired,
+  setDrawerContent: PropTypes.func.isRequired,
+};
+
+LocationMarker.propTypes = {
+  setLocationInfo: PropTypes.func.isRequired,
+  handleButtonClicked: PropTypes.func.isRequired,
 };
