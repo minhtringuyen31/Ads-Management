@@ -1,6 +1,6 @@
-const authorize = (requiredRole) => {
+const authorize = (allowedRoles) => {
   return (req, res, next) => {
-    const userRole = req.user?.role;
+    const userRole = req.user?.userRole;
 
     if (allowedRoles.includes(userRole)) {
       next();

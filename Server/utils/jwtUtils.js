@@ -4,16 +4,33 @@ import dotenv from "dotenv";
 dotenv.config();
 const secretKey = process.env.SECRET_KEY;
 
-const userPayload = {
-    userId: '123',
-    username: 'exampleUser',
-    role: 'admin',
-  };
 
-export const generateAccessToken = (userId, username, role) => {
-  return jwt.sign({ userId, username, role }, secretKey, { expiresIn: '15m' });
+export const generateAccessToken = (userId, fullname, userRole) => {
+  return jwt.sign({ userId, fullname, userRole }, secretKey, { expiresIn: '15m' });
 };
 
-export const generateRefreshToken = () => {
-  return jwt.sign({ userId, username, role }, secretKey, { expiresIn: '7d' });
+export const generateRefreshToken = (userId, fullname, userRole) => {
+  const expiresIn = '7d'; 
+
+  const payload = {
+    userId,
+    fullname,
+    userRole,
+  };
+
+  const refreshToken = jwt.sign(payload, secretKey, { expiresIn });
+
+  const decodedToken = jwt.decode(token);
+  const expireDate = new Date(decodedToken.exp * 1000);
+
+  return { refreshToken, expireDate };
+};
+
+export const verifyToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    return decoded;
+  } catch (err) {
+    throw err;
+  }
 };
