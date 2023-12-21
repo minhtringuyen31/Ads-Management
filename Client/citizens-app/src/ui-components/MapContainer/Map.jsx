@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axiosClient from "../../axiosConfig/axiosClient";
-
+import { useMapEvents } from "react-leaflet";
 // import dotenv from "dotenv";
 
 // dotenv.config();
@@ -75,7 +75,7 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
   });
   const center = useMemo(() => ({ lat: 10.823099, lng: 106.629662 }), []);
 
-  const handleButtonClicked = (value) => () => {
+  const handleButtonClicked = (value) => {
     console.log("Onclick event: ", value);
     switch (value) {
       case 1:
