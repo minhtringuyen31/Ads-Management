@@ -43,7 +43,7 @@ app.use(editRequestRoute);
 app.use(authorizeRequestRoute);
 app.use(authRoute);
 app.use('/', (req, res) => {
-    res.send('API from Backend hehe :) ');
+    res.send('API from Backend hihi :) ');
 });
 app.use(notFound);
 app.use(errorHandler);
