@@ -46,9 +46,9 @@ const AuthController = {
       }
 
       try {
-        const user = await verifyToken(refreshToken, secretKey);
-  
-        if (user.userId === storedRefreshToken.userId) {
+        const user = await verifyToken(refreshToken);
+        
+        if (user.userId.toString() === storedRefreshToken.userId.toString()) {
           const accessToken = generateAccessToken(user.userId, user.fullname, user.userRole);
           const { refreshToken, expireDate } = generateRefreshToken(user.userId, user.fullname, user.userRole);
           RefreshTokenService.create({
@@ -65,6 +65,7 @@ const AuthController = {
           return res.status(401).json({ message: "Unauthorized" });
         }
       } catch (error) {
+        console.log(error)
         return res.status(403).json({ message: "Forbidden" });
       }
     } catch (error) {

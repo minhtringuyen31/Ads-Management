@@ -20,7 +20,7 @@ export const generateRefreshToken = (userId, fullname, userRole) => {
 
   const refreshToken = jwt.sign(payload, secretKey, { expiresIn });
 
-  const decodedToken = jwt.decode(token);
+  const decodedToken = jwt.decode(refreshToken);
   const expireDate = new Date(decodedToken.exp * 1000);
 
   return { refreshToken, expireDate };

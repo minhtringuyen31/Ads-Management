@@ -46,8 +46,15 @@ const ReportSchema = new Schema(
       required: true,
     },
     operation: {
-      type: String,
-      require: false,
+      userId: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: "User",
+      },
+      content: {
+        type: String,
+        required: false,
+      },
     },
   },
 
