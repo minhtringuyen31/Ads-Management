@@ -41,14 +41,27 @@ const ReportForm = () => {
     fileInputRef.current.click();
   };
 
-  const handleSubmitReportForm = (values) => {
-    const postBody = {
-      fullname: values.fullname,
-      email: values.email,
-      phoneNumber: values.phoneNumber,
-      reportType: values.reportType,
-      content: values.content,
-    };
+  const handleSubmitReportForm = (values, type, agent) => {
+    const postBody =
+      type === "location"
+        ? {
+            username: values.fullname,
+            email: values.email,
+            phone_number: values.phoneNumber,
+            report_form: values.reportType,
+            report_content: values.content,
+            type: type,
+            location: agent,
+          }
+        : {
+            username: values.fullname,
+            email: values.email,
+            phone_number: values.phoneNumber,
+            report_form: values.reportType,
+            report_content: values.content,
+            type: type,
+            board: agent,
+          };
 
     console.log("Report Form: ", postBody);
   };

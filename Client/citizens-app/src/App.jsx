@@ -20,6 +20,7 @@ function App() {
   const closeDrawer = () => {
     setDrawerOpen(false);
   };
+
   return (
     <Box>
       <Map

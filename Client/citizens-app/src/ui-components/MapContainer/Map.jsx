@@ -16,13 +16,14 @@ const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
     click: (e) => {
       console.log(e.latlng);
       setPosition(e.latlng);
-      map.flyTo(e.latlng, map.getZoom(16));
+      map.flyTo(e.latlng, map.getZoom() + 1);
       handleMapClick(e);
     },
   });
 
   const handleMapClick = async (e) => {
     const { lat, lng } = e.latlng;
+    console.log("Reverse Geocoding");
     const address = await reverseGeocode(lat, lng);
     setLocationInfo(address);
     handleButtonClicked(1);

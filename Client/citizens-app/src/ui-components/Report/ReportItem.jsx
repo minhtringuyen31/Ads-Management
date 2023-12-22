@@ -7,6 +7,7 @@ import {
   ImageList,
   ImageListItem,
 } from "@mui/material";
+import { useEffect } from "react";
 
 const imageList = [
   {

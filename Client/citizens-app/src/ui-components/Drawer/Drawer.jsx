@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { SwipeableDrawer } from "@mui/material";
 import LocationInformation from "../LocationInformation/LocationInformation";
 import AdsList from "../AdsInformation/AdsList";

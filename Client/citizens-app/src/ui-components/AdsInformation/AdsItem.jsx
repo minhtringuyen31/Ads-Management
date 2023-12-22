@@ -227,8 +227,6 @@ const AdsItem = ({ item }) => {
         </Box>
       </Modal>
 
-      {/* <ReportModal isOpen={reportModelOpen} /> */}
-
       <Modal
         open={reportModelOpen}
         onClose={handleCloseModal}
