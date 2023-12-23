@@ -8,7 +8,7 @@ const AuthController = {
   login: async(req, res, next) => {
     const { loginCredential, password, userRole } = req.body;
 
-    const user = await User.findOne({
+    let user = await User.findOne({
       $or: [
         { username: loginCredential },
         { email: loginCredential },
@@ -17,10 +17,11 @@ const AuthController = {
       password: password,
       userRole: userRole
     });
+
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    console.log("User: ", user);
+    
     
     const accessToken = generateAccessToken(user._id, user.fullname, user.userRole);
     const { refreshToken, expireDate } = generateRefreshToken(user._id, user.fullname, user.userRole);
@@ -30,7 +31,9 @@ const AuthController = {
       userId: user._id,
       expireDate: expireDate,
     });
-    res.json({ accessToken, refreshToken });
+    
+    user.password = undefined;
+    res.json({ user, accessToken, refreshToken });
   },
   refresh: async (req, res) => {
     const { refreshToken } = req.body;

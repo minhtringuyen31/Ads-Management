@@ -46,7 +46,7 @@ const ReportSchema = new Schema(
       required: true,
     },
     operation: {
-      userId: {
+      user: {
         type: Schema.Types.ObjectId,
         required: false,
         ref: "User",
