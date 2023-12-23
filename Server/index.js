@@ -31,7 +31,7 @@ const initializeExpress = (app) => {
     app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    app.use(morgan('combined', { stream: logger.stream }));
+    // app.use(morgan('combined', { stream: logger.stream }));
 };
 
 initializeExpress(app);
