@@ -9,9 +9,9 @@ pipeline {
             steps {
                 // Thực hiện git pull từ nhánh feature/init-server
                 git branch: 'feature/init-server', url: 'https://github.com/minhtringuyen31/Ads-Management.git', credentialsId: "web"
-            }
         }
 
+            }
         stage('Install Dependencies') {
             steps {
                 // Bước này để cài đặt các dependencies của Node.js
@@ -38,6 +38,7 @@ pipeline {
                         sh 'docker run -p 80:5001 -d --name web web:latest'
                         sh 'docker ps -a'
                         sh 'docker logs web'
+                        sh 'docker container logs web'
                     }
                 }
             }

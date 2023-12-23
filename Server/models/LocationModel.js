@@ -12,6 +12,9 @@ const LocationSchema = new Schema({
             required: true,
         },
     },
+    display_name: {
+        type: String,
+    },
     address: {
         type: String,
         required: true,

@@ -2,11 +2,23 @@ import { AuthorizeRequest } from "../models/AuthorizeRequestModel.js";
 
 const AuthorizeRequestService = {
   async getAll(filter, projection) {
-      return await AuthorizeRequest.find(filter).select(projection);
+    return await AuthorizeRequest.find(filter).select(projection)
+      .populate({
+        path: "new_ads_board.location", // Đường dẫn đến location trong new_ads_board
+        model: "Location", // Thay thế bằng tên thực tế của mô hình Location
+        select: "-__v"
+      })
+      .populate({
+        path: "new_ads_board.adsboard_type", // Đường dẫn đến adsboard_type trong new_ads_board
+        model: "Type", // Thay thế bằng tên thực tế của mô hình Type
+        select: "label -__v"
+      }).populate({
+        path: "new_ads_board.adsboard_type", // Đường dẫn đến adsboard_type trong new_ads_board
+        model: "Type", // Thay thế bằng tên thực tế của mô hình Type
+        select: "label -__t"
+      })
+      .exec();
   },
-  // async getAll() {
-  //   return await AuthorizeRequest.find();
-  // },
 
   async getById(id) {
     return await AuthorizeRequest.findById(id);

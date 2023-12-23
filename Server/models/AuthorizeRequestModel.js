@@ -3,14 +3,12 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const AuthorizeRequestSchema = new Schema(
   {
-    locationId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "Location",
-    },
-    newInformation: {
-      type: Object,
-      required: true,
+    new_ads_board: {
+      adsboard: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "AdsBoard",
+      },
     },
     status: {
       type: String,
@@ -18,6 +16,7 @@ const AuthorizeRequestSchema = new Schema(
       default: "pending",
       required: true,
     },
+
   },
 
   {
