@@ -7,7 +7,7 @@ const ReportController = {
     try {
       const filter = req.body;
       const lists = await ReportService.getAll(filter);
-      
+
       if (!lists) {
         return next(createError.BadRequest(ModelName + " list not found"));
       }
@@ -20,11 +20,11 @@ const ReportController = {
       //     // If the report type is board and there is a board and a location_id, add the coordinate property
       //     return { ...report.toObject(), coordinate: report.board.location_id.coordinate };
       //   }
-  
+
       //   // If the type is neither location nor board, or if the required properties are not available, return the original report
       //   return report;
       // });
-      
+
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
@@ -38,16 +38,18 @@ const ReportController = {
   getById: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const object = await ReportService.getById(id)
+      const object = await ReportService.getById(id);
 
       if (!object) {
-        return next(createError.NotFound(ModelName + ` with id ${id} not found`));
+        return next(
+          createError.NotFound(ModelName + ` with id ${id} not found`)
+        );
       }
 
       res.json({
         message: "Get " + modelname + " successfully",
         status: 200,
-        data: object
+        data: object,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
@@ -59,10 +61,12 @@ const ReportController = {
       const reportData = req.body;
       const newReport = await ReportService.create(reportData);
 
+      req.io.emit("newReport", newReport);
+
       res.status(201).json({
         message: ModelName + " created successfully",
         status: 201,
-        data: newReport
+        data: newReport,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
@@ -76,13 +80,15 @@ const ReportController = {
       const updatedObject = await ReportService.update(id, updateData);
 
       if (!updatedObject) {
-        return next(createError.NotFound(ModelName + ` with id ${id} not found`));
+        return next(
+          createError.NotFound(ModelName + ` with id ${id} not found`)
+        );
       }
 
       res.json({
         message: ModelName + " updated successfully",
         status: 200,
-        data: updatedObject
+        data: updatedObject,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
@@ -95,18 +101,20 @@ const ReportController = {
       const deletedObject = await ReportService.delete(id);
 
       if (!deletedObject) {
-        return next(createError.NotFound(ModelName + ` with id ${id} not found`));
+        return next(
+          createError.NotFound(ModelName + ` with id ${id} not found`)
+        );
       }
 
       res.json({
         message: ModelName + " deleted successfully",
         status: 200,
-        data: deletedObject
+        data: deletedObject,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
     }
-  }
+  },
 };
 
 export default ReportController;

@@ -6,11 +6,11 @@ const secretKey = process.env.SECRET_KEY;
 
 
 export const generateAccessToken = (userId, fullname, userRole) => {
-  return jwt.sign({ userId, fullname, userRole }, secretKey, { expiresIn: '15m' });
+  return jwt.sign({ userId, fullname, userRole }, secretKey, { expiresIn: '1m' });
 };
 
 export const generateRefreshToken = (userId, fullname, userRole) => {
-  const expiresIn = '7d'; 
+  const expiresIn = '5m'; 
 
   const payload = {
     userId,
