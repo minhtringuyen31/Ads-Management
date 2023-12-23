@@ -2,7 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
-import logger from './logs/logger.js';
+import logger from './utils/logger.js';
 import { errorHandler, notFound } from './helper/errorHandler.js';
 import db from './configs/db.js';
 import locationRoute from './routes/location.route.js';

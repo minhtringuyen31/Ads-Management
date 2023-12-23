@@ -1,5 +1,5 @@
 import createError from 'http-errors';
-// import logger from '../logs/logger.js';
+import logger from '../utils/logger.js';
 const notFound = (req, res, next) => {
     next(createError.NotFound('This route does not exist'));
 
