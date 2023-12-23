@@ -14,6 +14,10 @@ const AuthorizeRequestSchema = new Schema(
       default: "pending",
       required: true,
     },
+    isDelete: {
+      type: Boolean,
+      default: 0,
+    },
 
   },
 

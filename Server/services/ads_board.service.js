@@ -32,6 +32,9 @@ const AdsBoardService = {
 
 
 
+                }).populate({
+                    path: "company",
+                    model: "Company", // Replace with the actual name of the Location model
                 })
                 .exec();
             return adsBoard;
@@ -67,8 +70,9 @@ const AdsBoardService = {
                         select: "label"
                     }],
 
-
-
+                }).populate({
+                    path: "company",
+                    model: "Company", // Replace with the actual name of the Location model
                 })
                 .exec();
             return adsBoard;
@@ -112,9 +116,9 @@ const AdsBoardService = {
                     model: "District", // Replace with the actual name of the Location model
                     select: "label"
                 }],
-
-
-
+            }).populate({
+                path: "company",
+                model: "Company", // Replace with the actual name of the Location model
             });
             return adsBoard;
         } catch (error) {
