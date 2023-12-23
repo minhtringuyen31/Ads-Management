@@ -18,7 +18,7 @@ import adsBoarTypedRoute from './routes/ads_board_type.route.js';
 import companyRoute from './routes/company_route.js';
 import userRoute from './routes/user.route.js';
 import authRoute from "./routes/auth.route.js"
-import { sendEmail } from "./utils/sendEmail.js";
+// import { sendEmail } from "./utils/sendEmail.js";
 
 dotenv.config();
 
