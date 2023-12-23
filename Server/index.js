@@ -2,7 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
-// import logger from './logs/logger.js';
+import logger from './logs/logger.js';
 import { errorHandler, notFound } from './helper/errorHandler.js';
 import db from './configs/db.js';
 import locationRoute from './routes/location.route.js';
@@ -31,7 +31,7 @@ const initializeExpress = (app) => {
     app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    // app.use(morgan('combined', { stream: logger.stream }));
+    app.use(morgan('combined', { stream: logger.stream }));
 };
 
 initializeExpress(app);
@@ -53,6 +53,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
-    console.log("Server is running on port: " + process.env.PORT);
+    console.log("Server is running on ports: " + process.env.PORT);
     console.log("http://localhost:" + process.env.PORT);
 });
