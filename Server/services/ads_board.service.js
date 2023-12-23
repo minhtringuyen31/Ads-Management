@@ -29,9 +29,6 @@ const AdsBoardService = {
                         model: "District", // Replace with the actual name of the Location model
                         select: "label"
                     }],
-
-
-
                 }).populate({
                     path: "company",
                     model: "Company", // Replace with the actual name of the Location model
