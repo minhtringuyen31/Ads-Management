@@ -13,6 +13,8 @@ import editRequestRoute from './routes/editRequest.route.js';
 import authorizeRequestRoute from './routes/authorizeRequest.route.js';
 import adsBoardRoute from './routes/ads_board.route.js';
 import adsBoarTypedRoute from './routes/ads_board_type.route.js';
+import companyRoute from './routes/company_route.js';
+import userRoute from './routes/user.route.js';
 dotenv.config();
 
 const app = express();
@@ -37,15 +39,13 @@ app.use(adsBoardRoute);
 app.use(adstypeRoute);
 app.use(locationTypeRoute);
 app.use(adsBoarTypedRoute);
-
+app.use(companyRoute);
+app.use(userRoute);
 
 
 app.use(reportRoute);
 app.use(editRequestRoute);
 app.use(authorizeRequestRoute);
-app.use('/', (req, res) => {
-    res.send('API from Backend hehe :) ');
-});
 app.use(notFound);
 app.use(errorHandler);
 

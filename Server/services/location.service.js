@@ -1,5 +1,6 @@
 import { AdsBoard } from '../models/AdsBoardModel.js';
 import { District } from '../models/DistrictModel.js';
+import { Report } from '../models/ReportModel.js';
 import { Location } from '../models/LocationModel.js'
 import mongoose from "mongoose";
 import { Ward } from '../models/WardModel.js';
@@ -144,9 +145,9 @@ const LocationService = {
             // };
 
             // // Sử dụng phương thức updateMany() để cập nhật
-            const result = await Ward.updateMany({}, {
-                coordinates: []
-            })
+            const result = await Report.updateMany({}, {
+                operation: {}
+            });
 
             // Add by Quang Thanh on 07.12.2023 to rename all document in collection
             // const result = await Location.updateMany({}, { $rename: { "location_type_id": "location_type" } });
