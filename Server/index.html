@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+      }
+      #container {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 50vw;
+        height: 50vh;
+        background-color: aquamarine;
+        padding-bottom: 0.67em;
+        border-radius: 10px;
+      }
+      #messages {
+        list-style: none;
+        margin-block: 0;
+        padding-inline: 0;
+        padding: 5rem 0;
+        overflow-y: auto;
+        width: 70%;
+        height: 40em;
+        background-color: white;
+        border-radius: 10px;
+      }
+      #messages li {
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 15px;
+      }
+      #chat-form {
+        padding: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Chat App</h1>
+      <ul id="messages"></ul>
+      <div>
+        <form action="" id="chat-form">
+          <input type="text" id="chat-msg" />
+          <button id="send-chat">Send</button>
+        </form>
+      </div>
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io("http://localhost:5001");
+    const name = prompt("Enter name, please!");
+    const chatForm = document.querySelector("#chat-form");
+    const chatMsg = document.querySelector("#chat-msg");
+    const messages = document.querySelector("#messages");
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const message = chatMsg.value;
+      socket.emit("on-chat", { name, message });
+      chatMsg.value = "";
+    });
+    socket.on("newReport", (message) => {
+      console.log(message);
+      const chatItem = document.createElement("li");
+      chatItem.textContent = `${message.name}: ${message.message}`;
+      messages.appendChild(chatItem);
+    });
+  </script>
+</html>

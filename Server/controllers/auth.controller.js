@@ -6,16 +6,13 @@ import { User } from "../models/UserModel.js";
 
 const AuthController = {
   login: async(req, res, next) => {
-    const { loginCredential, password, userRole } = req.body;
-
+    const { loginCredential, password } = req.body;
     let user = await User.findOne({
       $or: [
-        { username: loginCredential },
         { email: loginCredential },
         { phone: loginCredential }
       ],
       password: password,
-      userRole: userRole
     });
 
     if (!user) {
