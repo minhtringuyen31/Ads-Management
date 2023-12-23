@@ -4,11 +4,9 @@ const Schema = mongoose.Schema;
 const AuthorizeRequestSchema = new Schema(
   {
     new_ads_board: {
-      adsboard: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: "AdsBoard",
-      },
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "AdsBoard",
     },
     status: {
       type: String,

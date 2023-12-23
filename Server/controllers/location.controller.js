@@ -4,7 +4,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { fromJson } from "../helper/dto.js";
 import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
-
+import { v2 as cloudinary } from 'cloudinary';
 dotenv.config();
 
 const LocationController = {
@@ -55,16 +55,35 @@ const LocationController = {
         try {
 
             const data = req.body
+            const files = req.files;
+            if (files) {
+                data.image = files.map(file => file.path);
+            }
             const location = await LocationService.create(data);
             if (!location) {
                 return next(createError.BadRequest("Location not found"))
             }
-            res.json({
-                message: "Create location successfully",
-                status: 200,
-                data: location
-            })
+            if (location) {
+                res.json({
+                    message: "Create location successfully",
+                    status: 200,
+                    data: location
+                })
+            } else {
+                cloudinary.uploader.destroy('image', function (error, result) {
+                    console.log(result, error)
+                });
+                res.json({
+                    message: "Create location failed",
+                    status: 400,
+                    data: location
+                })
+            }
+
         } catch (error) {
+            cloudinary.uploader.destroy('image', function (error, result) {
+                console.log(result, error)
+            });
             next(createError.InternalServerError(error.message))
         }
 

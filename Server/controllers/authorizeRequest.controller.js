@@ -12,10 +12,6 @@ const AuthorizeRequestController = {
         return next(createError.BadRequest(ModelName + " list not found"));
       }
 
-      //   const users = await LocationService.getAllLocation(
-      //     filter,
-      //     "-password -refreshToken"
-      //   );
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,

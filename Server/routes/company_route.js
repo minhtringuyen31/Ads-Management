@@ -4,7 +4,7 @@ import Company from '../controllers/company.controller.js';
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/companys', Company.getAll);
+router.get('/companies', Company.getAll);
 
 router.get('/company/:id', Company.getDetail);
 

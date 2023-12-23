@@ -4,18 +4,35 @@ const AuthorizeRequestService = {
   async getAll(filter, projection) {
     return await AuthorizeRequest.find(filter).select(projection)
       .populate({
-        path: "new_ads_board.location", // Đường dẫn đến location trong new_ads_board
-        model: "Location", // Thay thế bằng tên thực tế của mô hình Location
-        select: "-__v"
-      })
-      .populate({
-        path: "new_ads_board.adsboard_type", // Đường dẫn đến adsboard_type trong new_ads_board
-        model: "Type", // Thay thế bằng tên thực tế của mô hình Type
-        select: "label -__v"
-      }).populate({
-        path: "new_ads_board.adsboard_type", // Đường dẫn đến adsboard_type trong new_ads_board
-        model: "Type", // Thay thế bằng tên thực tế của mô hình Type
-        select: "label -__t"
+        path: "new_ads_board", // Đường dẫn đến adsboard_type trong new_ads_board
+        model: "AdsBoard", // Thay thế bằng tên thực tế của mô hình Type
+        populate: [{
+          path: "location",
+          model: "Location", // Replace with the actual name of the Location model
+          populate: [{
+            path: "location_type",
+            model: "Type", // Replace with the actual name of the Location model
+            select: "label -__t"
+          }, {
+            path: "ward",
+            model: "Ward", // Replace with the actual name of the Location model
+            select: "label"
+          }, {
+            path: "ads_type",
+            model: "Type", // Replace with the actual name of the Location model
+            select: "label"
+          }, {
+            path: "district",
+            model: "District", // Replace with the actual name of the Location model
+            select: "label"
+          },
+
+          ],
+        }, {
+          path: "adsboard_type",
+          model: "Type", // Replace with the actual name of the Location model
+          select: "label -__t"
+        }],
       })
       .exec();
   },

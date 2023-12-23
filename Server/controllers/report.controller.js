@@ -7,24 +7,11 @@ const ReportController = {
     try {
       const filter = req.body;
       const lists = await ReportService.getAll(filter);
-      
+
       if (!lists) {
         return next(createError.BadRequest(ModelName + " list not found"));
       }
 
-      const reportsWithCoordinates = lists.map((report) => {
-        if (report.type === "location" && report.location) {
-          // If the report type is location and there is a location, add the coordinate property
-          return { ...report.toObject(), coordinate: report.location.coordinate };
-        } else if (report.type === "board" && report.board && report.board.location_id) {
-          // If the report type is board and there is a board and a location_id, add the coordinate property
-          return { ...report.toObject(), coordinate: report.board.location_id.coordinate };
-        }
-  
-        // If the type is neither location nor board, or if the required properties are not available, return the original report
-        return report;
-      });
-      
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
