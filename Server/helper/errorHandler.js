@@ -6,7 +6,7 @@ const notFound = (req, res, next) => {
 };
 
 const errorHandler = (error, req, res, next) => {
-    // logger.error(error.stack); // Ghi log lỗi sử dụng Winston
+    logger.error(error.stack); // Ghi log lỗi sử dụng Winston
     res.status(error.status || 500).send({ message: error.message, status: error.status || 500 });
 };
 
