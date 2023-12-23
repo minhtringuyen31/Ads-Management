@@ -2,7 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import morgan from 'morgan';
-import logger from './logs/logger.js';
+// import logger from './logs/logger.js';
 import { errorHandler, notFound } from './helper/errorHandler.js';
 import db from './configs/db.js';
 import locationRoute from './routes/location.route.js';
@@ -18,7 +18,7 @@ import adsBoarTypedRoute from './routes/ads_board_type.route.js';
 import companyRoute from './routes/company_route.js';
 import userRoute from './routes/user.route.js';
 import authRoute from "./routes/auth.route.js"
-// import { sendEmail } from "./utils/sendEmail.js";
+import { sendEmail } from "./utils/sendEmail.js";
 
 dotenv.config();
 
