@@ -11,6 +11,7 @@ const AdsList = ({ content }) => {
   useEffect(() => {
     async function fetchData() {
       try {
+        console.log("Location: ", content.locationId);
         const response = await axiosClient.get(
           `location/${content.locationId}`
         );
