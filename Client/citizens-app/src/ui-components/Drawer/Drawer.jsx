@@ -34,6 +34,7 @@ export default function Drawer({
           open={isDrawerOpen}
           onClose={closeDrawer}
           onOpen={openDrawer}
+          variant="persistent"
           BackdropProps={{
             invisible: true,
           }}
