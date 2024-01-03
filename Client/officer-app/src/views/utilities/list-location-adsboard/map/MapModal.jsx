@@ -8,7 +8,7 @@ import {
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
-import './styles.scss';
+import "../styles.scss";
 import MapView from "./MapView";
 
 const MapModal = ({ open, onClose, lat, lng }) => {

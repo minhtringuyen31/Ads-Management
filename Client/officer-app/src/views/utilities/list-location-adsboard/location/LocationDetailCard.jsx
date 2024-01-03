@@ -3,14 +3,13 @@ import { Card, CardContent, Typography } from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import "./styles.scss";
+import "../styles.scss";
 
-import { mockDataLocationAds } from "data/fakeDataLocation";
-import SlideImages from "./SlideImages";
-import MapModal from "./MapModal";
+import SlideImages from "../SlideImages";
+import MapModal from "../map/MapModal";
 
-const LocationDetailCard = ({ locationID }) => {
-
+const LocationDetailCard = ({ locationDetailData }) => {
+  // const [locationDetailData, setLocationDetailData] = useState(null);
   const [openMapModal, setOpenMapModal] = useState(false);
 
   const handleOpenMapModal = () => {
@@ -20,6 +19,13 @@ const LocationDetailCard = ({ locationID }) => {
   const handleCloseMapModal = () => {
     setOpenMapModal(false);
   };
+
+  if (!locationDetailData) {
+    return <div>Loading...</div>;
+  }
+
+  console.log("Data detail: ", locationDetailData);
+  // console.log("ID location: ", locationID);
 
   return (
     <>
@@ -32,7 +38,7 @@ const LocationDetailCard = ({ locationID }) => {
               color="text.primary"
               className="card__box__content__typo"
             >
-              {mockDataLocationAds[locationID - 1].location_type}
+              {locationDetailData.location_type.label}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -40,15 +46,15 @@ const LocationDetailCard = ({ locationID }) => {
               component="div"
               className="card__box__content__typo"
             >
-              {mockDataLocationAds[locationID - 1].coordinate.address}
+              {locationDetailData.address}, {locationDetailData.ward.label},{" "}
+              {locationDetailData.district.label}
             </Typography>
             <Typography
-              // variant="subtitle1"
               color="text.secondary"
               component="div"
               className="card__box__content__typo"
             >
-              {mockDataLocationAds[locationID - 1].ads_type}
+              {locationDetailData.ads_type.label}
             </Typography>
             <Typography
               variant="subtitle1"
@@ -56,7 +62,7 @@ const LocationDetailCard = ({ locationID }) => {
               component="div"
               className="card__box__content__typo"
             >
-              {mockDataLocationAds[locationID - 1].is_planned}
+              {locationDetailData.is_planned}
             </Typography>
             <Link
               component="button"
@@ -70,7 +76,7 @@ const LocationDetailCard = ({ locationID }) => {
           </CardContent>
         </Box>
         <SlideImages
-          images={mockDataLocationAds[locationID - 1].image}
+          images={locationDetailData.image}
           height={300}
           width={400}
         />
@@ -78,8 +84,8 @@ const LocationDetailCard = ({ locationID }) => {
       <MapModal
         open={openMapModal}
         onClose={handleCloseMapModal}
-        lat={mockDataLocationAds[locationID - 1].coordinate.lat}
-        lng={mockDataLocationAds[locationID - 1].coordinate.lng}
+        lat={locationDetailData.coordinate.lat}
+        lng={locationDetailData.coordinate.lng}
       />
     </>
   );

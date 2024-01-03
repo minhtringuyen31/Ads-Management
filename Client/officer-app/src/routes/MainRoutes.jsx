@@ -3,27 +3,42 @@ import { lazy } from "react";
 
 import MainLayout from "../layout/MainLayout/MainLayout";
 import Loadable from "ui-component/Loadable";
+// import LocationDetail from "views/utilities/LocationDetail";
 
 //utilities routing
-const UtilsCustomer = Loadable(
-  lazy(() => import("../views/utilities/LocationManagement"))
+const LocationManagement = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/LocationManagement"
+    )
+  )
+);
+const LocationDetail = Loadable(
+  lazy(() =>
+    import("../views/utilities/list-location-adsboard/location/LocationDetail")
+  )
 );
 const UtilsDriver = Loadable(
-  lazy(() => import("../views/utilities/BoardManagement"))
+  lazy(() =>
+    import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
+  )
 );
-const UtilsConsultant = Loadable(
-  lazy(() => import("../views/utilities/Consultant"))
-);
-const UtilsSalary = Loadable(lazy(() => import("../views/utilities/Salary")));
-const BussinessUnitPrice = Loadable(
-  lazy(() => import("../views/bussiness/unit-price/UnitPrice"))
-);
-const BussinessEditUnitPrice = Loadable(
-  lazy(() => import("../views/bussiness/unit-price/EditUnitPrice"))
+// const UtilsConsultant = Loadable(
+//   lazy(() => import("../views/utilities/Consultant"))
+// );
+// const UtilsSalary = Loadable(lazy(() => import("../views/utilities/Salary")));
+const LicenAdsboardList = Loadable(
+  lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
 );
 
-const BussinessRuleList = Loadable(
-  lazy(() => import("../views/bussiness/rules/RuleList"))
+// const BussinessEditUnitPrice = Loadable(
+//   lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboarItem"))
+// );
+
+const FormAddLicenAdsboard = Loadable(
+  lazy(() =>
+    import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard")
+  )
 );
 
 const BussinessVehicle = Loadable(
@@ -44,7 +59,11 @@ const MainRoutes = {
       children: [
         {
           path: "customer",
-          element: <UtilsCustomer />,
+          element: <LocationManagement />,
+        },
+        {
+          path: "customer/:locationID",
+          element: <LocationDetail />,
         },
       ],
     },
@@ -57,21 +76,12 @@ const MainRoutes = {
         },
       ],
     },
-    {
-      path: "utils",
-      children: [
-        {
-          path: "consultant",
-          element: <UtilsConsultant />,
-        },
-      ],
-    },
     // {
     //   path: "utils",
     //   children: [
     //     {
-    //       path: "salary",
-    //       element: <UtilsSalary />,
+    //       path: "consultant",
+    //       element: <UtilsConsultant />,
     //     },
     //   ],
     // },
@@ -81,16 +91,16 @@ const MainRoutes = {
       children: [
         {
           path: "unit_price",
-          element: <BussinessUnitPrice />,
+          element: <LicenAdsboardList />,
         },
         {
-          path: "unit_price/edit",
-          element: <BussinessEditUnitPrice />,
+          path: "unit_price/createForm",
+          element: <FormAddLicenAdsboard />,
         },
-        {
-          path: "rules",
-          element: <BussinessRuleList />,
-        },
+        // {
+        //   path: "rules",
+        //   element: <FormAddLicenAdsboard />,
+        // },
         {
           path: "vehicles",
           element: <BussinessVehicle />,

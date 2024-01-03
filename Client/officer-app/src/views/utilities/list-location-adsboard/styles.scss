@@ -6,6 +6,7 @@ $grey-100: #141414;
 $grey-500: #697586;
 
 .data-grid-container {
+
     .MuiDataGrid-root {
         border: none;
     }
@@ -34,6 +35,7 @@ $grey-500: #697586;
     .MuiDataGrid-footerContainer {
         border-top: none;
         background-color: $blueAccent-700;
+        
     }
 
     .MuiDataGrid-toolbarContainer .MuiButton-text {
@@ -43,8 +45,6 @@ $grey-500: #697586;
 
 //------------------------------------ MODAL ------------------------------------
 .dialog {
-   
-
     & .MuiDialogContent-root {
         padding-left: 5px;
         padding-right: 2.5px;
@@ -93,11 +93,6 @@ $grey-500: #697586;
             }
         }
     }
-    // &__contentMap {
-    //     display: flex;
-    //     justify-content: center;
-    //     align-items: center;
-    // }
 }
 
 //------------------------------------ CARD DETAIL ------------------------------------
@@ -116,6 +111,7 @@ $grey-500: #697586;
     &__box {
         display: flex;
         flex-direction: column;
+        width: 50%;
 
         &__content {
             flex: 1 0 auto;
