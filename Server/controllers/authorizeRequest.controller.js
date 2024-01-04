@@ -47,7 +47,7 @@ const AuthorizeRequestController = {
 
   create: async (req, res, next) => {
     try {
-      const reportData = req.body;
+      const reportData = { ...req.body };
 
       const files = req.files;
       if (files) {
