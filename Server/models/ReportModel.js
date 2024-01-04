@@ -55,6 +55,9 @@ const ReportSchema = new Schema(
       default: "pending",
       required: true,
     },
+    image: {
+      type: [String],
+    },
     operation: {
       user: {
         type: Schema.Types.ObjectId,

@@ -78,6 +78,12 @@ const LocationService = {
                     model: "Type", // Replace with the actual name of the Location model
                     select: "label -__t"
                 }).
+                populate(
+                    {
+                        path: "company",
+                        model: "Company", // Replace with the actual name of the Location model
+                    }
+                ).
                 populate({
                     path: "location",
                     model: "Location", // Replace with the actual name of the Location model
@@ -97,7 +103,9 @@ const LocationService = {
                         path: "district",
                         model: "District", // Replace with the actual name of the Location model
                         select: "label"
-                    }
+                    },
+                        // 
+
                     ],
                 })
                 .exec();
