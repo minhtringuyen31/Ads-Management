@@ -47,6 +47,7 @@ const AuthorizeRequestController = {
 
   create: async (req, res, next) => {
     try {
+      console.log("ủiehghjrrkvnvvểvr");
       const reportData = JSON.parse(JSON.stringify(req.body));
       console.log(reportData)
       const files = req.files;
