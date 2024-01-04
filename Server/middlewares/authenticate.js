@@ -7,6 +7,7 @@ const secretKey = process.env.SECRET_KEY;
 const authenticate = (req, res, next) => {
 
   const authorizationClient = req.headers['authorization'];
+  console.log(authorizationClient);
   const token = authorizationClient && authorizationClient.split(' ')[1]
 
   if (!token) {

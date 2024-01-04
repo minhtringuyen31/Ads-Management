@@ -56,6 +56,10 @@ const ReportSchema = new Schema(
         required: false,
       },
     },
+    // Add by Quang Thanh to support socket IO 
+    code: {
+      type: String,
+    }
   },
 
   {
