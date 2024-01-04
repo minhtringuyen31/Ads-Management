@@ -37,7 +37,7 @@ const initializeExpress = (app) => {
 
 initializeExpress(app);
 
-
+/// etst
 app.use(locationRoute);
 app.use(wardRoute);
 app.use(districtRoute);
