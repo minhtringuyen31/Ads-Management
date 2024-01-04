@@ -48,11 +48,14 @@ const AuthorizeRequestController = {
   create: async (req, res, next) => {
     try {
       const reportData = req.body;
+
       const files = req.files;
       if (files) {
-        reportData.image = files.map(file => file.path);
+        reportData.new_ads_board.image = files.map(file => file.path);
       }
+      // console.log(reportData)
       const newReport = await AuthorizeRequestService.create(reportData);
+      console.log(reportData)
       if (!newReport) {
         if (req.files) {
           req.files.forEach(file => {
