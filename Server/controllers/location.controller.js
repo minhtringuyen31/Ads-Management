@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import { fromJson } from "../helper/dto.js";
 import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
 import { v2 as cloudinary } from 'cloudinary';
+
+import { extractPublicId } from 'cloudinary-build-url'
 dotenv.config();
 
 const LocationController = {
@@ -61,40 +63,13 @@ const LocationController = {
             }
             const location = await LocationService.create(data);
             if (!location) {
-                return next(createError.BadRequest("Location not found"))
-            }
-            if (location) {
-                res.json({
-                    message: "Create location successfully",
-                    status: 200,
-                    data: location
-                })
-            } else {
-                cloudinary.uploader.destroy('image', function (error, result) {
-                    console.log(result, error)
-                });
-                res.json({
-                    message: "Create location failed",
-                    status: 400,
-                    data: location
-                })
-            }
-
-        } catch (error) {
-            cloudinary.uploader.destroy('image', function (error, result) {
-                console.log(result, error)
-            });
-            next(createError.InternalServerError(error.message))
-        }
-
-    },
-    update: async (req, res, next) => {
-        try {
-
-            const data = req.body
-            const { id } = req.params;
-            const location = await LocationService.update(id, data);
-            if (!location) {
+                if (req.files) {
+                    req.files.forEach(file => {
+                        cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                            console.log(result, error);
+                        });
+                    });
+                }
                 return next(createError.BadRequest("Location not found"))
             }
             res.json({
@@ -102,10 +77,53 @@ const LocationController = {
                 status: 200,
                 data: location
             })
+
         } catch (error) {
+            if (req.files) {
+                req.files.forEach(file => {
+                    cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                        console.log(result, error);
+                    });
+                });
+            }
             next(createError.InternalServerError(error.message))
         }
 
+    },
+    update: async (req, res, next) => {
+        try {
+            const data = req.body;
+            const { id } = req.params;
+            const files = req.files;
+            if (files) {
+                data.image = files.map(file => file.path);
+            }
+            const location = await LocationService.update(id, data);
+            if (!location) {
+                if (req.files) {
+                    req.files.forEach(file => {
+                        cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                            console.log(result, error);
+                        });
+                    });
+                }
+                return next(createError.BadRequest("Location not found"));
+            }
+            res.json({
+                message: "Update location successfully",
+                status: 200,
+                data: location
+            });
+        } catch (error) {
+            if (req.files) {
+                req.files.forEach(file => {
+                    cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                        console.log(result, error);
+                    });
+                });
+            }
+            next(createError.InternalServerError(error.message));
+        }
     },
     getDetail: async (req, res, next) => {
         try {

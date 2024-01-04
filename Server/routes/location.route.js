@@ -19,7 +19,7 @@ router.get('/location/:id', LocationController.getDetail);
 router.post('/location', uploadCloud.array('image'), LocationController.create);
 
 // Cập nhật một Location bằng ID
-router.put('/location/:id', LocationController.update);
+router.put('/location/:id', uploadCloud.array('image'), LocationController.update);
 
 // Xóa một Location bằng ID
 router.delete('/location/:id', LocationController.delete);

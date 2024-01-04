@@ -2,6 +2,11 @@ import createError from "http-errors";
 import ReportService from "../services/report.service.js";
 const ModelName = "Report";
 const modelname = "report";
+import { fromJson } from "../helper/dto.js";
+import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
+import { v2 as cloudinary } from 'cloudinary';
+
+import { extractPublicId } from 'cloudinary-build-url'
 const ReportController = {
   getAll: async (req, res, next) => {
     try {
@@ -46,16 +51,42 @@ const ReportController = {
   create: async (req, res, next) => {
     try {
       const reportData = req.body;
+      const files = req.files;
+      if (files) {
+        reportData.image = files.map(file => file.path);
+      }
       const newReport = await ReportService.create(reportData);
+      if (newReport) {
+        res.status(201).json({
+          message: ModelName + " created successfully",
+          status: 201,
+          data: newReport,
+        });
+      } else {
+        if (files) {
+          files.forEach(async file => {
+            await cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+              console.log(result, error);
+            });
+          });
+        }
+        res.json({
+          message: "Create location failed",
+          status: 400,
+          data: newReport
+        })
+      }
 
-      req.io.emit("newReport", newReport);
 
-      res.status(201).json({
-        message: ModelName + " created successfully",
-        status: 201,
-        data: newReport,
-      });
+
     } catch (error) {
+      if (req.files) {
+        req.files.forEach(async file => {
+          await cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+            console.log(result, error);
+          });
+        });
+      }
       next(createError.InternalServerError(error.message));
     }
   },
@@ -64,20 +95,41 @@ const ReportController = {
     try {
       const { id } = req.params;
       const updateData = req.body;
+      const files = req.files;
+      if (files) {
+        updateData.image = files.map(file => file.path);
+      }
       const updatedObject = await ReportService.update(id, updateData);
 
       if (!updatedObject) {
+        if (req.files) {
+          req.files.forEach(file => {
+            cloudinary.uploader.destroy(file.path, function (error, result) {
+              console.log(result, error);
+            });
+          });
+        }
         return next(
           createError.NotFound(ModelName + ` with id ${id} not found`)
         );
       }
+      else {
 
-      res.json({
-        message: ModelName + " updated successfully",
-        status: 200,
-        data: updatedObject,
-      });
+        res.json({
+          message: ModelName + " updated successfully",
+          status: 200,
+          data: updatedObject,
+        });
+      }
+
     } catch (error) {
+      if (req.files) {
+        req.files.forEach(file => {
+          cloudinary.uploader.destroy(file.path, function (error, result) {
+            console.log(result, error);
+          });
+        });
+      }
       next(createError.InternalServerError(error.message));
     }
   },

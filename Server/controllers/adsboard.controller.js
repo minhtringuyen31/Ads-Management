@@ -1,5 +1,6 @@
 import createError from "http-errors";
 import AdsBoardService from "../services/ads_board.service.js";
+import { extractPublicId } from 'cloudinary-build-url'
 const AdsBoardController = {
     getAll: async (req, res, next) => {
         try {
@@ -39,8 +40,20 @@ const AdsBoardController = {
         try {
 
             const data = req.body
+
+            const files = req.files;
+            if (files) {
+                data.image = files.map(file => file.path);
+            }
             const location = await AdsBoardService.create(data);
             if (!location) {
+                if (req.files) {
+                    req.files.forEach(file => {
+                        cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                            console.log(result, error);
+                        });
+                    });
+                }
                 return next(createError.BadRequest("AdsBoard not found"))
             }
             res.json({
@@ -49,6 +62,13 @@ const AdsBoardController = {
                 data: location
             })
         } catch (error) {
+            if (req.files) {
+                req.files.forEach(file => {
+                    cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                        console.log(result, error);
+                    });
+                });
+            }
             next(createError.InternalServerError(error.message))
         }
 
@@ -58,8 +78,19 @@ const AdsBoardController = {
 
             const data = req.body
             const { id } = req.params;
+            const files = req.files;
+            if (files) {
+                data.image = files.map(file => file.path);
+            }
             const location = await AdsBoardService.update(id, data);
             if (!location) {
+                if (req.files) {
+                    req.files.forEach(file => {
+                        cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                            console.log(result, error);
+                        });
+                    });
+                }
                 return next(createError.BadRequest("AdsBoard not found"))
             }
             res.json({
@@ -68,6 +99,13 @@ const AdsBoardController = {
                 data: location
             })
         } catch (error) {
+            if (req.files) {
+                req.files.forEach(file => {
+                    cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                        console.log(result, error);
+                    });
+                });
+            }
             next(createError.InternalServerError(error.message))
         }
 

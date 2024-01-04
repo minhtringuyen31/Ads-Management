@@ -21,7 +21,6 @@ const AdsBoardTypeController = {
 
     create: async (req, res, next) => {
         try {
-
             const data = req.body
             const location = await AdsBoardType.create(data);
             if (!location) {
