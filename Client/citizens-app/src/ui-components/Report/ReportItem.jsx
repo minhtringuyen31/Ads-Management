@@ -6,6 +6,7 @@ import {
   Button,
   ImageList,
   ImageListItem,
+  IconButton,
 } from "@mui/material";
 import { useEffect } from "react";
 
@@ -42,6 +43,9 @@ const ReportItem = () => {
         justifyContent="space-between"
       >
         <Box display="flex" flexDirection="column">
+        {/* <IconButton aria-label="delete" size="small">
+  <DeleteIcon fontSize="inherit" />
+</IconButton> */}
           <Typography fontSize="16px" fontWeight="bold">
             Trại Heo Ala
           </Typography>

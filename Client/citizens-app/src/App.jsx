@@ -5,21 +5,30 @@ import Drawer from "./ui-components/Drawer/Drawer";
 import { useState } from "react";
 
 function App() {
+  /**
+   * useState
+   */
   const [shape, setShape] = useState(0);
-
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [drawerContent, setDrawerContent] = useState({});
 
-  console.log(isDrawerOpen);
-  console.log("Drawer Content:", drawerContent);
-
+  /**
+   * @return {void}
+   */
   const openDrawer = () => {
     setDrawerOpen(true);
   };
 
+  /**
+   * @return {void}
+   */
   const closeDrawer = () => {
     setDrawerOpen(false);
   };
+
+  //Test
+  console.log(isDrawerOpen);
+  console.log("Drawer Content:", drawerContent);
 
   return (
     <Box>

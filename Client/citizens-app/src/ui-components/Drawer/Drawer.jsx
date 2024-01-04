@@ -1,9 +1,10 @@
 import React from "react";
-import { SwipeableDrawer } from "@mui/material";
+import { Box, Button, IconButton, SwipeableDrawer } from "@mui/material";
 import LocationInformation from "../LocationInformation/LocationInformation";
 import AdsList from "../AdsInformation/AdsList";
 import ReportList from "../Report/ReportList";
 import PropTypes from "prop-types";
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Drawer({
   shape,
@@ -27,7 +28,7 @@ export default function Drawer({
     }
   };
   return (
-    <div>
+    <Box height="100%" width="100%" display="relative'">
       <React.Fragment key={anchor}>
         <SwipeableDrawer
           anchor={anchor}
@@ -42,10 +43,17 @@ export default function Drawer({
             style: { width: 400 }, // Set the width you desire
           }}
         >
+          <Box display="flex" justifyContent="flex-end" margin="5px">
+            <IconButton aria-label="Close" size="small" display="absolute" right={0} onClick={() => closeDrawer()}>
+              <CloseIcon/>
+            </IconButton>
+          </Box>
           {renderShapeEditor()}
         </SwipeableDrawer>
+        
       </React.Fragment>
-    </div>
+      
+    </Box>
   );
 }
 

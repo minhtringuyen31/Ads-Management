@@ -15,6 +15,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import axiosClient from "../../axiosConfig/axiosClient";
+import PropTypes from "prop-types";
+
+
 
 const validateSchema = Yup.object().shape({
   fullname: Yup.string(),
@@ -33,15 +37,27 @@ const initialValues = {
   content: "",
 };
 
-const ReportForm = () => {
+const ReportForm = ({agent, type}) => {
+  /**
+   * useState
+   */
   const [previews, setPreviews] = useState([]);
   const fileInputRef = useRef(null);
 
+  /**
+   * @return {void}
+   */
   const handleBrowseImgBtnClick = () => {
     fileInputRef.current.click();
   };
 
-  const handleSubmitReportForm = (values, type, agent) => {
+  /**
+   * @param {*} values 
+   * @param {*} type 
+   * @param {*} agent 
+   * @return {void}
+   */
+  const handleSubmitReportForm = async (values) => {
     const postBody =
       type === "location"
         ? {
@@ -63,23 +79,29 @@ const ReportForm = () => {
             board: agent,
           };
 
+          try {
+            const response = await axiosClient.post("report", JSON.stringify(postBody));
+            if (response.status == 200) {
+              console.log("New Report: ", response.data);
+            }
+          } catch (error) {
+            console.log(error)
+          }
     console.log("Report Form: ", postBody);
   };
 
+  /**
+   * @param {*} event 
+   * @return {void}
+   */
   const handleBrowseImageChange = (event) => {
     console.log("Browse Files");
     const selectedFiles = event.target.files;
-
-    // Xử lý từng tệp đã được chọn
     for (let i = 0; i < selectedFiles.length; i++) {
       const selectedFile = selectedFiles[i];
       console.log(`Selected file ${i + 1}:`, selectedFile);
-
-      // Thực hiện xử lý với từng tệp ở đây
-      // Ví dụ: Đọc dữ liệu URL của tệp
       const fileReader = new FileReader();
       fileReader.onload = () => {
-        // Thêm URL của tệp vào danh sách preview
         setPreviews((prevPreviews) => [...prevPreviews, fileReader.result]);
       };
       fileReader.readAsDataURL(selectedFile);
@@ -350,3 +372,8 @@ const ReportForm = () => {
 };
 
 export default ReportForm;
+
+ReportForm.propTypes = {
+  agent: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired
+};
