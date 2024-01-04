@@ -123,7 +123,7 @@ const ReportService = {
       .populate({
         path: "board",
         model: "AdsBoard", // Replace with the actual name of the Board model
-        populate: {
+        populate: [{
           path: "location",
           model: "Location", // Replace with the actual name of the Location model
           populate: [
@@ -149,6 +149,11 @@ const ReportService = {
             },
           ],
         },
+        {
+          path: "adsboard_type",
+          model: "AdsBoardType", // Replace with the actual name of the Location model
+        },
+      ],
       })
       .populate({
         path: "operation.user",
