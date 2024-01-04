@@ -10,7 +10,7 @@ export const generateAccessToken = (userId, fullname, userRole) => {
 };
 
 export const generateRefreshToken = (userId, fullname, userRole) => {
-  const expiresIn = '5m'; 
+  const expiresIn = '30d'; 
 
   const payload = {
     userId,
