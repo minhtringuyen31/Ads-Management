@@ -126,6 +126,8 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
     handleButtonClicked(3);
   };
 
+  const handleReportSwitchClicked = () => {}
+
   const handleButtonClicked = (value) => {
     console.log("Onclick event: ", value);
     switch (value) {
@@ -205,7 +207,7 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
           label="Bảng QC"
         />
         <FormControlLabel
-          control={<CustomSwitch onChange={() => handleButtonClicked(3)} />}
+          control={<CustomSwitch onChange={() => handleButtonClicked(2)} />}
           label="Báo cáo vi phạm"
         />
       </Box>

@@ -61,8 +61,7 @@ const AdsItem = ({ item }) => {
         </Box>
         <Box marginY="5px">
           <Typography fontSize="16px" color="#70757a">
-            {item.location.address}, {item.location.ward.label},{" "}
-            {item.location.district.label}
+            {item.location.address}
           </Typography>
         </Box>
         <Box marginY="5px">
@@ -165,8 +164,7 @@ const AdsItem = ({ item }) => {
             </Box>
             <Box marginY="5px">
               <Typography fontSize="16px" color="#70757a">
-                {item.location.address}, {item.location.ward.label},{" "}
-                {item.location.district.label}
+                {item.location.address}
               </Typography>
             </Box>
             <Box marginY="5px">
@@ -250,8 +248,7 @@ const AdsItem = ({ item }) => {
               {item.adsboard_type.label}
             </Typography>
             <Typography fontSize={12} color="#70757a">
-              {item.location.address}, {item.location.ward.label},{" "}
-              {item.location.district.label}
+              {item.location.address}
             </Typography>
           </Box>
           <Box>

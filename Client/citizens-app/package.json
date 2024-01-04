@@ -19,6 +19,7 @@
     "@mui/material": "^5.14.18",
     "@react-google-maps/api": "^2.19.2",
     "axios": "^1.6.2",
+    "date-fns": "^3.0.6",
     "dotenv": "^16.3.1",
     "formik": "^2.4.5",
     "idb": "^8.0.0",

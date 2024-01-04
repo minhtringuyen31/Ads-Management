@@ -29,6 +29,7 @@ function App() {
   //Test
   console.log(isDrawerOpen);
   console.log("Drawer Content:", drawerContent);
+  console.log("Shape: ", shape)
 
   return (
     <Box>

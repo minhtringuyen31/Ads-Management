@@ -9,6 +9,10 @@ import {
   IconButton,
 } from "@mui/material";
 import { useEffect } from "react";
+import PropTypes from "prop-types";
+import { ReportOffRounded } from "@mui/icons-material";
+import { formatDistanceToNow } from 'date-fns';
+
 
 const imageList = [
   {
@@ -27,7 +31,11 @@ const boxStyle = {
   borderColor: "#cbd5e1",
 };
 
-const ReportItem = () => {
+const TimeAgo = ({ timestamp }) => {
+  const timeAgo = formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+  return <span>{timeAgo}</span>;
+};
+const ReportItem = ({item}) => {
   return (
     <Box
       margin="10px"
@@ -47,10 +55,18 @@ const ReportItem = () => {
   <DeleteIcon fontSize="inherit" />
 </IconButton> */}
           <Typography fontSize="16px" fontWeight="bold">
-            Trại Heo Ala
+            {item.board.adsboard_type.label}
           </Typography>
           <Typography fontSize="14px" color="#70757a" marginY="2px">
-            Tổ 1, Ấp 2, Lâm San, Cẩm Mỹ, Đồng Nai
+          {item.type === "board" ? (
+            <>
+              {item.board.location.address}
+            </>
+            ) : (
+              <>
+                {item.location.address}
+              </>
+            )}
           </Typography>
 
           <Box marginBottom="10px">
@@ -68,7 +84,7 @@ const ReportItem = () => {
           </Box>
         </Box>
         <Box>
-          <Avatar src="/assets/tieu.jpg" sx={{ width: 60, height: 60 }} />
+          <Avatar src={item.board.image} sx={{ width: 60, height: 60 }} />
         </Box>
       </Box>
       <Divider />
@@ -78,16 +94,19 @@ const ReportItem = () => {
             A
           </Avatar>
           <Box flex="flex" flexDirection="column" marginLeft="10px">
-            <Typography>Nguyễn Võ Minh Trí</Typography>
+            <Typography>{item.username}</Typography>
             <Typography fontSize={12} color="#70757a">
-              5 ngày trước
+              5 ngày trước {<TimeAgo timestamp={item.createdAt} />}
             </Typography>
           </Box>
         </Box>
-        <Box marginTop="10px">
-          <Typography>
-            Cơ sở đưa các thông tin sai sự thật về hình thức kinh doanh.
-          </Typography>
+        <Box display="flex" flexDirection="row" marginTop="10px">
+          <Typography fontSize={14} color="#70757a" marginRight={1}>Hình thưc báo cáo:</Typography>
+          <Typography fontSize={14}>{item.report_form}</Typography>
+        </Box>
+        <Box marginTop="5px">
+          <Typography fontSize={14} color="#70757a">Nội dung: </Typography>
+          <Typography fontSize={14} component="div" dangerouslySetInnerHTML={{ __html: item.report_content }} />
         </Box>
       </Box>
       <Box marginTop={1}>
@@ -109,3 +128,8 @@ const ReportItem = () => {
 };
 
 export default ReportItem;
+
+ReportItem.propTypes = {
+  item: PropTypes.object.isRequired
+};
+

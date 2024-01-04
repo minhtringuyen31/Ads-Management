@@ -81,13 +81,15 @@ const ReportForm = ({agent, type}) => {
 
           try {
             const response = await axiosClient.post("report", JSON.stringify(postBody));
-            if (response.status == 200) {
+            if (response.status == 201) {
               console.log("New Report: ", response.data);
+              const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
+              savedReports.push(response.data.data._id);
+              localStorage.setItem('reports', JSON.stringify(savedReports));
             }
           } catch (error) {
             console.log(error)
           }
-    console.log("Report Form: ", postBody);
   };
 
   /**
@@ -232,10 +234,10 @@ const ReportForm = ({agent, type}) => {
                 label="Hình thức báo cáo"
                 onChange={handleChange}
               >
-                <MenuItem value={"Tố cáo sai phạm"}>Tố cáo sai phạm</MenuItem>
-                <MenuItem value={"Đăng ký nội dung"}>Đăng ký nội dung</MenuItem>
-                <MenuItem value={"Đóng góp ý kiến"}>Đóng góp ý kiến</MenuItem>
-                <MenuItem value={"Giái đáp thắc mắc"}>
+                <MenuItem value={"denounce"}>Tố cáo sai phạm</MenuItem>
+                <MenuItem value={"register"}>Đăng ký nội dung</MenuItem>
+                <MenuItem value={"feedback"}>Đóng góp ý kiến</MenuItem>
+                <MenuItem value={"question"}>
                   Giải đáp thắc mắc
                 </MenuItem>
               </Select>
