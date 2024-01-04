@@ -1,4 +1,4 @@
-import { Divider, Grid, Typography,Box } from '@mui/material';
+import { Box, Divider, Grid, Typography } from '@mui/material';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import MainCard from 'ui-component/cards/MainCard';
@@ -19,7 +19,7 @@ const AdsBoardBox = (props) => {
           gap='10px'
           sx={{ cursor: 'pointer', width: '100%' }}
         >
-          <Typography variant='h3'>{props.data.type}</Typography>
+          <Typography variant='h3'>{props.data.adsboard_type.label}</Typography>
           <Typography>
             Kích thước:{' '}
             <span

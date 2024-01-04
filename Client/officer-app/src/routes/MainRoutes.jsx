@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
 import Loadable from 'ui-component/Loadable';
+import CategoryManage from 'views/utilities/categories/CategoryManage';
 import MainLayout from '../layout/MainLayout/MainLayout';
 
 //utilities routing
@@ -11,28 +12,16 @@ const UtilsDriver = Loadable(lazy(() => import('../views/utilities/Driver')));
 const UtilsConsultant = Loadable(
   lazy(() => import('../views/utilities/Consultant'))
 );
-const UtilsSalary = Loadable(lazy(() => import('../views/utilities/Salary')));
-const BussinessUnitPrice = Loadable(
-  lazy(() => import('../views/bussiness/unit-price/UnitPrice'))
-);
-const BussinessEditUnitPrice = Loadable(
-  lazy(() => import('../views/bussiness/unit-price/EditUnitPrice'))
-);
-
-const BussinessRuleList = Loadable(
-  lazy(() => import('../views/bussiness/rules/RuleList'))
-);
-
-const BussinessVehicle = Loadable(
-  lazy(() => import('../views/bussiness/vehicles/vehicleList'))
-);
 const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
 
 const ReportList = Loadable(
-  lazy(() => import('../views/utilities/report-process/ReportList'))
+  lazy(() => import('../views/utilities/report-manage/ReportList'))
 );
 const ReportDetail = Loadable(
-  lazy(() => import('../views/utilities/report-process/ReportDetail'))
+  lazy(() => import('../views/utilities/report-manage/ReportDetail'))
+);
+const DistrictList = Loadable(
+  lazy(() => import('../views/utilities/categories/district/DistrictList'))
 );
 
 const MainRoutes = {
@@ -86,36 +75,18 @@ const MainRoutes = {
             },
           ],
         },
-      ],
-    },
-    // {
-    //   path: "utils",
-    //   children: [
-    //     {
-    //       path: "salary",
-    //       element: <UtilsSalary />,
-    //     },
-    //   ],
-    // },
-
-    {
-      path: 'bussiness',
-      children: [
         {
-          path: 'unit_price',
-          element: <BussinessUnitPrice />,
-        },
-        {
-          path: 'unit_price/edit',
-          element: <BussinessEditUnitPrice />,
-        },
-        {
-          path: 'rules',
-          element: <BussinessRuleList />,
-        },
-        {
-          path: 'vehicles',
-          element: <BussinessVehicle />,
+          path: 'category',
+          children: [
+            {
+              path: 'list',
+              element: <CategoryManage />,
+            },
+            // {
+            //   path: 'detail',
+            //   element: <ReportDetail />,
+            // },
+          ],
         },
       ],
     },

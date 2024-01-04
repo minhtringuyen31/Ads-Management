@@ -1,13 +1,18 @@
-import React from "react";
-import { useState, useEffect, useRef } from "react";
-import axiosClient from "axiosConfig/axiosClient";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Box, TextField } from "@mui/material";
-import { Formik } from "formik";
-import MainCard from "ui-component/cards/MainCard";
-import { Grid, Typography, Button, InputAdornment } from "@mui/material";
-import { gridSpacing } from "store/constant";
-import AnimateButton from "ui-component/extended/AnimateButton";
+import {
+  Box,
+  Button,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
+import axiosClient from 'axiosConfig/axios-client';
+import { Formik } from 'formik';
+import { useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { gridSpacing } from 'store/constant';
+import MainCard from 'ui-component/cards/MainCard';
+import AnimateButton from 'ui-component/extended/AnimateButton';
 
 const EditUnitPrice = () => {
   const location = useLocation();
@@ -24,27 +29,27 @@ const EditUnitPrice = () => {
     };
     try {
       const response = await axiosClient.post(
-        "/unit_prices",
+        '/unit_prices',
         JSON.stringify(postBody)
       );
-      console.log("Update Reponse: ", response.data);
+      console.log('Update Reponse: ', response.data);
       if (response.data.status === 200) {
-        navigate("/bussiness/unit_price");
+        navigate('/bussiness/unit_price');
       }
     } catch (error) {
-      console.log("Error Update Unit Price: ", error);
+      console.log('Error Update Unit Price: ', error);
     }
   };
   return (
-    <MainCard title="Edit Unit Price">
+    <MainCard title='Edit Unit Price'>
       <Grid item lg={11}>
-        <Typography align="left" variant="h4">
+        <Typography align='left' variant='h4'>
           About
         </Typography>
         <Typography
-          align="left"
-          variant="h1"
-          sx={{ fontWeight: "bold", mb: "20px" }}
+          align='left'
+          variant='h1'
+          sx={{ fontWeight: 'bold', mb: '20px' }}
         >
           {unitPrice.vehicleType} Unit Price
         </Typography>
@@ -69,32 +74,32 @@ const EditUnitPrice = () => {
               <Grid container spacing={gridSpacing} lg={12}>
                 <Grid item lg={5}>
                   <TextField
-                    label="Base Fare"
+                    label='Base Fare'
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.baseFare}
-                    name="baseFare"
+                    name='baseFare'
                     error={
                       Boolean(touched.baseFare) && Boolean(errors.baseFare)
                     }
                     helperText={touched.baseFare && errors.baseFare}
                     fullWidth
                     sx={{
-                      mb: "20px",
+                      mb: '20px',
                     }}
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment position="start">VND</InputAdornment>
+                        <InputAdornment position='start'>VND</InputAdornment>
                       ),
                     }}
                   />
 
                   <TextField
-                    label="Distance Fare"
+                    label='Distance Fare'
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.distanceFare}
-                    name="distanceFare"
+                    name='distanceFare'
                     error={
                       Boolean(touched.distanceFare) &&
                       Boolean(errors.distanceFare)
@@ -102,11 +107,11 @@ const EditUnitPrice = () => {
                     helperText={touched.distanceFare && errors.distanceFare}
                     fullWidth
                     sx={{
-                      mb: "5px",
+                      mb: '5px',
                     }}
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment position="start">VND</InputAdornment>
+                        <InputAdornment position='start'>VND</InputAdornment>
                       ),
                     }}
                   />
@@ -116,19 +121,19 @@ const EditUnitPrice = () => {
                 <Grid item lg={4}>
                   <AnimateButton
                     sx={{
-                      display: "flex",
-                      justifyContent: "center", // Căn giữa theo chiều ngang
+                      display: 'flex',
+                      justifyContent: 'center', // Căn giữa theo chiều ngang
                     }}
                   >
                     <Button
                       disableElevation
-                      size="large"
-                      type="submit"
-                      variant="contained"
-                      color="secondary"
+                      size='large'
+                      type='submit'
+                      variant='contained'
+                      color='secondary'
                       sx={{
-                        mt: "10px",
-                        width: "200px",
+                        mt: '10px',
+                        width: '200px',
                       }}
                     >
                       Submit Change

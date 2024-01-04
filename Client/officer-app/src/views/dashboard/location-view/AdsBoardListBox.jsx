@@ -14,7 +14,7 @@ const AdsBoardListBox = (props) => {
       }}
     >
       {props.adsBoardsData.map((ads_board) => {
-        return <AdsBoardBox key={ads_board.id} data={ads_board} />;
+        return <AdsBoardBox key={ads_board._id} data={ads_board} />;
       })}
     </Grid>
   );

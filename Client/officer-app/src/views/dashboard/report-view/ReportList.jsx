@@ -15,7 +15,7 @@ const ReportList = (props) => {
       {props.data.map((report) => {
         return (
           <ReportListItem
-            key={report.id}
+            key={report._id}
             data={report}
             handleToggle={props.handleToggle}
           />

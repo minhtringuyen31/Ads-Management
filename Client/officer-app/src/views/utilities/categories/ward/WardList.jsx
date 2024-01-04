@@ -22,21 +22,17 @@ import {
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
-import moment from 'moment';
+import useHttp from 'hooks/use-http';
+import { getAllWards } from 'lib/api';
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { reportTestData } from 'views/dashboard/DashboardData/data';
+import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, time, name, email, address, report_type, status) => {
+const createData = (id, ward) => {
   return {
     id,
-    time,
-    name,
-    email,
-    address,
-    report_type,
-    status,
+    ward,
   };
 };
 
@@ -70,40 +66,10 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
-    id: 'time',
+    id: 'ward',
     numeric: false,
     disablePadding: true,
-    label: 'Ngày gửi',
-  },
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Tên người gửi',
-  },
-  {
-    id: 'email',
-    numeric: false,
-    disablePadding: false,
-    label: 'Email',
-  },
-  {
-    id: 'address',
-    numeric: false,
-    disablePadding: false,
-    label: 'Địa chỉ',
-  },
-  {
-    id: 'report_type',
-    numeric: false,
-    disablePadding: false,
-    label: 'Loại báo cáo',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Tình trạng',
+    label: 'Tên phường',
   },
   {
     id: 'detail',
@@ -199,7 +165,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Báo cáo
+          Danh sách Phường
         </Typography>
       )}
 
@@ -220,20 +186,7 @@ function EnhancedTableToolbar(props) {
   );
 }
 
-const rows = reportTestData.reports.map((report) => {
-  return createData(
-    report.id,
-    report.created_at,
-    report.username,
-    report.email,
-    report.phone_number,
-    report.report_form,
-    report.status
-  );
-});
-
-const ReportListTable = () => {
-  console.log(rows);
+const EnhancedTable = (props) => {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
@@ -249,7 +202,7 @@ const ReportListTable = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = props.rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -292,15 +245,15 @@ const ReportListTable = () => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - props.rows.length) : 0;
 
   const visibleRows = useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(props.rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, props.rows]
   );
 
   return (
@@ -319,7 +272,7 @@ const ReportListTable = () => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.rows.length}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
@@ -352,19 +305,10 @@ const ReportListTable = () => {
                       scope='row'
                       padding='none'
                     >
-                      {moment.utc(row.time).format('DD-MM-YYYY')}
-                    </TableCell>
-                    <TableCell align='left'>{row.name}</TableCell>
-                    <TableCell align='left'>{row.email}</TableCell>
-                    <TableCell align='left'>{row.address}</TableCell>
-                    <TableCell align='left'>{row.report_type}</TableCell>
-                    <TableCell align='left'>
-                      {row.status === 'solved'
-                        ? 'Đã giải quyết'
-                        : 'Chưa giải quyết'}
+                      {row.ward}
                     </TableCell>
                     <TableCell align='right'>
-                      <Link to='/report/detail'>
+                      <Link to='/utils/report/detail'>
                         <IconButton>
                           <EditIcon />
                         </IconButton>
@@ -388,7 +332,7 @@ const ReportListTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={rows.length}
+          count={props.rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -401,6 +345,43 @@ const ReportListTable = () => {
       />
     </Box>
   );
+};
+
+const WardList = () => {
+  const {
+    sendRequest,
+    status,
+    data: loadedWards,
+    error,
+  } = useHttp(getAllWards, true);
+
+  useEffect(() => {
+    sendRequest();
+  }, [sendRequest]);
+
+  const rows = useMemo(() => {
+    if (loadedWards) {
+      return loadedWards.map((ward) => {
+        return createData(ward._id, ward.label);
+      });
+    }
+  }, [loadedWards]);
+
+  if (error) {
+    return <div>Có lỗi xảy ra</div>;
+  }
+
+  if (status === 'pending') {
+    return <div>Đang tải dữ liệu</div>;
+  }
+
+  if (status === 'completed' && rows !== null) {
+    return (
+      <MainCard>
+        <EnhancedTable rows={rows} />
+      </MainCard>
+    );
+  }
 };
 
 EnhancedTableHead.propTypes = {
@@ -416,4 +397,8 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default ReportListTable;
+EnhancedTable.propTypes = {
+  rows: PropTypes.array.isRequired,
+};
+
+export default WardList;

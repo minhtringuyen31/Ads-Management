@@ -13,6 +13,7 @@ import {
 import { Fragment, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { reportTestData } from 'views/dashboard/DashboardData/data';
+import Form from './Form';
 
 const ReportDetail = () => {
   const [formOpen, setFormOpen] = useState({
@@ -41,7 +42,7 @@ const ReportDetail = () => {
   };
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={1}>
       <Grid item xs={12} lg={formOpen.lg1}>
         <MainCard>
           <ImageList
@@ -170,21 +171,43 @@ const ReportDetail = () => {
         </MainCard>
       </Grid>
       <Slide
-        direction={formOpen ? 'left' : 'right'}
+        direction={formOpen.isOpened ? 'left' : 'right'}
         in={formOpen.isOpened}
         mountOnEnter
         unmountOnExit
       >
         <Grid item xs={12} lg={formOpen.lg3}>
           <MainCard>
-            <IconButton
-              sx={{
-                position: 'absolute',
-              }}
-              onClick={handleFormClose}
-            >
-              <CloseIcon />
-            </IconButton>
+            <Grid container spacing={1} height='80vh' sx={{ width: '100%' }}>
+              <IconButton
+                sx={{
+                  position: 'absolute',
+                }}
+                onClick={handleFormClose}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Grid
+                item
+                lg={12}
+                xs={12}
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                flexDirection='column'
+              >
+                <Typography
+                  variant='h3'
+                  style={{
+                    marginBottom: '10px',
+                  }}
+                >
+                  Form phản hồi
+                </Typography>
+                <br />
+                <Form />
+              </Grid>
+            </Grid>
           </MainCard>
         </Grid>
       </Slide>
