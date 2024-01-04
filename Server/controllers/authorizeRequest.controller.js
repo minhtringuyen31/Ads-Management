@@ -51,10 +51,12 @@ const AuthorizeRequestController = {
       const reportData = JSON.parse(JSON.stringify(req.body));
       console.log(reportData)
       const files = req.files;
+      console.log(files)
       if (files) {
         reportData.new_ads_board.image = files.map(file => file.path);
       }
-      // console.log(reportData)
+      console.log("Sau khi thêm file")
+      console.log(reportData)
       const newReport = await AuthorizeRequestService.create(reportData);
 
       if (!newReport) {
