@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Field, useFormik, FormikProvider } from "formik";
-
-import { TextField, Button, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  Snackbar,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import Autocomplete from "@mui/material/Autocomplete";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -75,14 +83,19 @@ const calculateCenter = (locations) => {
 };
 
 const FormAddLicenAdsboard = () => {
-  const [adTypes, setAdTypes] = useState([]);
-  const [selectedAdType, setSelectedAdType] = useState(null);
+  const [adsBoardType, setAdsBoardType] = useState([]);
+  const [selectedAdsBoar, setselectedAdsBoar] = useState(null);
   const [locationInfoList, setlocationInfoList] = useState([]);
   const [mapCenter, setMapCenter] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [locationInfoClick, setLocationInfoClick] = useState({});
   const [startDate, setStartDate] = useState(dayjs("01/01/2021"));
   const [endDate, setEndDate] = useState(dayjs("01/01/2021"));
+
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showFailAlert, setShowFailAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -92,11 +105,20 @@ const FormAddLicenAdsboard = () => {
     setIsModalOpen(false);
   };
 
+  const handleCloseSuccessAlert = () => {
+    setShowSuccessAlert(false);
+    navigate("/bussiness/unit_price/");
+  };
+
+  const handleCloseFailAlert = () => {
+    setShowFailAlert(false);
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://14.225.192.121/adsboardtypes");
-        setAdTypes(response.data.data);
+        setAdsBoardType(response.data.data);
       } catch (error) {
         console.error("Error fetching ad types:", error);
       }
@@ -132,7 +154,7 @@ const FormAddLicenAdsboard = () => {
   }, [locationInfoList]);
 
   //Mảng options cho useAutocomplete từ dữ liệu lấy được từ API
-  const adTypeOptions = adTypes.map((type) => ({
+  const adTypeOptions = adsBoardType.map((type) => ({
     id: type._id,
     label: type.label,
   }));
@@ -141,11 +163,11 @@ const FormAddLicenAdsboard = () => {
     initialValues: {
       locationId: "",
       adsboardInfo: {
-        ads_type: "",
+        adsboard_type: "",
         width: "",
         height: "",
-        start_date: "",
-        end_date: "",
+        start_date: "01/01/2021",
+        end_date: "01/01/2021",
         img: [],
       },
       companyInfo: {
@@ -157,16 +179,70 @@ const FormAddLicenAdsboard = () => {
         email: "",
       },
     },
-    onSubmit: (values) => {
-      const data = {
+    onSubmit: async (values, { resetForm }) => {
+      console.log("Form submission started - isLoading set to true");
+      setIsLoading(true);
+      let data = {
         ...values,
         locationId: locationInfoClick.id,
         adsboardInfo: {
           ...values.adsboardInfo,
-          ads_type: selectedAdType.id,
+          adsboard_type: selectedAdsBoar.id,
         },
       };
-      console.log(data);
+      try {
+        const formData = new FormData();
+        formData.append("new_ads_board[location]", data.locationId);
+        formData.append(
+          "new_ads_board[adsboard_type]",
+          data.adsboardInfo.adsboard_type
+        );
+        formData.append("new_ads_board[width]", data.adsboardInfo.width);
+        formData.append("new_ads_board[height]", data.adsboardInfo.height);
+        formData.append(
+          "new_ads_board[contract_end_date]",
+          data.adsboardInfo.end_date
+        );
+        formData.append(
+          "new_ads_board[contract_start_date]",
+          data.adsboardInfo.start_date
+        );
+        data.adsboardInfo.img.map((file) =>
+          formData.append("new_ads_board[image]", file)
+        );
+
+        formData.append("new_ads_board[name]", data.companyInfo.name);
+        formData.append("new_ads_board[address]", data.companyInfo.address);
+        formData.append(
+          "new_ads_board[contact_name_person]",
+          data.companyInfo.namePeople
+        );
+        formData.append("new_ads_board[phone]", data.companyInfo.phoneNumber);
+        formData.append("new_ads_board[email]", data.companyInfo.email);
+        formData.append(
+          "new_ads_board[description]",
+          data.companyInfo.description
+        );
+
+        const response = await axios.post(
+          "http://14.225.192.121/authorizeRequest",
+          formData
+        );
+        if (response.status === 201) {
+          resetForm({});
+          setShowSuccessAlert(true);
+        } else {
+          setShowFailAlert(true);
+        }
+        console.log("res: ", response);
+      } catch (error) {
+        console.error("Error fetching coordinates: ", error);
+        setShowFailAlert(true);
+      } finally {
+        console.log("Form submission ended - isLoading set to false");
+        setIsLoading(false);
+      }
+      console.log("Final data: ", data);
     },
   });
 
@@ -176,87 +252,58 @@ const FormAddLicenAdsboard = () => {
   };
 
   return (
-    <FormikProvider value={formik}>
-      <form style={ContainerStyle} onSubmit={formik.handleSubmit}>
-        {/* Begin: HEADER */}
-        <Typography>
-          <h2>Cấp phép bảng quảng cáo</h2>
-        </Typography>
-        {/* End: HEADER */}
+    <>
+      {isLoading && (
+        <Box
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1500,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      <FormikProvider value={formik}>
+        <form
+          style={ContainerStyle}
+          onSubmit={formik.handleSubmit}
+          encType="multipart/form-data"
+        >
+          {/* Begin: HEADER */}
+          <Typography>
+            <h2>Cấp phép bảng quảng cáo</h2>
+          </Typography>
+          {/* End: HEADER */}
 
-        {/* Begin: BODY */}
-        <Box style={FormBodyStyle}>
-          {/* ------------------ Begin: 1. THÔNG TIN LOCATION ------------------ */}
-          <Box style={FormBodyItemStyle}>
-            <Typography>
-              <h4>Thông tin điểm đặt</h4>
-            </Typography>
+          {/* Begin: BODY */}
+          <Box style={FormBodyStyle}>
+            {/* ------------------ Begin: 1. THÔNG TIN LOCATION ------------------ */}
+            <Box style={FormBodyItemStyle}>
+              <Typography>
+                <h4>Thông tin điểm đặt</h4>
+              </Typography>
 
-            <Box style={FormBodyItemContentStyle}>
-              <Field
-                component={TextField}
-                required
-                id="locationId"
-                label="Điểm đặt (click here)"
-                value={locationInfoClick.display_name}
-                defaultValue=""
-                style={{
-                  width: "100%",
-                  marginRight: "1rem",
-                }}
-                InputProps={{
-                  readOnly: true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onClick={openModal}
-              />
-
-              {mapCenter && (
-                <MapBox
-                  isOpen={isModalOpen}
-                  onOpen={openModal}
-                  onClose={closeModal}
-                  center={mapCenter}
-                  zoom={15}
-                  locations={locationInfoList}
-                  locationInfoClick={setLocationInfoClick}
-                />
-              )}
-              <TextField
-                required
-                id="outlined-required"
-                label="Địa chỉ"
-                value={locationInfoClick.address}
-                defaultValue=""
-                style={{
-                  width: "100%",
-                  marginRight: "1rem",
-                }}
-                InputProps={{
-                  readOnly: true,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-              />
-              <Box
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "1rem",
-                  width: "100%",
-                }}
-              >
-                <TextField
+              <Box style={FormBodyItemContentStyle}>
+                <Field
+                  component={TextField}
                   required
-                  id="outlined-required"
-                  label="Loại vị trí"
-                  value={locationInfoClick.location_type?.label}
+                  id="locationId"
+                  label="Điểm đặt (click here)"
+                  value={locationInfoClick.display_name}
                   defaultValue=""
                   style={{
-                    width: "50%",
+                    width: "100%",
+                    marginRight: "1rem",
                   }}
                   InputProps={{
                     readOnly: true,
@@ -264,14 +311,30 @@ const FormAddLicenAdsboard = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  onClick={openModal}
                 />
+
+                {mapCenter && (
+                  <MapBox
+                    isOpen={isModalOpen}
+                    onOpen={openModal}
+                    onClose={closeModal}
+                    center={mapCenter}
+                    zoom={15}
+                    locations={locationInfoList}
+                    locationInfoClick={setLocationInfoClick}
+                  />
+                )}
                 <TextField
                   required
                   id="outlined-required"
-                  label="Hình thức quảng cáo"
-                  value={locationInfoClick.ads_type?.label}
+                  label="Địa chỉ"
+                  value={locationInfoClick.address}
                   defaultValue=""
-                  style={{ width: "50%" }}
+                  style={{
+                    width: "100%",
+                    marginRight: "1rem",
+                  }}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -279,240 +342,311 @@ const FormAddLicenAdsboard = () => {
                     shrink: true,
                   }}
                 />
+                <Box
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "1rem",
+                    width: "100%",
+                  }}
+                >
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Loại vị trí"
+                    value={locationInfoClick.location_type?.label}
+                    defaultValue=""
+                    style={{
+                      width: "50%",
+                    }}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                  <TextField
+                    required
+                    id="outlined-required"
+                    label="Hình thức quảng cáo"
+                    value={locationInfoClick.ads_type?.label}
+                    defaultValue=""
+                    style={{ width: "50%" }}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </Box>
               </Box>
             </Box>
-          </Box>
-          {/* ------------------ End: 1. THÔNG TIN LOCATION ------------------ */}
+            {/* ------------------ End: 1. THÔNG TIN LOCATION ------------------ */}
 
-          {/* ------------------ Begin: 2. THÔNG TIN ADSBOARD ------------------ */}
-          <Box style={FormBodyItemStyle}>
-            <Typography>
-              <h4>Thông tin bảng quảng cáo</h4>
-            </Typography>
-            <Box style={FormBodyItemContentStyle}>
-              {/* BEGIN: Chọn bảng quảng cáo */}
-              <Box>
-                <Autocomplete
-                  options={adTypeOptions}
-                  getOptionLabel={(option) => option.label}
-                  value={selectedAdType}
-                  onChange={(event, newValue) => {
-                    setSelectedAdType(newValue);
+            {/* ------------------ Begin: 2. THÔNG TIN ADSBOARD ------------------ */}
+            <Box style={FormBodyItemStyle}>
+              <Typography>
+                <h4>Thông tin bảng quảng cáo</h4>
+              </Typography>
+              <Box style={FormBodyItemContentStyle}>
+                {/* BEGIN: Chọn bảng quảng cáo */}
+                <Box>
+                  <Autocomplete
+                    options={adTypeOptions}
+                    getOptionLabel={(option) => option.label}
+                    value={selectedAdsBoar}
+                    onChange={(_event, newValue) => {
+                      setselectedAdsBoar(newValue);
+                    }}
+                    isOptionEqualToValue={(option, value) =>
+                      option.id === value.id
+                    }
+                    name="adsboardInfo.adsboard_type"
+                    renderInput={(params) => (
+                      <TextField
+                        required
+                        {...params}
+                        label="Loại bảng quảng cáo"
+                        variant="outlined"
+                        style={{ width: "100%" }}
+                      />
+                    )}
+                  ></Autocomplete>
+                </Box>
+                {/* END: Chọn bảng quảng cáo */}
+
+                {/* BEGIN: Nhập chiều cao chiều rộng */}
+                <Box
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                    gap: "1rem",
                   }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.id === value.id
-                  }
-                  name="adsboardInfo.ads_type"
-                  renderInput={(params) => (
-                    <TextField
+                >
+                  <Field
+                    component={TextField}
+                    name="adsboardInfo.height"
+                    onChange={formik.handleChange}
+                    required
+                    id="adsboardInfo.height"
+                    label="Chiều cao"
+                    defaultValue=""
+                    style={{ width: "50%" }}
+                  />
+
+                  <Field
+                    component={TextField}
+                    name="adsboardInfo.width"
+                    onChange={formik.handleChange}
+                    required
+                    id="adsboardInfo.width"
+                    label="Chiều rộng"
+                    defaultValue=""
+                    style={{ width: "50%" }}
+                  />
+                </Box>
+                {/* END: Nhập chiều cao chiều rộng */}
+
+                {/* BEGIN: Contract date: Coi lại style !!! */}
+                <Box
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "1rem",
+                  }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
                       required
-                      {...params}
-                      label="Loại bảng quảng cáo"
-                      variant="outlined"
-                      style={{ width: "100%" }}
+                      label="Bắt đầu hợp đồng"
+                      sx={{
+                        width: 1 / 2,
+                      }}
+                      format="DD/MM/YYYY"
+                      id="adsboardInfo.start_date"
+                      onChange={(newValue) => {
+                        setStartDate(newValue);
+                        formik.setFieldValue(
+                          "adsboardInfo.start_date",
+
+                          newValue.toISOString()
+                        );
+                      }}
+                      value={startDate}
                     />
-                  )}
-                ></Autocomplete>
-              </Box>
-              {/* END: Chọn bảng quảng cáo */}
+                  </LocalizationProvider>
 
-              {/* BEGIN: Nhập chiều cao chiều rộng */}
-              <Box
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  width: "100%",
-                  gap: "1rem",
-                }}
-              >
-                <Field
-                  component={TextField}
-                  name="adsboardInfo.height"
-                  onChange={formik.handleChange}
-                  required
-                  id="adsboardInfo.height"
-                  label="Chiều cao"
-                  defaultValue=""
-                  style={{ width: "50%" }}
-                />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Kết thúc hợp đồng"
+                      required
+                      sx={{
+                        width: 1 / 2,
+                      }}
+                      format="DD/MM/YYYY"
+                      onChange={(newValue) => {
+                        setEndDate(newValue);
+                        formik.setFieldValue(
+                          "adsboardInfo.end_date",
 
-                <Field
-                  component={TextField}
-                  name="adsboardInfo.width"
-                  onChange={formik.handleChange}
-                  required
-                  id="adsboardInfo.width"
-                  label="Chiều rộng"
-                  defaultValue=""
-                  style={{ width: "50%" }}
-                />
-              </Box>
-              {/* END: Nhập chiều cao chiều rộng */}
+                          newValue.toISOString()
+                        );
+                      }}
+                      value={endDate}
+                      id="adsboardInfo.end_date"
+                    />
+                  </LocalizationProvider>
+                </Box>
+                {/* END: Contract date: Coi lại style !!! */}
 
-              {/* BEGIN: Contract date: Coi lại style !!! */}
-              <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "1rem",
-                }}
-              >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    required
-                    label="Bắt đầu hợp đồng"
-                    sx={{
-                      width: 1 / 2,
-                    }}
-                    format="DD/MM/YYYY"
-                    id="adsboardInfo.start_date"
-                    onChange={(newValue) => {
-                      setStartDate(newValue);
-                      formik.setFieldValue(
-                        "adsboardInfo.start_date",
-                        newValue.format("DD/MM/YYYY")
-                      );
-                    }}
-                    value={startDate}
+                {/* BEGIN: Upload images, maximum 2 images */}
+                <Box>
+                  <ImageUpload
+                    name="adsboardInfo.img"
+                    onUpload={handleImageUpload}
                   />
-                </LocalizationProvider>
-
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Kết thúc hợp đồng"
-                    required
-                    sx={{
-                      width: 1 / 2,
-                    }}
-                    format="DD/MM/YYYY"
-                    onChange={(newValue) => {
-                      setEndDate(newValue);
-                      formik.setFieldValue(
-                        "adsboardInfo.end_date",
-                        newValue.format("DD/MM/YYYY")
-                      );
-                    }}
-                    value={endDate}
-                    id="adsboardInfo.end_date"
-                  />
-                </LocalizationProvider>
-              </Box>
-              {/* END: Contract date: Coi lại style !!! */}
-
-              {/* BEGIN: Upload images, maximum 2 images */}
-              <Box>
-                <ImageUpload
-                  name="adsboardInfo.img"
-                  onUpload={handleImageUpload}
-                />
-              </Box>
-              {/* END: Upload images, maximum 2 images */}
-            </Box>
-          </Box>
-          {/* ------------------ End: 2. THÔNG TIN ADSBOARD ------------------ */}
-
-          {/* ------------------ Begin: 3. THÔNG TIN COMPANY ------------------ */}
-          <Box style={FormBodyItemStyle}>
-            <Typography>
-              <h4>Thông tin công ty</h4>
-            </Typography>
-
-            <Box style={FormBodyItemContentStyle}>
-              <Field
-                component={TextField}
-                required
-                label="Tên công ty"
-                defaultValue=""
-                name="companyInfo.name"
-                onChange={formik.handleChange}
-                id="companyInfo.name"
-              />
-              <Field
-                component={TextField}
-                required
-                label="Địa chỉ công ty"
-                defaultValue=""
-                name="companyInfo.address"
-                onChange={formik.handleChange}
-                id="companyInfo.address"
-              />
-
-              <TextareaAutosize
-                minRows={5}
-                aria-label="Mô tả"
-                // id="description"
-                placeholder="Mô tả về bảng quảng cáo..."
-                style={{
-                  maxWidth: "100%",
-                  minWidth: "50%",
-
-                  fontFamily: "'Roboto',sans-serif",
-                  border: "1px solid #ccc",
-                  borderRadius: "0.75rem",
-                  backgroundColor: "#f8fafc",
-                  padding: "1rem",
-                  fontSize: "14px",
-                }}
-                name="companyInfo.description"
-                onChange={formik.handleChange}
-                id="companyInfo.description"
-              />
-
-              <Field
-                component={TextField}
-                required
-                label="Tên người liên lạc"
-                defaultValue=""
-                name="companyInfo.namePeople"
-                onChange={formik.handleChange}
-                id="companyInfo.namePeople"
-              />
-              <Box style={{ display: "flex", gap: "1rem" }}>
-                <Field
-                  component={TextField}
-                  required
-                  label="Số điện thoại"
-                  defaultValue=""
-                  style={{
-                    width: "50%",
-                  }}
-                  name="companyInfo.phoneNumber"
-                  onChange={formik.handleChange}
-                  id="companyInfo.phoneNumber"
-                />
-                <Field
-                  component={TextField}
-                  required
-                  label="Email"
-                  defaultValue=""
-                  style={{
-                    width: "50%",
-                  }}
-                  name="companyInfo.email"
-                  onChange={formik.handleChange}
-                  id="companyInfo.email"
-                />
+                </Box>
+                {/* END: Upload images, maximum 2 images */}
               </Box>
             </Box>
-          </Box>
-          {/* ------------------ End: 3. THÔNG TIN COMPANY ------------------ */}
-        </Box>
-        {/* End: BODY */}
+            {/* ------------------ End: 2. THÔNG TIN ADSBOARD ------------------ */}
 
-        {/* Begin: FOOTER */}
-        <Box style={FormFooterStyle}>
-          <Button
-            type="submit"
-            size="large"
-            variant="contained"
-            // onClick={onSubmit}
-          >
-            Xác nhận
-          </Button>
-        </Box>
-        {/* End: FOOTER */}
-      </form>
-    </FormikProvider>
+            {/* ------------------ Begin: 3. THÔNG TIN COMPANY ------------------ */}
+            <Box style={FormBodyItemStyle}>
+              <Typography>
+                <h4>Thông tin công ty</h4>
+              </Typography>
+
+              <Box style={FormBodyItemContentStyle}>
+                <Field
+                  component={TextField}
+                  required
+                  label="Tên công ty"
+                  defaultValue=""
+                  name="companyInfo.name"
+                  onChange={formik.handleChange}
+                  id="companyInfo.name"
+                />
+                <Field
+                  component={TextField}
+                  required
+                  label="Địa chỉ công ty"
+                  defaultValue=""
+                  name="companyInfo.address"
+                  onChange={formik.handleChange}
+                  id="companyInfo.address"
+                />
+
+                <TextareaAutosize
+                  minRows={5}
+                  aria-label="Mô tả"
+                  placeholder="Mô tả về bảng quảng cáo..."
+                  style={{
+                    maxWidth: "100%",
+                    minWidth: "50%",
+
+                    fontFamily: "'Roboto',sans-serif",
+                    border: "1px solid #ccc",
+                    borderRadius: "0.75rem",
+                    backgroundColor: "#f8fafc",
+                    padding: "1rem",
+                    fontSize: "14px",
+                  }}
+                  name="companyInfo.description"
+                  onChange={formik.handleChange}
+                  id="companyInfo.description"
+                />
+
+                <Field
+                  component={TextField}
+                  required
+                  label="Tên người liên lạc"
+                  defaultValue=""
+                  name="companyInfo.namePeople"
+                  onChange={formik.handleChange}
+                  id="companyInfo.namePeople"
+                />
+                <Box style={{ display: "flex", gap: "1rem" }}>
+                  <Field
+                    component={TextField}
+                    required
+                    label="Số điện thoại"
+                    defaultValue=""
+                    style={{
+                      width: "50%",
+                    }}
+                    name="companyInfo.phoneNumber"
+                    onChange={formik.handleChange}
+                    id="companyInfo.phoneNumber"
+                  />
+                  <Field
+                    component={TextField}
+                    required
+                    label="Email"
+                    defaultValue=""
+                    style={{
+                      width: "50%",
+                    }}
+                    name="companyInfo.email"
+                    onChange={formik.handleChange}
+                    id="companyInfo.email"
+                  />
+                </Box>
+              </Box>
+            </Box>
+            {/* ------------------ End: 3. THÔNG TIN COMPANY ------------------ */}
+          </Box>
+          {/* End: BODY */}
+
+          {/* Begin: FOOTER */}
+          <Box style={FormFooterStyle}>
+            <Button type="submit" size="large" variant="contained">
+              Xác nhận
+            </Button>
+          </Box>
+          {/* End: FOOTER */}
+        </form>
+      </FormikProvider>
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={2000}
+        onClose={handleCloseSuccessAlert}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={handleCloseSuccessAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          Tạo yêu cầu cấp phép thành công
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={showFailAlert}
+        autoHideDuration={1000}
+        onClose={handleCloseFailAlert}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={handleCloseFailAlert}
+          severity="error"
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          Tạo yêu cầu cấp phép lỗi!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };
 

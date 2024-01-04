@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Pagination } from "@mui/material";
+import { Pagination, Chip } from "@mui/material";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-
+import ModalAccept from "./ModalAccept";
 import MainCard from "ui-component/cards/MainCard";
 import {
   Table,
@@ -23,10 +23,14 @@ const styleBox = {
   justifyContent: "space-between",
   marginBottom: "0.75rem",
 };
+
 const LicenAdsboardList = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [licenList, setLicenList] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [cancelId, setCancelId] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Adjust the number of items per page
 
@@ -44,19 +48,23 @@ const LicenAdsboardList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const respone = await axios.get(
+        const response = await axios.get(
           "http://14.225.192.121/authorizeRequests"
         );
-        const dataWithId = respone.data.data.map((item, index) => ({
+        let sortedData = response.data.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        sortedData = sortedData.map((item, index) => ({
           ...item,
           id: index + 1,
           contract_start_date: formatDate(
             item.new_ads_board.contract_start_date
           ),
-
           contract_end_date: formatDate(item.new_ads_board.contract_end_date),
         }));
-        setLicenList(dataWithId);
+
+        setLicenList(sortedData);
       } catch (error) {
         console.error("Error fetching licen list: ", error);
       }
@@ -65,6 +73,43 @@ const LicenAdsboardList = () => {
   }, []);
 
   console.log("Licen list: ", licenList);
+
+  const handleOpenDialog = (id) => {
+    setCancelId(id);
+    setOpenDialog(true);
+  };
+
+  const handleCancel = async () => {
+    if (cancelId) {
+      console.log("ID nè", cancelId);
+      try {
+        const respone = await axios.put(
+          `http://14.225.192.121/authorizeRequest/${cancelId}`,
+          {
+            status: "canceled",
+          }
+        );
+        setLicenList(
+          licenList.map((request) => {
+            console.log("req: ", request);
+            if (request._id === cancelId) {
+              console.log("vô đây khum");
+              return {
+                ...request,
+                status: "canceled",
+              };
+            } else {
+              return request;
+            }
+          })
+        );
+        console.log(respone);
+      } catch (error) {
+        console.error("Error cancel request: ", error);
+      }
+      setOpenDialog(false);
+    }
+  };
 
   const pageCount = Math.ceil(licenList.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -97,14 +142,17 @@ const LicenAdsboardList = () => {
               }}
             >
               <TableRow>
-                <TableCell sx={{ fontWeight: "bold", width: "5%" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "2.5%" }}>
                   STT
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "25%" }}>
                   Điểm đặt
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "20%" }}>
                   Công ty
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", width: "10%" }}>
+                  Người lên hệ
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
                   Bắt đầu hợp đồng
@@ -115,7 +163,7 @@ const LicenAdsboardList = () => {
                 <TableCell sx={{ fontWeight: "bold", width: "12.5%" }}>
                   Tình trạng
                 </TableCell>
-                <TableCell sx={{ width: "12.5%" }}></TableCell>
+                <TableCell sx={{ width: "7.5%" }}></TableCell>
               </TableRow>
             </TableHead>
 
@@ -126,17 +174,33 @@ const LicenAdsboardList = () => {
                   <TableCell>
                     {row.new_ads_board.location.display_name}
                   </TableCell>
-                  <TableCell>{row.new_ads_board.company.name}</TableCell>
+                  <TableCell>{row.new_ads_board.name}</TableCell>
+                  <TableCell>{row.new_ads_board.contact_name_person}</TableCell>
                   <TableCell>{row.contract_start_date}</TableCell>
                   <TableCell>{row.contract_end_date}</TableCell>
                   <TableCell>
-                    {row.status === "pending"
-                      ? "Đang xử lý"
-                      : row.status === "completed"
-                      ? "Đã được duyệt"
-                      : row.status === "canceled"
-                      ? "Đã hủy"
-                      : row.status}
+                    <Chip
+                      label={
+                        row.status === "pending"
+                          ? "Đang xử lý"
+                          : row.status === "completed"
+                          ? "Đã được duyệt"
+                          : row.status === "canceled"
+                          ? "Đã hủy"
+                          : row.status
+                      }
+                      color={
+                        row.status === "pending"
+                          ? "primary"
+                          : row.status === "completed"
+                          ? "success"
+                          : row.status === "canceled"
+                          ? "error"
+                          : "default"
+                      }
+                      variant="outlined"
+                      sx={{ borderRadius: "12px" }}
+                    />
                   </TableCell>
                   <TableCell>
                     <Button
@@ -146,17 +210,36 @@ const LicenAdsboardList = () => {
                       sx={{
                         fontWeight: "bold",
                       }}
-                      disabled={row.status !== "pending"}
+                      onClick={() => {
+                        handleOpenDialog(row._id);
+                      }}
+                      disabled={
+                        row.status === "completed" ||
+                        row.status === "canceled" ||
+                        row.status === "rejected"
+                      }
                     >
                       Hủy
                     </Button>
+                    <ModalAccept
+                      open={openDialog}
+                      handleClose={() => setOpenDialog(false)}
+                      handleCancel={handleCancel}
+                      title={"Xác nhận hủy yêu cầu"}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </Box>
-        <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <span />
           <Pagination
             count={pageCount}
