@@ -2,6 +2,8 @@ import express from 'express';
 import ReportController from '../controllers/report.controller.js';
 import authenticate from '../middlewares/authenticate.js';
 import uploadCloud from '../middlewares/uploader.js';
+import { createReportValidationRules, updateReportValidationRules, handleValidationErrors } from '../validators/report.validator.js';
+
 const router = express.Router();
 
 router.get('/reports', authenticate, ReportController.getAll);

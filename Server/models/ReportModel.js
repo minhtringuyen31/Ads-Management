@@ -1,11 +1,17 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
+const reportFormEnum = {
+  denounce: "Tố giác sai phạm",
+  register: "Đăng ký nội dung",
+  feedback: "Đóng góp ý kiến",
+  question: "Giải đáp thắc mắc",
+};
 const ReportSchema = new Schema(
   {
     report_form: {
       type: String,
-      enum: ["denounce", "register", "feedback", "question"],
+      enum: Object.keys(reportFormEnum),
       required: true,
     },
     username: {
@@ -32,12 +38,16 @@ const ReportSchema = new Schema(
     location: {
       type: Schema.Types.ObjectId,
       required: false,
-      ref: "Location"
+      ref: "Location",
     },
     board: {
       type: Schema.Types.ObjectId,
       required: false,
-      ref: "AdsBoard"
+      ref: "AdsBoard",
+    },
+    images: {
+      type: [String],
+      required: false,
     },
     status: {
       type: String,
@@ -59,10 +69,10 @@ const ReportSchema = new Schema(
         required: false,
       },
     },
-    // Add by Quang Thanh to support socket IO 
+    // Add by Quang Thanh to support socket IO
     code: {
       type: String,
-    }
+    },
   },
 
   {

@@ -1,5 +1,6 @@
 import createError from "http-errors";
 import ReportService from "../services/report.service.js";
+import rabbitmq from '../message-broker/rabbitmq.js'
 const ModelName = "Report";
 const modelname = "report";
 import { fromJson } from "../helper/dto.js";
@@ -78,7 +79,15 @@ const ReportController = {
       }
 
 
+<<<<<<< HEAD
 
+=======
+      res.status(201).json({
+        message: ModelName + " created successfully",
+        status: 201,
+        data: newReport,
+      });
+>>>>>>> 2d415ba12f695c656f94848026b360e9bc56f338
     } catch (error) {
       if (req.files) {
         req.files.forEach(async file => {
@@ -122,6 +131,19 @@ const ReportController = {
         });
       }
 
+<<<<<<< HEAD
+=======
+      if(updateData.operation){
+        const message = await ReportService.getById(updatedObject._id);
+        rabbitmq.publishMessage("MAIL", message)
+      }
+
+      res.json({
+        message: ModelName + " updated successfully",
+        status: 200,
+        data: updatedObject,
+      });
+>>>>>>> 2d415ba12f695c656f94848026b360e9bc56f338
     } catch (error) {
       if (req.files) {
         req.files.forEach(file => {
