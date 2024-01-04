@@ -78,16 +78,6 @@ const ReportController = {
         })
       }
 
-
-<<<<<<< HEAD
-
-=======
-      res.status(201).json({
-        message: ModelName + " created successfully",
-        status: 201,
-        data: newReport,
-      });
->>>>>>> 2d415ba12f695c656f94848026b360e9bc56f338
     } catch (error) {
       if (req.files) {
         req.files.forEach(async file => {
@@ -131,9 +121,8 @@ const ReportController = {
         });
       }
 
-<<<<<<< HEAD
-=======
-      if(updateData.operation){
+
+      if (updateData.operation) {
         const message = await ReportService.getById(updatedObject._id);
         rabbitmq.publishMessage("MAIL", message)
       }
@@ -143,7 +132,6 @@ const ReportController = {
         status: 200,
         data: updatedObject,
       });
->>>>>>> 2d415ba12f695c656f94848026b360e9bc56f338
     } catch (error) {
       if (req.files) {
         req.files.forEach(file => {
