@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import http from "http";
-import { Server } from "socket.io";
 import logger from "./utils/logger.js";
 import { errorHandler, notFound } from "./helper/errorHandler.js";
 import db from "./configs/db.js";
@@ -31,8 +30,6 @@ const corsOptions = {
 db();
 const initializeExpress = (app) => {
   app.use(cors());
-  const server = http.createServer(app);
-  const io = new Server(server);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(morgan("combined", { stream: logger.stream }));
@@ -40,22 +37,6 @@ const initializeExpress = (app) => {
 
 initializeExpress(app);
 
-const server = http.createServer(app);
-const io = new Server(server);
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
-
-io.on("connection", (socket) => {
-  console.log("A client connected");
-  console.log(socket.id);
-
-  // Khi client ngắt kết nối
-  socket.on("disconnect", () => {
-    console.log("A client disconnected");
-  });
-});
 
 app.use(locationRoute);
 app.use(wardRoute);

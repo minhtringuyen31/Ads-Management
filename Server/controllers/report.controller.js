@@ -1,5 +1,6 @@
 import createError from "http-errors";
 import ReportService from "../services/report.service.js";
+import rabbitmq from '../message-broker/rabbitmq.js'
 const ModelName = "Report";
 const modelname = "report";
 const ReportController = {
@@ -48,8 +49,6 @@ const ReportController = {
       const reportData = req.body;
       const newReport = await ReportService.create(reportData);
 
-      req.io.emit("newReport", newReport);
-
       res.status(201).json({
         message: ModelName + " created successfully",
         status: 201,
@@ -70,6 +69,11 @@ const ReportController = {
         return next(
           createError.NotFound(ModelName + ` with id ${id} not found`)
         );
+      }
+
+      if(updateData.operation){
+        const message = await ReportService.getById(updatedObject._id);
+        rabbitmq.publishMessage("MAIL", message)
       }
 
       res.json({
