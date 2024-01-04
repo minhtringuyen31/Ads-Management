@@ -2,6 +2,9 @@ import createError from "http-errors";
 import AuthorizeRequestService from "../services/authorizeRequest.service.js";
 const ModelName = "Authorize Request";
 const modelname = "authorize Request";
+import { v2 as cloudinary } from 'cloudinary';
+
+import { extractPublicId } from 'cloudinary-build-url'
 const AuthorizeRequestController = {
   getAll: async (req, res, next) => {
     try {
