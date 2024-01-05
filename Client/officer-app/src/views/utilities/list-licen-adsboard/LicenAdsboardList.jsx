@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Pagination, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
+import TablePagination from "@mui/material/TablePagination";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ModalAccept from "./ModalAccept";
 import MainCard from "ui-component/cards/MainCard";
@@ -31,8 +32,8 @@ const LicenAdsboardList = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [cancelId, setCancelId] = useState(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Adjust the number of items per page
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleNewLicense = () => {
     navigate("/bussiness/unit_price/createForm");
@@ -111,13 +112,13 @@ const LicenAdsboardList = () => {
     }
   };
 
-  const pageCount = Math.ceil(licenList.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = licenList.slice(indexOfFirstItem, indexOfLastItem);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  const paginate = (event, value) => {
-    setCurrentPage(value);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value), 10);
+    setPage(0);
   };
 
   return (
@@ -168,68 +169,72 @@ const LicenAdsboardList = () => {
             </TableHead>
 
             <TableBody>
-              {currentItems.map((row) => (
-                <TableRow hover key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>
-                    {row.new_ads_board.location.display_name}
-                  </TableCell>
-                  <TableCell>{row.new_ads_board.name}</TableCell>
-                  <TableCell>{row.new_ads_board.contact_name_person}</TableCell>
-                  <TableCell>{row.contract_start_date}</TableCell>
-                  <TableCell>{row.contract_end_date}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={
-                        row.status === "pending"
-                          ? "Đang xử lý"
-                          : row.status === "completed"
-                          ? "Đã được duyệt"
-                          : row.status === "canceled"
-                          ? "Đã hủy"
-                          : row.status
-                      }
-                      color={
-                        row.status === "pending"
-                          ? "primary"
-                          : row.status === "completed"
-                          ? "success"
-                          : row.status === "canceled"
-                          ? "error"
-                          : "default"
-                      }
-                      variant="outlined"
-                      sx={{ borderRadius: "12px" }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      startIcon={<DeleteOutlineOutlinedIcon />}
-                      sx={{
-                        fontWeight: "bold",
-                      }}
-                      onClick={() => {
-                        handleOpenDialog(row._id);
-                      }}
-                      disabled={
-                        row.status === "completed" ||
-                        row.status === "canceled" ||
-                        row.status === "rejected"
-                      }
-                    >
-                      Hủy
-                    </Button>
-                    <ModalAccept
-                      open={openDialog}
-                      handleClose={() => setOpenDialog(false)}
-                      handleCancel={handleCancel}
-                      title={"Xác nhận hủy yêu cầu"}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {licenList
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow hover key={row.id}>
+                    <TableCell>{row.id}</TableCell>
+                    <TableCell>
+                      {row.new_ads_board.location.display_name}
+                    </TableCell>
+                    <TableCell>{row.new_ads_board.name}</TableCell>
+                    <TableCell>
+                      {row.new_ads_board.contact_name_person}
+                    </TableCell>
+                    <TableCell>{row.contract_start_date}</TableCell>
+                    <TableCell>{row.contract_end_date}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={
+                          row.status === "pending"
+                            ? "Đang xử lý"
+                            : row.status === "completed"
+                            ? "Đã được duyệt"
+                            : row.status === "canceled"
+                            ? "Đã hủy"
+                            : row.status
+                        }
+                        color={
+                          row.status === "pending"
+                            ? "primary"
+                            : row.status === "completed"
+                            ? "success"
+                            : row.status === "canceled"
+                            ? "error"
+                            : "default"
+                        }
+                        variant="outlined"
+                        sx={{ borderRadius: "12px" }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DeleteOutlineOutlinedIcon />}
+                        sx={{
+                          fontWeight: "bold",
+                        }}
+                        onClick={() => {
+                          handleOpenDialog(row._id);
+                        }}
+                        disabled={
+                          row.status === "completed" ||
+                          row.status === "canceled" ||
+                          row.status === "rejected"
+                        }
+                      >
+                        Hủy
+                      </Button>
+                      <ModalAccept
+                        open={openDialog}
+                        handleClose={() => setOpenDialog(false)}
+                        handleCancel={handleCancel}
+                        title={"Xác nhận hủy yêu cầu"}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
@@ -241,12 +246,14 @@ const LicenAdsboardList = () => {
           }}
         >
           <span />
-          <Pagination
-            count={pageCount}
-            page={currentPage}
-            onChange={paginate}
-            color="primary"
-            sx={{ padding: theme.spacing(2) }}
+          <TablePagination
+            rowsPerPageOptions={[5, 10]}
+            component="div"
+            count={licenList.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Box>
       </Scrollbar>

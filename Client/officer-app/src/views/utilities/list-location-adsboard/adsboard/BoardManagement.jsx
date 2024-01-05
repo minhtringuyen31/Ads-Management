@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
-
 import MainCard from "ui-component/cards/MainCard";
+import TablePagination from "@mui/material/TablePagination";
 import {
   Box,
   Table,
@@ -22,7 +22,8 @@ const BoardManagement = () => {
   const [filteredData, setFilteredData] = useState([]); //lưu data đã được filter
   const theme = useTheme();
 
-  // const title = useRef("Board Management");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRowClick = useCallback((row) => {
     setSelectedRow(row); //lưu data của row đc chọn
@@ -55,7 +56,14 @@ const BoardManagement = () => {
     fetchData();
   }, []);
 
-  console.log("abc");
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value), 10);
+    setPage(0);
+  };
 
   return (
     <MainCard title="Board Management">
@@ -78,19 +86,21 @@ const BoardManagement = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredData.map((row) => (
-                <TableRow
-                  key={row.id}
-                  onClick={() => handleRowClick(row)}
-                  hover
-                >
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.adsboard_type.label}</TableCell>
-                  <TableCell>{`Height: ${row.height}; Width: ${row.width}`}</TableCell>
-                  <TableCell>{row.contract_start_date}</TableCell>
-                  <TableCell>{row.contract_end_date}</TableCell>
-                </TableRow>
-              ))}
+              {filteredData
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow
+                    key={row.id}
+                    onClick={() => handleRowClick(row)}
+                    hover
+                  >
+                    <TableCell>{row.id}</TableCell>
+                    <TableCell>{row.adsboard_type.label}</TableCell>
+                    <TableCell>{`Height: ${row.height}; Width: ${row.width}`}</TableCell>
+                    <TableCell>{row.contract_start_date}</TableCell>
+                    <TableCell>{row.contract_end_date}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
@@ -103,6 +113,25 @@ const BoardManagement = () => {
           adDetail={selectedRow}
         />
       )}
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <span />
+        <TablePagination
+          rowsPerPageOptions={[5, 10]}
+          component="div"
+          count={filteredData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
     </MainCard>
   );
 };

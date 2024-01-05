@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Pagination } from "@mui/material";
+import TablePagination from "@mui/material/TablePagination";
 import {
   Box,
   Table,
@@ -20,8 +20,9 @@ const LocationManagement = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [dataLocation, setDataLocation] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Adjust the number of items per page
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     async function fetchData() {
@@ -57,13 +58,13 @@ const LocationManagement = () => {
     return <div>Loading...</div>;
   }
 
-  const pageCount = Math.ceil(dataLocation.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = dataLocation.slice(indexOfFirstItem, indexOfLastItem);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  const paginate = (event, value) => {
-    setCurrentPage(value);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value), 10);
+    setPage(0);
   };
 
   return (
@@ -116,23 +117,25 @@ const LocationManagement = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentItems.map((row) => (
-                <TableRow
-                  key={row.id}
-                  onClick={() => handleRowClick(row)}
-                  hover
-                >
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>
-                    {row.address}, {row.ward.label}, {row.district.label}
-                  </TableCell>
-                  <TableCell>{row.location_type.label}</TableCell>
-                  <TableCell>{row.ads_type.label}</TableCell>
-                  <TableCell>
-                    {row.is_planned ? "Đã quy hoạch" : "Chưa quy hoạch"}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {dataLocation
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow
+                    key={row.id}
+                    onClick={() => handleRowClick(row)}
+                    hover
+                  >
+                    <TableCell>{row.id}</TableCell>
+                    <TableCell>
+                      {row.address}, {row.ward.label}, {row.district.label}
+                    </TableCell>
+                    <TableCell>{row.location_type.label}</TableCell>
+                    <TableCell>{row.ads_type.label}</TableCell>
+                    <TableCell>
+                      {row.is_planned ? "Đã quy hoạch" : "Chưa quy hoạch"}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
@@ -144,12 +147,14 @@ const LocationManagement = () => {
           }}
         >
           <span />
-          <Pagination
-            count={pageCount}
-            page={currentPage}
-            onChange={paginate}
-            color="primary"
-            sx={{ padding: theme.spacing(2) }}
+          <TablePagination
+            rowsPerPageOptions={[5, 10]}
+            component="div"
+            count={dataLocation.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Box>
       </MainCard>
