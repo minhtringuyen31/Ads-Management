@@ -16,7 +16,6 @@ const modalStyle = {
   p: 0,
   width: "60%",
   height: "60%",
-  // overflowY: "auto",
 };
 
 const MapBox = ({

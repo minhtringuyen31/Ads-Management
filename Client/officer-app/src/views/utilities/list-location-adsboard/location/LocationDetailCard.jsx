@@ -9,7 +9,6 @@ import SlideImages from "../SlideImages";
 import MapModal from "../map/MapModal";
 
 const LocationDetailCard = ({ locationDetailData }) => {
-  // const [locationDetailData, setLocationDetailData] = useState(null);
   const [openMapModal, setOpenMapModal] = useState(false);
 
   const handleOpenMapModal = () => {
@@ -25,7 +24,6 @@ const LocationDetailCard = ({ locationDetailData }) => {
   }
 
   console.log("Data detail: ", locationDetailData);
-  // console.log("ID location: ", locationID);
 
   return (
     <>
@@ -86,6 +84,7 @@ const LocationDetailCard = ({ locationDetailData }) => {
         onClose={handleCloseMapModal}
         lat={locationDetailData.coordinate.lat}
         lng={locationDetailData.coordinate.lng}
+        address={locationDetailData.address}
       />
     </>
   );
