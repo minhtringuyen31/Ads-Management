@@ -230,7 +230,7 @@ const LicenAdsboardList = () => {
                         open={openDialog}
                         handleClose={() => setOpenDialog(false)}
                         handleCancel={handleCancel}
-                        title={"Xác nhận hủy yêu cầu"}
+                        title={"Xác nhận"}
                       />
                     </TableCell>
                   </TableRow>
