@@ -5,6 +5,7 @@ import { Chip } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ModalAccept from "./ModalAccept";
+import ModalDetail from "./ModalDetailLicen";
 import MainCard from "ui-component/cards/MainCard";
 import {
   Table,
@@ -29,8 +30,11 @@ const LicenAdsboardList = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [licenList, setLicenList] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openModalConfirm, setOpenModalConfirm] = useState(false);
   const [cancelId, setCancelId] = useState(null);
+
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [openModalDetail, setOpenModalDetail] = useState(false);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -75,10 +79,15 @@ const LicenAdsboardList = () => {
 
   console.log("Licen list: ", licenList);
 
-  const handleOpenDialog = (id) => {
+  const handleOpenModalConfirm = (id) => {
     setCancelId(id);
-    setOpenDialog(true);
+    setOpenModalConfirm(true);
   };
+
+  const handleRowClick = useCallback((row) => {
+    setSelectedRow(row); //lưu data của row đc chọn
+    setOpenModalDetail(true);
+  }, []);
 
   const handleCancel = async () => {
     if (cancelId) {
@@ -108,7 +117,7 @@ const LicenAdsboardList = () => {
       } catch (error) {
         console.error("Error cancel request: ", error);
       }
-      setOpenDialog(false);
+      setOpenModalConfirm(false);
     }
   };
 
@@ -120,6 +129,8 @@ const LicenAdsboardList = () => {
     setRowsPerPage(parseInt(event.target.value), 10);
     setPage(0);
   };
+
+  console.log('Selected data: ', selectedRow);
 
   return (
     <MainCard title="Quản lý cấp phép quảng cáo">
@@ -172,7 +183,15 @@ const LicenAdsboardList = () => {
               {licenList
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
-                  <TableRow hover key={row.id}>
+                  <TableRow
+                    hover
+                    key={row.id}
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                      handleRowClick(row);
+                      
+                    }}
+                  >
                     <TableCell>{row.id}</TableCell>
                     <TableCell>
                       {row.new_ads_board.location.display_name}
@@ -216,7 +235,7 @@ const LicenAdsboardList = () => {
                           fontWeight: "bold",
                         }}
                         onClick={() => {
-                          handleOpenDialog(row._id);
+                          handleOpenModalConfirm(row._id);
                         }}
                         disabled={
                           row.status === "completed" ||
@@ -227,8 +246,8 @@ const LicenAdsboardList = () => {
                         Hủy
                       </Button>
                       <ModalAccept
-                        open={openDialog}
-                        handleClose={() => setOpenDialog(false)}
+                        open={openModalConfirm}
+                        handleClose={() => setOpenModalConfirm(false)}
                         handleCancel={handleCancel}
                         title={"Xác nhận"}
                       />
@@ -257,6 +276,14 @@ const LicenAdsboardList = () => {
           />
         </Box>
       </Scrollbar>
+
+      {selectedRow && (
+        <ModalDetail
+          open={openModalDetail}
+          handleClose={() => setOpenModalDetail(false)}
+          licenDetail={selectedRow}
+        />
+      )}
     </MainCard>
   );
 };

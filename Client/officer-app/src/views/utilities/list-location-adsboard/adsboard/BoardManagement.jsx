@@ -14,7 +14,7 @@ import { useTheme } from "@mui/material/styles";
 import Scrollbar from "ui-component/scrollbar/Scrollbar";
 import "../styles.scss";
 
-import Modal from "../ModalDetail";
+import Modal from "../ModalDetailAdsboard";
 
 const BoardManagement = () => {
   const [openModal, setOpenModal] = useState(false); //đóng mở modal
@@ -93,6 +93,7 @@ const BoardManagement = () => {
                     key={row.id}
                     onClick={() => handleRowClick(row)}
                     hover
+                    sx={{ cursor: "pointer" }}
                   >
                     <TableCell>{row.id}</TableCell>
                     <TableCell>{row.adsboard_type.label}</TableCell>

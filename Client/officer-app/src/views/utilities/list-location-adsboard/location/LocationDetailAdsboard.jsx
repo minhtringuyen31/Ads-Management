@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
 import { useState } from "react";
-import ModalTest from "../ModalDetail";
+import ModalTest from "../ModalDetailAdsboard";
 
 const boxContainerStyle = {
   // backgroundColor: "yellow",

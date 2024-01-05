@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import "../styles.scss";
 
-import SlideImages from "../SlideImages";
+import SlideImages from "../../SlideImages";
 import MapModal from "../map/MapModal";
 
 const LocationDetailCard = ({ locationDetailData }) => {
