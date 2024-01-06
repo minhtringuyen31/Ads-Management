@@ -4,6 +4,7 @@ import Map from "./ui-components/MapContainer/Map";
 import Drawer from "./ui-components/Drawer/Drawer";
 import { useState } from "react";
 import { styled } from '@mui/material/styles';
+import SearchBar from "./ui-components/Search/SearchBar";
 
 /**
  * Custom Switch Style
@@ -72,7 +73,7 @@ function App() {
    */
   const handleReportSwitchChange = () => {
     setReportSwitch(!reportSwitch);
-    if (isDrawerOpen) {
+    if (isDrawerOpen && shape === 2) {
       closeDrawer();
     } else {
       setShape(2);
@@ -108,6 +109,9 @@ function App() {
         closeDrawer={closeDrawer}
         isDrawerOpen={isDrawerOpen}
       />
+      {/* <Box position>
+        <SearchBar/>
+      </Box> */}
       <Box position='absolute' bgcolor={'rgba(255, 255, 255, 0.75)'} display="flex" flexDirection="row" width="100" margin="10px" paddingLeft="10px" bottom={0} right={0} borderRadius={2} zIndex='1000'>
         <FormControlLabel
           control={<CustomSwitch checked={boardSwitch} onChange={() => handleBoardSwitchChange()}  />}

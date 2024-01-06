@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axiosClient from "../../axiosConfig/axiosClient";
 import { useMapEvents } from "react-leaflet";
+import SearchBar from "../Search/SearchBar";
 // import dotenv from "dotenv";
 
 // dotenv.config();
@@ -37,15 +38,15 @@ const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
     );
     const data = await response.json();
-    const mapillaryResponse = await fetch(
-      `https://api.mapillary.com/v3/images?client_id=YOUR_MAPILLARY_CLIENT_ID&closeto=${lng},${lat}&radius=50`
-    );
-    const mapillaryData = await mapillaryResponse.json();
-    console.log("MapillaryData: ", mapillaryData)
+    // const mapillaryResponse = await fetch(
+    //   `https://api.mapillary.com/v3/images?client_id=YOUR_MAPILLARY_CLIENT_ID&closeto=${lng},${lat}&radius=50`
+    // );
+    // const mapillaryData = await mapillaryResponse.json();
+    // console.log("MapillaryData: ", mapillaryData)
 
-    // Add images to the data
-    data.images = mapillaryData.features.map((feature) => feature.properties.key);
-      console.log("Data: ", data)
+    // // Add images to the data
+    // data.images = mapillaryData.features.map((feature) => feature.properties.key);
+    //   console.log("Data: ", data)
     return data;
   };
 
@@ -202,6 +203,9 @@ const Map = ({ setShape, openDrawer, setDrawerContent, boardDisplayMode }) => {
             handleButtonClicked={handleButtonClicked}
           />
         </MapContainer>
+        <Box position="absolute" right="5%" top="2%" width="35%" zIndex={10000}>
+        <SearchBar/>
+      </Box>
       </Box>
  
       
