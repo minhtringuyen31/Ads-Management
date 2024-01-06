@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Admin, User, WardOfficer, DistrictOfficer } from "../models/UserModel.js";
+import { ProvinceOfficer, User, WardOfficer, DistrictOfficer } from "../models/UserModel.js";
 const UserService = {
     async getAll(filter, projection) {
         try {
