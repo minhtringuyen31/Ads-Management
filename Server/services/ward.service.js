@@ -3,7 +3,12 @@ import { Ward } from '../models/WardModel.js'
 const WardService = {
     async getAll(filter, projection) {
         try {
-            const ward = await Ward.find(filter).select(projection);
+            const ward = await Ward.find(filter).select("-coordinates")
+            .populate({
+                path: "district",
+                model: "District", // Replace with the actual name of the User model
+                select: "-coordinates",
+              });
             return ward;
         } catch (error) {
             throw error;

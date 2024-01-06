@@ -30,6 +30,8 @@ const AuthController = {
     });
     
     user.password = undefined;
+    req.user = user;
+    console.log(req.user)
     res.json({ user, accessToken, refreshToken });
   },
   refresh: async (req, res) => {

@@ -1,7 +1,6 @@
-
 import mongoose from "mongoose";
-import { ProvinceOfficer, User, WardOfficer, DistrictOfficer } from "../models/UserModel.js";
-const CompanyServices = {
+import { Admin, User, WardOfficer, DistrictOfficer } from "../models/UserModel.js";
+const UserService = {
     async getAll(filter, projection) {
         try {
             const user = await User.find(filter).select(projection);
@@ -35,7 +34,16 @@ const CompanyServices = {
     },
     async getById(id) {
         try {
-            const user = await User.findById(id);
+            let user = await User.findById(id);
+            if (user.__t === "DistrictOfficer") {
+                const user = await DistrictOfficer.findById(id);
+            }
+            else if (user.__t === "WardOfficer") {
+                const user = await WardOfficer.findById(id);
+            }
+            else {
+                const user = await User.findById(id);
+            }
             return user;
         } catch (error) {
             throw error;
@@ -43,7 +51,17 @@ const CompanyServices = {
     },
     async update(id, data) {
         try {
-            const user = await User.findByIdAndUpdate(id, data, { new: true });
+            const user = await User.findById(id);
+            if (user.__t === "DistrictOfficer") {
+                const updatedUser = await DistrictOfficer.findByIdAndUpdate(id, data);
+            }
+            else if (user.__t === "WardOfficer") {
+                const updatedUser = await WardOfficer.findByIdAndUpdate(id, data);
+            }
+            else {
+                const updatedUser = await User.findByIdAndUpdate(id, data);
+            }
+
             return user;
         } catch (error) {
             throw error;
@@ -56,7 +74,7 @@ const CompanyServices = {
         } catch (error) {
             throw error;
         }
-    }
-}
+    },
+};
 
-export default CompanyServices
+export default UserService;
