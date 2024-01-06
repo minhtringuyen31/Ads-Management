@@ -47,6 +47,7 @@
     "react-swipeable-views-react-18-fix": "^0.14.1",
     "react-swipeable-views-utils": "^0.14.0",
     "redux": "^4.2.0",
+    "redux-persist": "^6.0.0",
     "simplebar-react": "^3.2.4",
     "yup": "^0.32.11"
   },

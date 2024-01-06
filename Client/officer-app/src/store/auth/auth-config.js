@@ -17,3 +17,11 @@ export const StoreToken = ({ accessToken, refreshToken }) => {
 export const RemoveToken = () => {
   localStorage.clear();
 };
+
+export const StoreUser = (user) => {
+  localStorage.setItem('user', JSON.stringify(user));
+};
+
+export const GetUser = () => {
+  return JSON.parse(localStorage.getItem('user'));
+};

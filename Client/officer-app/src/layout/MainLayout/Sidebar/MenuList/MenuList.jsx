@@ -3,15 +3,13 @@ import { Typography } from '@mui/material';
 
 // project imports
 import menuItem from 'menu-items';
-import { useSelector } from 'react-redux';
+import { GetUser } from 'store/auth/auth-config';
 import NavGroup from './NavGroup/NavGroup';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
-  const user = useSelector((state) => state.userInfo);
-  const role = useSelector((state) => state.authorization.userInfo.userRole);
-  console.log(user);
+  const role = GetUser().userRole;
   let items = [];
 
   switch (role) {

@@ -34,7 +34,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import useHttp from 'hooks/use-http';
 import { login } from 'lib/api';
 import { AuthenticationActions } from 'redux/auth/authentication-slice';
-import { AuthorizationActions } from 'redux/auth/authorization-slice';
+import { StoreUser } from 'store/auth/auth-config';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -72,7 +72,7 @@ const Login = ({ ...others }) => {
       })
     );
 
-    dispatch(AuthorizationActions.updateAuthorization(loadedAuth.user));
+    StoreUser(loadedAuth.user);
 
     navigate('/dashboard');
   }
