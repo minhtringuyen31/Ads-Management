@@ -212,7 +212,7 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
         />
       </Box>
 
-      <Box
+      {/* <Box
         display="flex"
         justifyContent="end"
         alignItems="center"
@@ -232,7 +232,7 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
         <Button variant="outlined" onClick={() => handleButtonClicked(3)}>
           Ads Panel
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };
