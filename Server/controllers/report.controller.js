@@ -1,27 +1,64 @@
 import createError from "http-errors";
 import ReportService from "../services/report.service.js";
-import rabbitmq from '../message-broker/rabbitmq.js'
+import UserService from "../services/user.service.js";
+import rabbitmq from "../message-broker/rabbitmq.js";
 const ModelName = "Report";
 const modelname = "report";
 import { fromJson } from "../helper/dto.js";
-import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
-import { v2 as cloudinary } from 'cloudinary';
+import {
+  createMongooseQuery,
+  createMongooseSortObject,
+} from "../helper/filter.js";
+import { v2 as cloudinary } from "cloudinary";
 
-import { extractPublicId } from 'cloudinary-build-url'
+import { extractPublicId } from "cloudinary-build-url";
 const ReportController = {
   getAll: async (req, res, next) => {
     try {
       const filter = req.body;
-      const lists = await ReportService.getAll(filter);
+      const reports = await ReportService.getAll(filter);
 
-      if (!lists) {
-        return next(createError.BadRequest(ModelName + " list not found"));
+      const lists = reports.map((report) => {
+        if (report.type === "location" && report.location) {
+          // If the report type is location and there is a location, add the coordinate property
+          return {
+            ...report,
+            ward: report.location.ward,
+            district: report.location.ward.district,
+          };
+        } else if (
+          report.type === "board" &&
+          report.board &&
+          report.board.location
+        ) {
+          // If the report type is board and there is a board and a location_id, add the coordinate property
+          return {
+            ...report,
+            ward: report.board.location.ward,
+            district: report.board.location.ward.district,
+          };
+        }
+        return report;
+      });
+      let filteredLists = lists;
+      const user = await UserService.getById(req.user.userId);
+      const assigned_areaid = user.assigned_areaid;
+      if (user.__t === "WardOfficer") {
+        filteredLists = lists.filter(
+          (report) => report.ward === assigned_areaid
+        );
+      } else if (user.__t === "DistrictOfficer") {
+        filteredLists = lists.filter(
+          (report) => report.district === assigned_areaid
+        );
       }
-
+      
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
-        data: lists,
+        // size: filteredLists.length,
+        // size_all: reports.length,
+        data: filteredLists,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
@@ -54,7 +91,7 @@ const ReportController = {
       const reportData = req.body;
       const files = req.files;
       if (files) {
-        reportData.image = files.map(file => file.path);
+        reportData.image = files.map((file) => file.path);
       }
       const newReport = await ReportService.create(reportData);
       if (newReport) {
@@ -65,25 +102,30 @@ const ReportController = {
         });
       } else {
         if (files) {
-          files.forEach(async file => {
-            await cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
-              console.log(result, error);
-            });
+          files.forEach(async (file) => {
+            await cloudinary.uploader.destroy(
+              extractPublicId(file.path),
+              function (error, result) {
+                console.log(result, error);
+              }
+            );
           });
         }
         res.json({
           message: "Create location failed",
           status: 400,
-          data: newReport
-        })
+          data: newReport,
+        });
       }
-
     } catch (error) {
       if (req.files) {
-        req.files.forEach(async file => {
-          await cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
-            console.log(result, error);
-          });
+        req.files.forEach(async (file) => {
+          await cloudinary.uploader.destroy(
+            extractPublicId(file.path),
+            function (error, result) {
+              console.log(result, error);
+            }
+          );
         });
       }
       next(createError.InternalServerError(error.message));
@@ -96,13 +138,13 @@ const ReportController = {
       const updateData = req.body;
       const files = req.files;
       if (files) {
-        updateData.image = files.map(file => file.path);
+        updateData.image = files.map((file) => file.path);
       }
       const updatedObject = await ReportService.update(id, updateData);
 
       if (!updatedObject) {
         if (req.files) {
-          req.files.forEach(file => {
+          req.files.forEach((file) => {
             cloudinary.uploader.destroy(file.path, function (error, result) {
               console.log(result, error);
             });
@@ -111,9 +153,7 @@ const ReportController = {
         return next(
           createError.NotFound(ModelName + ` with id ${id} not found`)
         );
-      }
-      else {
-
+      } else {
         res.json({
           message: ModelName + " updated successfully",
           status: 200,
@@ -121,10 +161,9 @@ const ReportController = {
         });
       }
 
-
       if (updateData.operation) {
         const message = await ReportService.getById(updatedObject._id);
-        rabbitmq.publishMessage("MAIL", message)
+        rabbitmq.publishMessage("MAIL", message);
       }
 
       res.json({
@@ -134,7 +173,7 @@ const ReportController = {
       });
     } catch (error) {
       if (req.files) {
-        req.files.forEach(file => {
+        req.files.forEach((file) => {
           cloudinary.uploader.destroy(file.path, function (error, result) {
             console.log(result, error);
           });

@@ -61,6 +61,7 @@ const UserController = {
         try {
             const { id } = req.params;
             const location = await UserService.getById(id);
+            
             if (!location) {
                 return next(createError.BadRequest("User not found"))
             }

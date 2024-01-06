@@ -55,9 +55,9 @@ WardOfficerSchema.add({
 
 DistrictOfficerSchema.add({
     assigned_areaid: {
-        type: [Schema.Types.ObjectId],
+        type: Schema.Types.ObjectId,
         required: false,
-        ref: 'Ward',
+        ref: 'District',
     },
 });
 
