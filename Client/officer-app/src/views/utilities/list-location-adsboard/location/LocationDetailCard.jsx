@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Button,
+} from "@mui/material";
 import MapIcon from "@mui/icons-material/Map";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
@@ -20,7 +26,26 @@ const LocationDetailCard = ({ locationDetailData }) => {
   };
 
   if (!locationDetailData) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          zIndex: 1500,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   console.log("Data detail: ", locationDetailData);
@@ -71,6 +96,9 @@ const LocationDetailCard = ({ locationDetailData }) => {
               View in map
               <MapIcon />
             </Link>
+            <Button variant="contained" sx={{ marginTop: "16px" }}>
+              Yêu cầu chỉnh sửa
+            </Button>
           </CardContent>
         </Box>
         <SlideImages

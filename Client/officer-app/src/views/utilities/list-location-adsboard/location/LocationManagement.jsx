@@ -9,6 +9,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  CircularProgress,
 } from "@mui/material";
 
 import MainCard from "ui-component/cards/MainCard";
@@ -55,7 +56,26 @@ const LocationManagement = () => {
   );
 
   if (!dataLocation) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          zIndex: 1500,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const handleChangePage = (event, newPage) => {
@@ -124,6 +144,7 @@ const LocationManagement = () => {
                     key={row.id}
                     onClick={() => handleRowClick(row)}
                     hover
+                    sx={{ cursor: "pointer" }}
                   >
                     <TableCell>{row.id}</TableCell>
                     <TableCell>
