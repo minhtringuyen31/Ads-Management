@@ -10,7 +10,8 @@ import NavGroup from './NavGroup/NavGroup';
 
 const MenuList = () => {
   const user = useSelector((state) => state.userInfo);
-  const role = useSelector((state) => state.authorization.userInfo.userRole);
+  // const role = useSelector((state) => state.authorization.userInfo.userRole);
+  const role = 'ward_officer';
   console.log(user);
   let items = [];
 

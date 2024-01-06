@@ -15,15 +15,17 @@ import store from './redux';
 // import { store } from 'store';
 
 // ==============================|| REACT DOM RENDER  ||============================== //
-
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <Provider store={store}>
+
+  < Provider store={store}>
     <BrowserRouter basename={config.basename}>
       <App />
     </BrowserRouter>
   </Provider>
+
+
 );
 
 // If you want to start measuring performance in your app, pass a function

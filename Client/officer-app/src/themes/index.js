@@ -44,6 +44,7 @@ export const theme = (customization) => {
       },
     },
     typography: themeTypography(themeOption),
+
   };
 
   const themes = createTheme(themeOptions);

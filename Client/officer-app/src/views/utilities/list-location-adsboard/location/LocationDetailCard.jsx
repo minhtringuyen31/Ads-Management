@@ -93,7 +93,7 @@ const LocationDetailCard = ({ locationDetailData }) => {
               onClick={handleOpenMapModal}
               className="card__box__content__typo"
             >
-              View in map
+              Bản đồ
               <MapIcon />
             </Link>
             <Button variant="contained" sx={{ marginTop: "16px" }}>
