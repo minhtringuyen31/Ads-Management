@@ -9,7 +9,6 @@ const AuthenticationSlice = createSlice({
   reducers: {
     login(state, action) {
       state.isLoggedIn = true;
-      console.log(action.payload);
       StoreToken({
         accessToken: action.payload.accessToken,
         refreshToken: action.payload.refreshToken,

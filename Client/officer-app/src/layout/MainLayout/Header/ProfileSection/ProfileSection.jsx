@@ -1,43 +1,39 @@
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from 'react';
 
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // material-ui
-import { useTheme } from "@mui/material/styles";
 import {
   Avatar,
   Box,
-  Card,
-  CardContent,
   Chip,
   ClickAwayListener,
   Divider,
-  Grid,
-  InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  OutlinedInput,
   Paper,
   Popper,
   Stack,
-  Switch,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // third-party
-import PerfectScrollbar from "react-perfect-scrollbar";
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project imports
-import MainCard from "ui-component/cards/MainCard";
-import Transitions from "ui-component/extended/Transitions";
+import MainCard from 'ui-component/cards/MainCard';
+import Transitions from 'ui-component/extended/Transitions';
 // import UpgradePlanCard from "./UpgradePlanCard";
-import User1 from "assets/images/user.png";
+import User1 from 'assets/images/user.png';
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from "@tabler/icons";
+import { IconLogout, IconSettings } from '@tabler/icons';
+import { AuthenticationActions } from 'redux/auth/authentication-slice';
+import { AuthorizationActions } from 'redux/auth/authorization-slice';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -45,9 +41,10 @@ const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
@@ -56,7 +53,9 @@ const ProfileSection = () => {
    * */
   const anchorRef = useRef(null);
   const handleLogout = async () => {
-    console.log("Logout");
+    dispatch(AuthenticationActions.logout());
+    dispatch(AuthorizationActions.removeAuthorization());
+    window.location.href = '/admin_dashboard/login';
   };
 
   const handleClose = (event) => {
@@ -66,11 +65,11 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  const handleListItemClick = (event, index, route = "") => {
+  const handleListItemClick = (event, index, route = '') => {
     setSelectedIndex(index);
     handleClose(event);
 
-    if (route && route !== "") {
+    if (route && route !== '') {
       navigate(route);
     }
   };
@@ -91,21 +90,21 @@ const ProfileSection = () => {
     <>
       <Chip
         sx={{
-          height: "48px",
-          alignItems: "center",
-          borderRadius: "27px",
-          transition: "all .2s ease-in-out",
+          height: '48px',
+          alignItems: 'center',
+          borderRadius: '27px',
+          transition: 'all .2s ease-in-out',
           borderColor: theme.palette.primary.light,
           backgroundColor: theme.palette.primary.light,
           '&[aria-controls="menu-list-grow"], &:hover': {
             borderColor: theme.palette.primary.main,
             background: `${theme.palette.primary.main}!important`,
             color: theme.palette.primary.light,
-            "& svg": {
+            '& svg': {
               stroke: theme.palette.primary.light,
             },
           },
-          "& .MuiChip-label": {
+          '& .MuiChip-label': {
             lineHeight: 0,
           },
         }}
@@ -114,31 +113,31 @@ const ProfileSection = () => {
             src={User1}
             sx={{
               ...theme.typography.mediumAvatar,
-              margin: "8px 0 8px 8px !important",
-              cursor: "pointer",
+              margin: '8px 0 8px 8px !important',
+              cursor: 'pointer',
             }}
             ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            color="inherit"
+            aria-controls={open ? 'menu-list-grow' : undefined}
+            aria-haspopup='true'
+            color='inherit'
           />
         }
         label={
           <IconSettings
             stroke={1.5}
-            size="1.5rem"
+            size='1.5rem'
             color={theme.palette.primary.main}
           />
         }
-        variant="outlined"
+        variant='outlined'
         ref={anchorRef}
-        aria-controls={open ? "menu-list-grow" : undefined}
-        aria-haspopup="true"
+        aria-controls={open ? 'menu-list-grow' : undefined}
+        aria-haspopup='true'
         onClick={handleToggle}
-        color="primary"
+        color='primary'
       />
       <Popper
-        placement="bottom-end"
+        placement='bottom-end'
         open={open}
         anchorEl={anchorRef.current}
         role={undefined}
@@ -147,7 +146,7 @@ const ProfileSection = () => {
         popperOptions={{
           modifiers: [
             {
-              name: "offset",
+              name: 'offset',
               options: {
                 offset: [0, 14],
               },
@@ -168,17 +167,17 @@ const ProfileSection = () => {
                 >
                   <Box sx={{ p: 2 }}>
                     <Stack>
-                      <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">Good Morning,</Typography>
+                      <Stack direction='row' spacing={0.5} alignItems='center'>
+                        <Typography variant='h4'>Good Morning,</Typography>
                         <Typography
-                          component="span"
-                          variant="h4"
+                          component='span'
+                          variant='h4'
                           sx={{ fontWeight: 400 }}
                         >
                           Admin
                         </Typography>
                       </Stack>
-                      <Typography variant="subtitle2">Project Admin</Typography>
+                      <Typography variant='subtitle2'>Project Admin</Typography>
                     </Stack>
                     {/* <OutlinedInput
                       sx={{ width: "100%", pr: 1, pl: 2, my: 2 }}
@@ -204,9 +203,9 @@ const ProfileSection = () => {
                   </Box>
                   <PerfectScrollbar
                     style={{
-                      height: "100%",
-                      maxHeight: "calc(100vh - 250px)",
-                      overflowX: "hidden",
+                      height: '100%',
+                      maxHeight: 'calc(100vh - 250px)',
+                      overflowX: 'hidden',
                     }}
                   >
                     <Box sx={{ p: 2 }}>
@@ -214,17 +213,17 @@ const ProfileSection = () => {
                       {/* <Divider /> */}
 
                       <List
-                        component="nav"
+                        component='nav'
                         sx={{
-                          width: "100%",
+                          width: '100%',
                           maxWidth: 350,
                           minWidth: 300,
                           backgroundColor: theme.palette.background.paper,
-                          borderRadius: "10px",
-                          [theme.breakpoints.down("md")]: {
-                            minWidth: "100%",
+                          borderRadius: '10px',
+                          [theme.breakpoints.down('md')]: {
+                            minWidth: '100%',
                           },
-                          "& .MuiListItemButton-root": {
+                          '& .MuiListItemButton-root': {
                             mt: 0.5,
                           },
                         }}
@@ -235,15 +234,15 @@ const ProfileSection = () => {
                           }}
                           selected={selectedIndex === 0}
                           onClick={(event) =>
-                            handleListItemClick(event, 0, "#")
+                            handleListItemClick(event, 0, '#')
                           }
                         >
                           <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem" />
+                            <IconSettings stroke={1.5} size='1.3rem' />
                           </ListItemIcon>
                           <ListItemText
                             primary={
-                              <Typography variant="body2">
+                              <Typography variant='body2'>
                                 Account Settings
                               </Typography>
                             }
@@ -295,11 +294,11 @@ const ProfileSection = () => {
                           onClick={handleLogout}
                         >
                           <ListItemIcon>
-                            <IconLogout stroke={1.5} size="1.3rem" />
+                            <IconLogout stroke={1.5} size='1.3rem' />
                           </ListItemIcon>
                           <ListItemText
                             primary={
-                              <Typography variant="body2">Logout</Typography>
+                              <Typography variant='body2'>Logout</Typography>
                             }
                           />
                         </ListItemButton>

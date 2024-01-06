@@ -39,9 +39,11 @@ instance.interceptors.response.use(
           return axios(newConfig);
         } else {
           RemoveToken();
+          window.location.href = '/admin_dashboard/login';
         }
       } catch (error) {
         RemoveToken();
+        window.location.href = '/admin_dashboard/login';
       }
     }
   }

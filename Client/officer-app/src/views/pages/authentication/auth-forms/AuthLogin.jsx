@@ -65,8 +65,6 @@ const Login = ({ ...others }) => {
   }
 
   if (status === 'completed') {
-    console.log(loadedAuth);
-
     dispatch(
       AuthenticationActions.login({
         accessToken: loadedAuth.accessToken,

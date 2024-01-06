@@ -1,14 +1,12 @@
-import bussiness from './bussiness';
 import dashboard from './dashboard';
 import utilities from './utilities';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, utilities, bussiness],
-  ward: [dashboard, utilities, bussiness],
-  district: [dashboard, utilities, bussiness],
-  department: [dashboard, utilities, bussiness],
+  ward_officer: [dashboard, utilities.ward_officer],
+  district_officer: [dashboard, utilities.district_officer],
+  province_officer: [dashboard, utilities.province_officer],
 };
 
 export default menuItems;
