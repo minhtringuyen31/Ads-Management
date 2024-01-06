@@ -1,9 +1,37 @@
-import { Box, Typography, Button, Divider } from "@mui/material";
+import { Box, Typography, Button, Divider, Modal } from "@mui/material";
 import ReportIcon from "@mui/icons-material/Report";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import ReportForm from "../Report/ReportForm";
 
-const LocationInformation = ({ content }) => (
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "white",
+
+  boxShadow: 24,
+  borderRadius: 10,
+};
+
+
+const LocationInformation = ({ content }) => {
+  const [reportModelOpen, setReportModalOpen] = useState(false);
+
+  const handleCloseModal = () => {
+    setReportModalOpen(false);
+  };
+  const handleOpenReportModal = () => {
+    setReportModalOpen(true);
+  };
+
+  const handleReportBtnOnclick = () => {
+    handleOpenReportModal();
+  };
+
+  return (
   <Box
     position="relative"
     display="flex"
@@ -45,12 +73,43 @@ const LocationInformation = ({ content }) => (
         sx={{
           fontWeight: "bold",
         }}
+        onClick={()=>handleReportBtnOnclick()}
       >
         Báo cáo vi phạm
       </Button>
     </Box>
+
+    <Modal
+        open={reportModelOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          style={style}
+          bgcolor={"white"}
+          width="40%"
+          height="90%"
+          padding={3}
+        >
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Typography fontSize={20} fontWeight="bold" color="#475569">
+              {/* {item.adsboard_type.label} */}
+            </Typography>
+            <Typography fontSize={12} color="#70757a">
+              {/* {item.location.address} */}
+            </Typography>
+          </Box>
+          <Box>
+            <ReportForm  type={"board"}/>
+          </Box>
+        </Box>
+      </Modal>
   </Box>
-);
+  );
+};
 
 export default LocationInformation;
 

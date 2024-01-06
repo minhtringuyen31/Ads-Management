@@ -1,49 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { styled } from '@mui/material/styles';
-import { Box, Button, FormControlLabel, Typography, Switch } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axiosClient from "../../axiosConfig/axiosClient";
 import { useMapEvents } from "react-leaflet";
-import { CleaningServices } from "@mui/icons-material";
 // import dotenv from "dotenv";
 
 // dotenv.config();
 
-const CustomSwitch = styled(Switch)(({ theme }) => ({
-  padding: 8,
-  '& .MuiSwitch-track': {
-    borderRadius: 22 / 2,
-    '&::before, &::after': {
-      content: '""',
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      width: 16,
-      height: 16,
-    },
-    '&::before': {
-      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-        theme.palette.getContrastText(theme.palette.primary.main),
-      )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
-      left: 12,
-    },
-    '&::after': {
-      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-        theme.palette.getContrastText(theme.palette.primary.main),
-      )}" d="M19,13H5V11H19V13Z" /></svg>')`,
-      right: 12,
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxShadow: 'none',
-    width: 16,
-    height: 16,
-    margin: 2,
-  },
-}));
 
 const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
   const [position, setPosition] = useState(null);
@@ -81,10 +47,8 @@ const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
   );
 };
 
-const Map = ({ setShape, openDrawer, setDrawerContent }) => {
+const Map = ({ setShape, openDrawer, setDrawerContent, boardDisplayMode }) => {
   const [locationList, setLocationList] = useState([]);
-  const [reportSwitchChecked, setReportSwitchChecked] = useState(false);
-  console.log('report swtich: ', reportSwitchChecked)
 
   const planedMarkerIcon = new L.divIcon({
     className: "custom-svg-marker",
@@ -126,8 +90,6 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
     handleButtonClicked(3);
   };
 
-  const handleReportSwitchClicked = () => {}
-
   const handleButtonClicked = (value) => {
     console.log("Onclick event: ", value);
     switch (value) {
@@ -166,7 +128,8 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {locationList.map((location) => (
+          {
+          boardDisplayMode ? locationList.map((location) => (
             <Marker
               position={location.coordinate}
               key={location._id}
@@ -193,7 +156,38 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
                 </Button>
               </Popup>
             </Marker>
-          ))}
+          )) : 
+          locationList
+          .filter((location) => location.is_planned === true)
+          .map((location) => (
+            <Marker
+              position={location.coordinate}
+              key={location._id}
+              icon={location.is_planned ? planedMarkerIcon : notPlanedMarkerIcon}
+            >
+              <Popup>
+                <Typography fontWeight="bold">
+                  {location.ads_type.label}
+                </Typography>
+                <Typography>{location.location_type.label}</Typography>
+                <Typography>
+                  {location.address}, {location.ward.label},{" "}
+                  {location.district.label}
+                </Typography>
+
+                <Typography fontWeight="bold" fontStyle="italic">
+                  {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
+                </Typography>
+                <Button
+                  variant="outlined"
+                  onClick={() => handleDetailBtnClicked(location._id)}
+                >
+                  Chi tiết
+                </Button>
+              </Popup>
+            </Marker>
+          ))
+          }
           <LocationMarker
             setLocationInfo={setDrawerContent}
             handleButtonClicked={handleButtonClicked}
@@ -201,16 +195,7 @@ const Map = ({ setShape, openDrawer, setDrawerContent }) => {
         </MapContainer>
       </Box>
  
-      <Box position='absolute' bgcolor={'rgba(255, 255, 255, 0.75)'} display="flex" flexDirection="row" width="100" margin="10px" paddingLeft="10px" bottom={0} right={0} borderRadius={2} zIndex='1000'>
-        <FormControlLabel
-          control={<CustomSwitch defaultChecked />}
-          label="Bảng QC"
-        />
-        <FormControlLabel
-          control={<CustomSwitch onChange={() => handleButtonClicked(2)} />}
-          label="Báo cáo vi phạm"
-        />
-      </Box>
+      
 
       {/* <Box
         display="flex"
@@ -243,6 +228,7 @@ Map.propTypes = {
   setShape: PropTypes.func.isRequired,
   openDrawer: PropTypes.func.isRequired,
   setDrawerContent: PropTypes.func.isRequired,
+  boardDisplayMode: PropTypes.bool.isRequired
 };
 
 LocationMarker.propTypes = {
