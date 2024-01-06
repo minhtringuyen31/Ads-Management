@@ -37,7 +37,7 @@ const initialValues = {
   content: "",
 };
 
-const ReportForm = ({agent, type}) => {
+const ReportForm = ({agent, type, handleCloseModal}) => {
   /**
    * useState
    */
@@ -347,6 +347,7 @@ const ReportForm = ({agent, type}) => {
                   textTransform: "none",
                   fontWeight: "bold",
                 }}
+                onClick={()=>handleCloseModal()}
               >
                 Hủy
               </Button>

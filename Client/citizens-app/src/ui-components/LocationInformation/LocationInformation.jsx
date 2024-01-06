@@ -97,13 +97,15 @@ const LocationInformation = ({ content }) => {
           <Box display="flex" flexDirection="column" alignItems="center">
             <Typography fontSize={20} fontWeight="bold" color="#475569">
               {/* {item.adsboard_type.label} */}
+              {content.name}
             </Typography>
             <Typography fontSize={12} color="#70757a">
               {/* {item.location.address} */}
+              {content.display_name}
             </Typography>
           </Box>
           <Box>
-            <ReportForm  type={"board"}/>
+            <ReportForm agent={""} type={"board"} handleCloseModal={handleCloseModal}/>
           </Box>
         </Box>
       </Modal>
