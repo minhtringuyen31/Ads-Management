@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 
-import MainLayout from "../layout/MainLayout/MainLayout";
-import Loadable from "ui-component/Loadable";
+import Loadable from 'ui-component/Loadable';
 import CategoryManage from 'views/utilities/categories/CategoryManage';
+import MainLayout from '../layout/MainLayout/MainLayout';
 
 // import LocationDetail from "views/utilities/LocationDetail";
 
@@ -10,33 +10,33 @@ import CategoryManage from 'views/utilities/categories/CategoryManage';
 const LocationManagement = Loadable(
   lazy(() =>
     import(
-      "../views/utilities/list-location-adsboard/location/LocationManagement"
+      '../views/utilities/list-location-adsboard/location/LocationManagement'
     )
   )
 );
 const LocationDetail = Loadable(
   lazy(() =>
-    import("../views/utilities/list-location-adsboard/location/LocationDetail")
+    import('../views/utilities/list-location-adsboard/location/LocationDetail')
   )
 );
 
 const BoardManagement = Loadable(
   lazy(() =>
-    import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
+    import('../views/utilities/list-location-adsboard/adsboard/BoardManagement')
   )
 );
 
 const LicenAdsboardList = Loadable(
-  lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
+  lazy(() => import('../views/utilities/list-licen-adsboard/LicenAdsboardList'))
 );
 
 const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
 
 const FormAddLicenAdsboard = Loadable(
   lazy(() =>
-    import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard")
+    import('../views/utilities/list-licen-adsboard/FormAddLicenAdsboard')
   )
-)
+);
 const ReportList = Loadable(
   lazy(() => import('../views/utilities/report-manage/ReportList'))
 );
@@ -66,11 +66,11 @@ const MainRoutes = {
       path: 'utils',
       children: [
         {
-          path: "customer",
+          path: 'locations',
           element: <LocationManagement />,
         },
         {
-          path: "customer/:locationID",
+          path: 'location/:locationID',
           element: <LocationDetail />,
         },
       ],
@@ -79,7 +79,7 @@ const MainRoutes = {
       path: 'utils',
       children: [
         {
-          path: 'driver',
+          path: 'adsboards',
           element: <BoardManagement />,
         },
       ],
@@ -88,11 +88,11 @@ const MainRoutes = {
       path: 'utils',
       children: [
         {
-          path: "unit_price",
+          path: 'authorize_requests',
           element: <LicenAdsboardList />,
         },
         {
-          path: "unit_price/createForm",
+          path: 'authorize_request/create_form',
           element: <FormAddLicenAdsboard />,
         },
         {
