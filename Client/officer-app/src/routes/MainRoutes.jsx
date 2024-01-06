@@ -1,97 +1,134 @@
-import React from "react";
-import { lazy } from "react";
+import { lazy } from 'react';
 
 import MainLayout from "../layout/MainLayout/MainLayout";
 import Loadable from "ui-component/Loadable";
+import CategoryManage from 'views/utilities/categories/CategoryManage';
+
+// import LocationDetail from "views/utilities/LocationDetail";
 
 //utilities routing
-const UtilsCustomer = Loadable(
-  lazy(() => import("../views/utilities/Customer"))
+const LocationManagement = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/LocationManagement"
+    )
+  )
 );
-const UtilsDriver = Loadable(lazy(() => import("../views/utilities/Driver")));
-const UtilsConsultant = Loadable(
-  lazy(() => import("../views/utilities/Consultant"))
-);
-const UtilsSalary = Loadable(lazy(() => import("../views/utilities/Salary")));
-const BussinessUnitPrice = Loadable(
-  lazy(() => import("../views/bussiness/unit-price/UnitPrice"))
-);
-const BussinessEditUnitPrice = Loadable(
-  lazy(() => import("../views/bussiness/unit-price/EditUnitPrice"))
+const LocationDetail = Loadable(
+  lazy(() =>
+    import("../views/utilities/list-location-adsboard/location/LocationDetail")
+  )
 );
 
-const BussinessRuleList = Loadable(
-  lazy(() => import("../views/bussiness/rules/RuleList"))
+const BoardManagement = Loadable(
+  lazy(() =>
+    import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
+  )
 );
 
-const BussinessVehicle = Loadable(
-  lazy(() => import("../views/bussiness/vehicles/vehicleList"))
+const LicenAdsboardList = Loadable(
+  lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
 );
-const Home = Loadable(lazy(() => import("../views/dashboard/DashboardHome")));
+
+const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
+
+const FormAddLicenAdsboard = Loadable(
+  lazy(() =>
+    import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard")
+  )
+)
+const ReportList = Loadable(
+  lazy(() => import('../views/utilities/report-manage/ReportList'))
+);
+const ReportDetail = Loadable(
+  lazy(() => import('../views/utilities/report-manage/ReportDetail'))
+);
+const AuthorizeRequestList = Loadable(
+  lazy(() =>
+    import('../views/utilities/authorize_request/AuthorizeRequestList')
+  )
+);
+const AuthorizeRequestDetail = Loadable(
+  lazy(() =>
+    import('../views/utilities/authorize_request/AuthorizeRequestDetail')
+  )
+);
 
 const MainRoutes = {
-  path: "/",
+  path: '/',
   element: <MainLayout />,
   children: [
     {
-      path: "dashboard",
+      path: 'dashboard',
       element: <Home />,
     },
     {
-      path: "utils",
+      path: 'utils',
       children: [
         {
           path: "customer",
-          element: <UtilsCustomer />,
+          element: <LocationManagement />,
+        },
+        {
+          path: "customer/:locationID",
+          element: <LocationDetail />,
         },
       ],
     },
     {
-      path: "utils",
+      path: 'utils',
       children: [
         {
-          path: "driver",
-          element: <UtilsDriver />,
+          path: 'driver',
+          element: <BoardManagement />,
         },
       ],
     },
     {
-      path: "utils",
-      children: [
-        {
-          path: "consultant",
-          element: <UtilsConsultant />,
-        },
-      ],
-    },
-    // {
-    //   path: "utils",
-    //   children: [
-    //     {
-    //       path: "salary",
-    //       element: <UtilsSalary />,
-    //     },
-    //   ],
-    // },
-
-    {
-      path: "bussiness",
+      path: 'utils',
       children: [
         {
           path: "unit_price",
-          element: <BussinessUnitPrice />,
+          element: <LicenAdsboardList />,
         },
         {
-          path: "unit_price/edit",
-          element: <BussinessEditUnitPrice />,
+          path: "unit_price/createForm",
+          element: <FormAddLicenAdsboard />,
         },
         {
-          path: "rules",
-          element: <BussinessRuleList />,
+          path: 'report',
+          children: [
+            {
+              path: 'list',
+              element: <ReportList />,
+            },
+            {
+              path: 'detail',
+              element: <ReportDetail />,
+            },
+          ],
         },
         {
-          path: "vehicles",
-          element: <BussinessVehicle />,
+          path: 'category',
+          children: [
+            {
+              path: 'list',
+              element: <CategoryManage />,
+            },
+          ],
+        },
+        {
+          path: 'authorize',
+          children: [
+            {
+              path: 'list',
+              element: <AuthorizeRequestList />,
+            },
+            {
+              path: 'detail',
+              element: <AuthorizeRequestDetail />,
+            },
+          ],
         },
       ],
     },

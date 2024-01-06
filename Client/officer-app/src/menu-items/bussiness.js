@@ -10,7 +10,8 @@ const bussiness = {
   children: [
     {
       id: "unit-price",
-      title: "Unit Price",
+      // title: "Unit Price",
+      title: "Danh sách cấp phép",
       type: "item",
       url: "/bussiness/unit_price",
       icon: icons.IconHelp,
@@ -24,14 +25,6 @@ const bussiness = {
       icon: icons.IconBrandChrome,
       breadcrumbs: false,
     },
-    // {
-    //   id: "vehicles",
-    //   title: "Vehicles",
-    //   type: "item",
-    //   url: "/bussiness/vehicles",
-    //   icon: icons.IconMotorbike,
-    //   breadcrumbs: false,
-    // },
   ],
 };
 

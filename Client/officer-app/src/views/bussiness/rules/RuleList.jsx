@@ -1,45 +1,42 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import axiosClient from "axiosConfig/axiosClient";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
-  Card,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-} from "@mui/material";
-import ScrollBar from "react-perfect-scrollbar";
-import { useTheme } from "@mui/material/styles";
-import MainCard from "ui-component/cards/MainCard";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
+import ScrollBar from 'react-perfect-scrollbar';
+import { useNavigate } from 'react-router-dom';
+import MainCard from 'ui-component/cards/MainCard';
 
 const data = [
   {
     _id: 12,
-    name: "Time-based - Peak hour",
+    name: 'Time-based - Peak hour',
     condition:
-      "config.hours >= 7 && config.hours < 9 || config.hours >= 17 && config.hours < 19",
-    action: "config.baseFare *= 1.2",
-    createdAt: "01/01/2023",
-    updatedAt: "01/05/2023",
+      'config.hours >= 7 && config.hours < 9 || config.hours >= 17 && config.hours < 19',
+    action: 'config.baseFare *= 1.2',
+    createdAt: '01/01/2023',
+    updatedAt: '01/05/2023',
   },
   {
     _id: 13,
-    name: "Car distance-based - Discount",
+    name: 'Car distance-based - Discount',
     condition: "config.distance >= 5 && config.type === 'car'",
-    action: "config.distanceFare *= 0.6",
-    createdAt: "01/01/2023",
-    updatedAt: "01/05/2023",
+    action: 'config.distanceFare *= 0.6',
+    createdAt: '01/01/2023',
+    updatedAt: '01/05/2023',
   },
   {
     _id: 14,
-    name: "Weather-based - Bad weather",
-    condition: "config.badWeather",
-    action: "config.baseFare *= 1.2",
-    createdAt: "01/01/2023",
-    updatedAt: "01/05/2023",
+    name: 'Weather-based - Bad weather',
+    condition: 'config.badWeather',
+    action: 'config.baseFare *= 1.2',
+    createdAt: '01/01/2023',
+    updatedAt: '01/05/2023',
   },
 ];
 
@@ -50,10 +47,10 @@ const RuleList = () => {
 
   function formatPeakHourCondition(inputString) {
     const parts = inputString.split(/\s*\|\|\s*/);
-    let condition = "";
+    let condition = '';
     for (let i = 0; i < parts.length; i++) {
       if (i > 0) {
-        condition += " or ";
+        condition += ' or ';
       }
       condition += formatPeakHourTimeRange(parts[i]);
     }
@@ -68,17 +65,17 @@ const RuleList = () => {
       const endHour = parseInt(hours[1]);
       const formattedRange = `${startHour
         .toString()
-        .padStart(2, "0")}:00 - ${endHour.toString().padStart(2, "0")}:00`;
+        .padStart(2, '0')}:00 - ${endHour.toString().padStart(2, '0')}:00`;
       return formattedRange;
-    } else if (inputString.includes("<")) {
+    } else if (inputString.includes('<')) {
       const endHour = parseInt(inputString.match(/\d+/)[0]);
-      const formattedRange = `0:00 - ${endHour.toString().padStart(2, "0")}:00`;
+      const formattedRange = `0:00 - ${endHour.toString().padStart(2, '0')}:00`;
       return formattedRange;
-    } else if (inputString.includes(">")) {
+    } else if (inputString.includes('>')) {
       const startHour = parseInt(inputString.match(/\d+/)[0]);
       const formattedRange = `${startHour
         .toString()
-        .padStart(2, "0")}:00 - 24:00`;
+        .padStart(2, '0')}:00 - 24:00`;
       return formattedRange;
     }
     return inputString;
@@ -86,7 +83,7 @@ const RuleList = () => {
 
   function formatAction(inputString) {
     const parts = inputString.split(/\s*\|\|\s*/);
-    let condition = "";
+    let condition = '';
     for (let i = 0; i < parts.length; i++) {
       condition += formatExpression(parts[i]);
     }
@@ -107,10 +104,10 @@ const RuleList = () => {
 
   function formatDiscountCondition(inputString) {
     const parts = inputString.split(/\s*\|\|\s*/);
-    let condition = "";
+    let condition = '';
     for (let i = 0; i < parts.length; i++) {
       if (i > 0) {
-        condition += " and ";
+        condition += ' and ';
       }
       condition += formatDiscountExpression(parts[i]);
     }
@@ -143,7 +140,7 @@ const RuleList = () => {
 
     if (matches && matches.length === 2) {
       const propertyName = matches[1];
-      const formattedString = propertyName.replace(/([A-Z])/g, " $1").trim();
+      const formattedString = propertyName.replace(/([A-Z])/g, ' $1').trim();
       return formattedString.charAt(0).toUpperCase() + formattedString.slice(1);
     }
 
@@ -156,13 +153,13 @@ const RuleList = () => {
     for (const object of objectArray) {
       const newObject = {
         name: object.name,
-        condition: "",
-        action: "",
+        condition: '',
+        action: '',
       };
-      if (object.name === "Time-based - Peak hour") {
+      if (object.name === 'Time-based - Peak hour') {
         newObject.condition = formatPeakHourCondition(object.condition);
         newObject.action = formatAction(object.action);
-      } else if (object.name === "Car distance-based - Discount") {
+      } else if (object.name === 'Car distance-based - Discount') {
         newObject.condition = formatDiscountCondition(object.condition);
         newObject.action = formatAction(object.action);
       } else {
@@ -182,7 +179,7 @@ const RuleList = () => {
 
         const newData = strProcessing(data);
         setRules(newData);
-        console.log("Rule: ", newData);
+        console.log('Rule: ', newData);
 
         // console.log("Repponse Rule List: ", response.data.data);
       } catch (error) {
@@ -197,7 +194,7 @@ const RuleList = () => {
   };
 
   return (
-    <MainCard title="Rule">
+    <MainCard title='Rule'>
       <ScrollBar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -209,28 +206,28 @@ const RuleList = () => {
               <TableRow>
                 <TableCell
                   sx={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                 >
                   ID
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                 >
                   Name
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                 >
                   Condition
                 </TableCell>
                 <TableCell
                   sx={{
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                 >
                   Action

@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // material-ui
-import { useTheme } from "@mui/material/styles";
 import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -19,19 +17,24 @@ import {
   OutlinedInput,
   Stack,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // third party
-import * as Yup from "yup";
-import { Formik } from "formik";
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 // project imports
-import useScriptRef from "hooks/useScriptRef";
-import AnimateButton from "ui-component/extended/AnimateButton";
+import useScriptRef from 'hooks/useScriptRef';
+import AnimateButton from 'ui-component/extended/AnimateButton';
 
 // assets
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import useHttp from 'hooks/use-http';
+import { login } from 'lib/api';
+import { AuthenticationActions } from 'redux/auth/authentication-slice';
+import { AuthorizationActions } from 'redux/auth/authorization-slice';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -41,6 +44,8 @@ const Login = ({ ...others }) => {
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
   const navigate = useNavigate();
+  const { sendRequest, status, data: loadedAuth, error } = useHttp(login, true);
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
@@ -51,19 +56,35 @@ const Login = ({ ...others }) => {
     event.preventDefault();
   };
 
-  const handleSubmit = () => {
-    console.log("submit login");
-    navigate("/dashboard");
+  const handleSubmit = (value) => {
+    sendRequest({ loginCredential: value.email, password: value.password });
   };
+
+  if (error) {
+    return;
+  }
+
+  if (status === 'completed') {
+    dispatch(
+      AuthenticationActions.login({
+        accessToken: loadedAuth.accessToken,
+        refreshToken: loadedAuth.refreshToken,
+      })
+    );
+
+    dispatch(AuthorizationActions.updateAuthorization(loadedAuth.user));
+
+    navigate('/dashboard');
+  }
 
   return (
     <>
-      <Grid container direction="column" justifyContent="center" spacing={2}>
+      <Grid container direction='column' justifyContent='center' spacing={2}>
         <Grid item xs={12}>
           <Box
             sx={{
-              alignItems: "center",
-              display: "flex",
+              alignItems: 'center',
+              display: 'flex',
             }}
           ></Box>
         </Grid>
@@ -71,11 +92,11 @@ const Login = ({ ...others }) => {
           item
           xs={12}
           container
-          alignItems="center"
-          justifyContent="center"
+          alignItems='center'
+          justifyContent='center'
         >
           <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1">
+            <Typography variant='subtitle1'>
               Sign in with Email address
             </Typography>
           </Box>
@@ -84,16 +105,16 @@ const Login = ({ ...others }) => {
 
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: '',
+          password: '',
           submit: null,
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
-            .email("Must be a valid email")
+            .email('Must be a valid email')
             .max(255)
-            .required("Email is required"),
-          password: Yup.string().max(255).required("Password is required"),
+            .required('Email is required'),
+          password: Yup.string().max(255).required('Password is required'),
         })}
         // onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         //   try {
@@ -127,23 +148,23 @@ const Login = ({ ...others }) => {
               error={Boolean(touched.email && errors.email)}
               sx={{ ...theme.typography.customInput }}
             >
-              <InputLabel htmlFor="outlined-adornment-email-login">
+              <InputLabel htmlFor='outlined-adornment-email-login'>
                 Email Address / Username
               </InputLabel>
               <OutlinedInput
-                id="outlined-adornment-email-login"
-                type="email"
+                id='outlined-adornment-email-login'
+                type='email'
                 value={values.email}
-                name="email"
+                name='email'
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label="Email Address / Username"
+                label='Email Address / Username'
                 inputProps={{}}
               />
               {touched.email && errors.email && (
                 <FormHelperText
                   error
-                  id="standard-weight-helper-text-email-login"
+                  id='standard-weight-helper-text-email-login'
                 >
                   {errors.email}
                 </FormHelperText>
@@ -155,45 +176,45 @@ const Login = ({ ...others }) => {
               error={Boolean(touched.password && errors.password)}
               sx={{ ...theme.typography.customInput }}
             >
-              <InputLabel htmlFor="outlined-adornment-password-login">
+              <InputLabel htmlFor='outlined-adornment-password-login'>
                 Password
               </InputLabel>
               <OutlinedInput
-                id="outlined-adornment-password-login"
-                type={showPassword ? "text" : "password"}
+                id='outlined-adornment-password-login'
+                type={showPassword ? 'text' : 'password'}
                 value={values.password}
-                name="password"
+                name='password'
                 onBlur={handleBlur}
                 onChange={handleChange}
                 endAdornment={
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
-                      aria-label="toggle password visibility"
+                      aria-label='toggle password visibility'
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                      size="large"
+                      edge='end'
+                      size='large'
                     >
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }
-                label="Password"
+                label='Password'
                 inputProps={{}}
               />
               {touched.password && errors.password && (
                 <FormHelperText
                   error
-                  id="standard-weight-helper-text-password-login"
+                  id='standard-weight-helper-text-password-login'
                 >
                   {errors.password}
                 </FormHelperText>
               )}
             </FormControl>
             <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
+              direction='row'
+              alignItems='center'
+              justifyContent='space-between'
               spacing={1}
             >
               <FormControlLabel
@@ -201,16 +222,16 @@ const Login = ({ ...others }) => {
                   <Checkbox
                     checked={checked}
                     onChange={(event) => setChecked(event.target.checked)}
-                    name="checked"
-                    color="primary"
+                    name='checked'
+                    color='primary'
                   />
                 }
-                label="Remember me"
+                label='Remember me'
               />
               <Typography
-                variant="subtitle1"
-                color="secondary"
-                sx={{ textDecoration: "none", cursor: "pointer" }}
+                variant='subtitle1'
+                color='secondary'
+                sx={{ textDecoration: 'none', cursor: 'pointer' }}
               >
                 Forgot Password?
               </Typography>
@@ -227,10 +248,10 @@ const Login = ({ ...others }) => {
                   disableElevation
                   disabled={isSubmitting}
                   fullWidth
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
+                  size='large'
+                  type='submit'
+                  variant='contained'
+                  color='secondary'
                 >
                   Sign in
                 </Button>
