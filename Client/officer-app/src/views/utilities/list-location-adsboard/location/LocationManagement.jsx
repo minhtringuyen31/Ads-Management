@@ -26,6 +26,11 @@ const LocationManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const handleReqEditLocation = (event) => {
+    event.stopPropagation();
+    navigate("/utils/location/request_edit_form");
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -159,7 +164,11 @@ const LocationManagement = () => {
                       {row.is_planned ? "Đã quy hoạch" : "Chưa quy hoạch"}
                     </TableCell>
                     <TableCell>
-                      <Button endIcon={<EditIcon />} variant="outlined">
+                      <Button
+                        endIcon={<EditIcon />}
+                        variant="outlined"
+                        onClick={handleReqEditLocation}
+                      >
                         Yêu cầu chỉnh sửa
                       </Button>
                     </TableCell>

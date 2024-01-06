@@ -15,6 +15,7 @@ import {
   TableBody,
   TableCell,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
@@ -40,7 +41,7 @@ const LicenAdsboardList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleNewLicense = () => {
-    navigate("/utils/authorize_requests/create_form");
+    navigate("/utils/authorize_request/create_form");
   };
   const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
@@ -82,6 +83,7 @@ const LicenAdsboardList = () => {
   const handleOpenModalConfirm = (id) => {
     setCancelId(id);
     setOpenModalConfirm(true);
+    setOpenModalDetail(false);
   };
 
   const handleRowClick = useCallback((row) => {
@@ -89,7 +91,7 @@ const LicenAdsboardList = () => {
     setOpenModalDetail(true);
   }, []);
 
-  const handleCancel = async () => {
+  const handleAgree = async () => {
     if (cancelId) {
       console.log("ID nè", cancelId);
       try {
@@ -130,10 +132,41 @@ const LicenAdsboardList = () => {
     setPage(0);
   };
 
+  if (!licenList) {
+    console.log("vào đây hem");
+    return (
+      <Box
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          zIndex: 1500,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   console.log("Selected data: ", selectedRow);
 
   return (
     <MainCard title="Quản lý cấp phép quảng cáo">
+      {selectedRow && (
+        <ModalDetail
+          open={openModalDetail}
+          handleClose={() => setOpenModalDetail(false)}
+          licenDetail={selectedRow}
+        />
+      )}
       <Scrollbar>
         <Box>
           <Box style={styleBox}>
@@ -187,7 +220,8 @@ const LicenAdsboardList = () => {
                     hover
                     key={row.id}
                     sx={{ cursor: "pointer" }}
-                    onClick={() => {
+                    onClick={(event) => {
+                      event.stopPropagation();
                       handleRowClick(row);
                     }}
                   >
@@ -233,8 +267,10 @@ const LicenAdsboardList = () => {
                         sx={{
                           fontWeight: "bold",
                         }}
-                        onClick={() => {
+                        onClick={(event) => {
+                          event.stopPropagation();
                           handleOpenModalConfirm(row._id);
+                          // event.stopPropagation();
                         }}
                         disabled={
                           row.status === "completed" ||
@@ -246,8 +282,14 @@ const LicenAdsboardList = () => {
                       </Button>
                       <ModalAccept
                         open={openModalConfirm}
-                        handleClose={() => setOpenModalConfirm(false)}
-                        handleCancel={handleCancel}
+                        handleDisagree={(event) => {
+                          event.stopPropagation();
+                          setOpenModalConfirm(false);
+                        }}
+                        handleAgree={(event) => {
+                          event.stopPropagation();
+                          handleAgree();
+                        }}
                         title={"Xác nhận"}
                       />
                     </TableCell>
@@ -279,14 +321,6 @@ const LicenAdsboardList = () => {
           />
         </Box>
       </Scrollbar>
-
-      {selectedRow && (
-        <ModalDetail
-          open={openModalDetail}
-          handleClose={() => setOpenModalDetail(false)}
-          licenDetail={selectedRow}
-        />
-      )}
     </MainCard>
   );
 };

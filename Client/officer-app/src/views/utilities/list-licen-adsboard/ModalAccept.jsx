@@ -16,11 +16,11 @@ const style = {
   p: 4,
 };
 
-const ModalAccept = ({ open, handleClose, handleCancel, title }) => {
+const ModalAccept = ({ open, handleDisagree, handleAgree, title }) => {
   return (
     <Modal
       open={open}
-      onClose={handleClose}
+      onClose={handleDisagree}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       BackdropProps={{ style: { opacity: 0.15 } }}
@@ -40,10 +40,10 @@ const ModalAccept = ({ open, handleClose, handleCancel, title }) => {
             gap: 1,
           }}
         >
-          <Button variant="outlined" color="error" onClick={handleClose}>
+          <Button variant="outlined" color="error" onClick={handleDisagree}>
             Hủy
           </Button>
-          <Button variant="outlined" onClick={handleCancel} autoFocus>
+          <Button variant="outlined" onClick={handleAgree} autoFocus>
             Đồng ý
           </Button>
         </Box>

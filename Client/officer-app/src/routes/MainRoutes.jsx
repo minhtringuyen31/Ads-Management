@@ -19,6 +19,11 @@ const LocationDetail = Loadable(
     import('../views/utilities/list-location-adsboard/location/LocationDetail')
   )
 );
+const RequestEditLocation = Loadable(
+  lazy(() => 
+    import('../views/utilities/list-location-adsboard/location/FormRequestEditLocation')
+  )
+);
 
 const BoardManagement = Loadable(
   lazy(() =>
@@ -73,6 +78,10 @@ const MainRoutes = {
           path: 'location/:locationID',
           element: <LocationDetail />,
         },
+        {
+          path: 'location/request_edit_form',
+          element: <RequestEditLocation />,
+        }
       ],
     },
     {
