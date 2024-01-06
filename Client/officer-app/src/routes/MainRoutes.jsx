@@ -1,8 +1,9 @@
-import React from "react";
-import { lazy } from "react";
+import { lazy } from 'react';
 
 import MainLayout from "../layout/MainLayout/MainLayout";
 import Loadable from "ui-component/Loadable";
+import CategoryManage from 'views/utilities/categories/CategoryManage';
+
 // import LocationDetail from "views/utilities/LocationDetail";
 
 //utilities routing
@@ -18,44 +19,51 @@ const LocationDetail = Loadable(
     import("../views/utilities/list-location-adsboard/location/LocationDetail")
   )
 );
-const UtilsDriver = Loadable(
+
+const BoardManagement = Loadable(
   lazy(() =>
     import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
   )
 );
-// const UtilsConsultant = Loadable(
-//   lazy(() => import("../views/utilities/Consultant"))
-// );
-// const UtilsSalary = Loadable(lazy(() => import("../views/utilities/Salary")));
+
 const LicenAdsboardList = Loadable(
   lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
 );
 
-// const BussinessEditUnitPrice = Loadable(
-//   lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboarItem"))
-// );
+const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
 
 const FormAddLicenAdsboard = Loadable(
   lazy(() =>
     import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard")
   )
+)
+const ReportList = Loadable(
+  lazy(() => import('../views/utilities/report-manage/ReportList'))
 );
-
-const BussinessVehicle = Loadable(
-  lazy(() => import("../views/bussiness/vehicles/vehicleList"))
+const ReportDetail = Loadable(
+  lazy(() => import('../views/utilities/report-manage/ReportDetail'))
 );
-const Home = Loadable(lazy(() => import("../views/dashboard/DashboardHome")));
+const AuthorizeRequestList = Loadable(
+  lazy(() =>
+    import('../views/utilities/authorize_request/AuthorizeRequestList')
+  )
+);
+const AuthorizeRequestDetail = Loadable(
+  lazy(() =>
+    import('../views/utilities/authorize_request/AuthorizeRequestDetail')
+  )
+);
 
 const MainRoutes = {
-  path: "/",
+  path: '/',
   element: <MainLayout />,
   children: [
     {
-      path: "dashboard",
+      path: 'dashboard',
       element: <Home />,
     },
     {
-      path: "utils",
+      path: 'utils',
       children: [
         {
           path: "customer",
@@ -68,26 +76,16 @@ const MainRoutes = {
       ],
     },
     {
-      path: "utils",
+      path: 'utils',
       children: [
         {
-          path: "driver",
-          element: <UtilsDriver />,
+          path: 'driver',
+          element: <BoardManagement />,
         },
       ],
     },
-    // {
-    //   path: "utils",
-    //   children: [
-    //     {
-    //       path: "consultant",
-    //       element: <UtilsConsultant />,
-    //     },
-    //   ],
-    // },
-
     {
-      path: "bussiness",
+      path: 'utils',
       children: [
         {
           path: "unit_price",
@@ -97,13 +95,40 @@ const MainRoutes = {
           path: "unit_price/createForm",
           element: <FormAddLicenAdsboard />,
         },
-        // {
-        //   path: "rules",
-        //   element: <FormAddLicenAdsboard />,
-        // },
         {
-          path: "vehicles",
-          element: <BussinessVehicle />,
+          path: 'report',
+          children: [
+            {
+              path: 'list',
+              element: <ReportList />,
+            },
+            {
+              path: 'detail',
+              element: <ReportDetail />,
+            },
+          ],
+        },
+        {
+          path: 'category',
+          children: [
+            {
+              path: 'list',
+              element: <CategoryManage />,
+            },
+          ],
+        },
+        {
+          path: 'authorize',
+          children: [
+            {
+              path: 'list',
+              element: <AuthorizeRequestList />,
+            },
+            {
+              path: 'detail',
+              element: <AuthorizeRequestDetail />,
+            },
+          ],
         },
       ],
     },
