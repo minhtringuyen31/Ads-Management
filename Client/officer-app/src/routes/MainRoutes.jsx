@@ -20,8 +20,15 @@ const ReportList = Loadable(
 const ReportDetail = Loadable(
   lazy(() => import('../views/utilities/report-manage/ReportDetail'))
 );
-const DistrictList = Loadable(
-  lazy(() => import('../views/utilities/categories/district/DistrictList'))
+const AuthorizeRequestList = Loadable(
+  lazy(() =>
+    import('../views/utilities/authorize_request/AuthorizeRequestList')
+  )
+);
+const AuthorizeRequestDetail = Loadable(
+  lazy(() =>
+    import('../views/utilities/authorize_request/AuthorizeRequestDetail')
+  )
 );
 
 const MainRoutes = {
@@ -86,6 +93,19 @@ const MainRoutes = {
             //   path: 'detail',
             //   element: <ReportDetail />,
             // },
+          ],
+        },
+        {
+          path: 'authorize',
+          children: [
+            {
+              path: 'list',
+              element: <AuthorizeRequestList />,
+            },
+            {
+              path: 'detail',
+              element: <AuthorizeRequestDetail />,
+            },
           ],
         },
       ],

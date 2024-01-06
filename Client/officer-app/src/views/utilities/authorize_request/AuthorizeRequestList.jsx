@@ -22,22 +22,29 @@ import {
 import { alpha, useTheme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import useHttp from 'hooks/use-http';
-import { getAllReports } from 'lib/api';
+import { getAllAuthorizeRequest } from 'lib/api';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import ReportContext from 'store/report/report-context';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, number, time, name, email, report_type, status) => {
+const createData = (
+  id,
+  date,
+  number,
+  company_name,
+  contact_name_person,
+  address,
+  status
+) => {
   return {
     id,
+    date,
     number,
-    time,
-    name,
-    email,
-    report_type,
+    company_name,
+    contact_name_person,
+    address,
     status,
   };
 };
@@ -84,22 +91,22 @@ const headCells = [
     label: 'Ngày gửi',
   },
   {
-    id: 'name',
+    id: 'company_name',
     numeric: false,
     disablePadding: false,
-    label: 'Tên người gửi',
+    label: 'Tên công ty',
   },
   {
-    id: 'email',
+    id: 'contact_name_person',
     numeric: false,
     disablePadding: false,
-    label: 'Email',
+    label: 'Tên người liên hệ',
   },
   {
-    id: 'report_type',
+    id: 'address',
     numeric: false,
     disablePadding: false,
-    label: 'Loại báo cáo',
+    label: 'Địa chỉ',
   },
   {
     id: 'status',
@@ -196,7 +203,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Báo cáo
+          Danh sách các yêu cầu cấp phép quảng cáo
         </Typography>
       )}
 
@@ -218,7 +225,7 @@ function EnhancedTableToolbar(props) {
 }
 
 const EnhancedTable = (props) => {
-  const reportCtx = useContext(ReportContext);
+  console.log(props.rows);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
@@ -260,10 +267,6 @@ const EnhancedTable = (props) => {
     setSelected(newSelected);
   };
 
-  const handleReportDetail = (id) => {
-    reportCtx.setReportDetail(id);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -291,16 +294,6 @@ const EnhancedTable = (props) => {
       ),
     [order, orderBy, page, rowsPerPage, props.rows]
   );
-
-  const getReportType = (report_type) => {
-    if (report_type === 'denounce') {
-      return 'Báo cáo vi phạm';
-    } else if (report_type === 'suggest') {
-      return 'Đóng góp ý kiến';
-    } else {
-      return 'Giải đáp thắc mắc';
-    }
-  };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -344,19 +337,22 @@ const EnhancedTable = (props) => {
                     >
                       {moment.utc(row.time).format('DD-MM-YYYY')}
                     </TableCell>
-                    <TableCell align='left'>{row.name}</TableCell>
-                    <TableCell align='left'>{row.email}</TableCell>
+                    <TableCell align='left'>{row.company_name}</TableCell>
                     <TableCell align='left'>
-                      {getReportType(row.report_type)}
+                      {row.contact_name_person}
                     </TableCell>
-                    <TableCell align='left'>
-                      {row.status === 'solved'
-                        ? 'Đã giải quyết'
-                        : 'Chưa giải quyết'}
+                    <TableCell align='left'>{row.address}</TableCell>
+                    <TableCell
+                      align='left'
+                      sx={{
+                        color: row.status === 'canceled' ? 'red' : 'green',
+                      }}
+                    >
+                      {row.status === 'canceled' ? 'Đã hủy' : 'Đang chờ duyệt'}
                     </TableCell>
                     <TableCell align='right'>
                       <Link to='/utils/report/detail'>
-                        <IconButton onClick={() => handleReportDetail(row.id)}>
+                        <IconButton>
                           <EditIcon />
                         </IconButton>
                       </Link>
@@ -394,41 +390,33 @@ const EnhancedTable = (props) => {
   );
 };
 
-const ReportListTable = () => {
+const AuthorizeRequestList = () => {
   const {
     sendRequest,
     status,
-    data: loadedReports,
+    data: loadedAuthorizeRequest,
     error,
-  } = useHttp(getAllReports, true);
+  } = useHttp(getAllAuthorizeRequest, true);
 
   useEffect(() => {
     sendRequest();
   }, [sendRequest]);
 
-  const getAddress = (report) => {
-    if (report.type === 'board') {
-      return report.board.location.address;
-    } else {
-      return report.location.address;
-    }
-  };
-
   const rows = useMemo(() => {
-    if (loadedReports) {
-      return loadedReports.map((report, index) => {
+    if (loadedAuthorizeRequest) {
+      return loadedAuthorizeRequest.map((request, index) => {
         return createData(
-          report._id,
+          request._id,
+          request.createdAt,
           index + 1,
-          report.createdAt,
-          report.username,
-          report.email,
-          report.report_form,
-          report.status
+          request.new_ads_board.name,
+          request.new_ads_board.contact_name_person,
+          request.new_ads_board.location.address,
+          request.status
         );
       });
     }
-  }, [loadedReports]);
+  }, [loadedAuthorizeRequest]);
 
   if (error) {
     return <div>Có lỗi xảy ra</div>;
@@ -464,4 +452,4 @@ EnhancedTable.propTypes = {
   rows: PropTypes.array.isRequired,
 };
 
-export default ReportListTable;
+export default AuthorizeRequestList;

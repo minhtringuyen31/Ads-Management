@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
-import { useMemo, useReducer } from 'react';
+import { useCallback, useMemo, useReducer } from 'react';
 import MapContext from './map-context';
-import { useCallback } from 'react';
 
 const defaultMapState = {
   location: {
@@ -59,13 +58,19 @@ const MapProvider = (props) => {
   //   dispatchMapAction({ type: 'REMOVE' });
   // };
 
-  const setZoomToMap = useCallback((data) => {
-    dispatchMapAction({ type: 'ZOOM', data: data });
-  }, [dispatchMapAction]);
+  const setZoomToMap = useCallback(
+    (data) => {
+      dispatchMapAction({ type: 'ZOOM', data: data });
+    },
+    [dispatchMapAction]
+  );
 
-  const setLocationDetailData = useCallback((data) => {
-    dispatchMapAction({ type: 'LOCATE', data: data });
-  }, [dispatchMapAction]);
+  const setLocationDetailData = useCallback(
+    (data) => {
+      dispatchMapAction({ type: 'LOCATE', data: data });
+    },
+    [dispatchMapAction]
+  );
 
   const removeLocationDetailData = useCallback(() => {
     dispatchMapAction({ type: 'REMOVE' });

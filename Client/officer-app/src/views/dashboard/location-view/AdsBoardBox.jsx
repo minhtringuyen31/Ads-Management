@@ -45,9 +45,7 @@ const AdsBoardBox = (props) => {
               width: '100%',
             }}
           />
-          <Typography variant='h4'>
-            Công ty TNHH Không chịu trách nhiệm
-          </Typography>
+          <Typography variant='h4'>{props.data.company.name}</Typography>
           <Typography>
             Địa chỉ:{' '}
             <span
@@ -55,7 +53,7 @@ const AdsBoardBox = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              123 Nguyễn Tất Thành, Phường 1, Quận 4
+              {props.data.company.address}
             </span>
           </Typography>
           <Typography>

@@ -131,6 +131,22 @@ export const getAllReports = async () => {
   }
 };
 
+export const getReportDetail = async (id) => {
+  try {
+    const response = await instance.get(`${rootApi}/report/${id}`);
+    const reportsData = response.data;
+
+    if (response.statusText === 'OK') {
+      console.log(reportsData.data);
+      return reportsData.data;
+    } else {
+      throw new Error('Could not fetch data.');
+    }
+  } catch (error) {
+    throw new Error('Request failed: ' + error.message);
+  }
+};
+
 // Ads Board API
 export const getAllAdsBoards = async () => {
   try {
@@ -182,6 +198,23 @@ export const login = async ({ loginCredential, password }) => {
 
     if (response.statusText === 'OK') {
       return authData;
+    } else {
+      throw new Error('Could not fetch data.');
+    }
+  } catch (error) {
+    throw new Error('Request failed: ' + error.message);
+  }
+};
+
+// Authorize Request
+export const getAllAuthorizeRequest = async () => {
+  try {
+    const response = await instance.get(`${rootApi}/authorizeRequests`);
+
+    const authData = response.data;
+
+    if (response.statusText === 'OK') {
+      return authData.data;
     } else {
       throw new Error('Could not fetch data.');
     }
