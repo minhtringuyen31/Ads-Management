@@ -37,10 +37,10 @@ const LicenAdsboardList = () => {
   const [openModalDetail, setOpenModalDetail] = useState(false);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleNewLicense = () => {
-    navigate("/bussiness/unit_price/createForm");
+    navigate("/utils/authorize_requests/create_form");
   };
   const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
@@ -130,7 +130,7 @@ const LicenAdsboardList = () => {
     setPage(0);
   };
 
-  console.log('Selected data: ', selectedRow);
+  console.log("Selected data: ", selectedRow);
 
   return (
     <MainCard title="Quản lý cấp phép quảng cáo">
@@ -189,7 +189,6 @@ const LicenAdsboardList = () => {
                     sx={{ cursor: "pointer" }}
                     onClick={() => {
                       handleRowClick(row);
-                      
                     }}
                   >
                     <TableCell>{row.id}</TableCell>
@@ -273,6 +272,10 @@ const LicenAdsboardList = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={"Số hàng mỗi trang"}
+            labelDisplayedRows={({ from, to, count }) => {
+              return "" + from + " - " + to + " của " + count;
+            }}
           />
         </Box>
       </Scrollbar>

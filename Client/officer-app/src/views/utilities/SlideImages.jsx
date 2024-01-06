@@ -79,7 +79,7 @@ function SlideImages({ images, height, width }) {
             onClick={handleNext}
             disabled={activeStep === maxSteps - 1}
           >
-            Next
+            Sau
             {theme.direction === "rtl" ? (
               <KeyboardArrowLeft />
             ) : (
@@ -94,7 +94,7 @@ function SlideImages({ images, height, width }) {
             ) : (
               <KeyboardArrowLeft />
             )}
-            Back
+            Trước
           </Button>
         }
       />

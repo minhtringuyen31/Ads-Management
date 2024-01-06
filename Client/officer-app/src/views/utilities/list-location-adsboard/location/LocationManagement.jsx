@@ -10,8 +10,9 @@ import {
   TableHead,
   TableRow,
   CircularProgress,
+  Button,
 } from "@mui/material";
-
+import EditIcon from "@mui/icons-material/Edit";
 import MainCard from "ui-component/cards/MainCard";
 import { useTheme } from "@mui/material/styles";
 
@@ -23,7 +24,7 @@ const LocationManagement = () => {
   const [dataLocation, setDataLocation] = useState([]);
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
     async function fetchData() {
@@ -48,7 +49,7 @@ const LocationManagement = () => {
       if (clickedLocationId != null) {
         localStorage.setItem("locationID", clickedLocationId);
         console.log("Saved locationID:", clickedLocationId);
-        navigate(`/utils/customer/${clickedLocationId}`);
+        navigate(`/utils/location/${clickedLocationId}`);
       }
       console.log(clickedLocationId);
     },
@@ -89,7 +90,7 @@ const LocationManagement = () => {
 
   return (
     <>
-      <MainCard title="Location Management">
+      <MainCard title="Quản lý địa điểm">
         {/* <Scrollbar> */}
         <Box className="data-grid-container">
           <Table>
@@ -104,36 +105,38 @@ const LocationManagement = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  ID
+                  STT
+                </TableCell>
+                <TableCell
+                  sx={{
+                    fontWeight: "bold",
+                    width: "40%",
+                  }}
+                >
+                  Địa chỉ
                 </TableCell>
                 <TableCell
                   sx={{
                     fontWeight: "bold",
                   }}
                 >
-                  Address
+                  Loại địa điểm
                 </TableCell>
                 <TableCell
                   sx={{
                     fontWeight: "bold",
                   }}
                 >
-                  Location type
+                  Loại quảng cáo
                 </TableCell>
                 <TableCell
                   sx={{
                     fontWeight: "bold",
                   }}
                 >
-                  Ads type
+                  Tình trạng quy hoạch
                 </TableCell>
-                <TableCell
-                  sx={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  Planned status
-                </TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -154,6 +157,11 @@ const LocationManagement = () => {
                     <TableCell>{row.ads_type.label}</TableCell>
                     <TableCell>
                       {row.is_planned ? "Đã quy hoạch" : "Chưa quy hoạch"}
+                    </TableCell>
+                    <TableCell>
+                      <Button endIcon={<EditIcon />} variant="outlined">
+                        Yêu cầu chỉnh sửa
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -176,6 +184,10 @@ const LocationManagement = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={"Số hàng mỗi trang"}
+            labelDisplayedRows={({ from, to, count }) => {
+              return "" + from + " - " + to + " của " + count;
+            }}
           />
         </Box>
       </MainCard>
