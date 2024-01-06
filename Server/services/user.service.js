@@ -1,6 +1,6 @@
 
 import mongoose from "mongoose";
-import { Admin, User, WardOfficer } from "../models/UserModel.js";
+import { ProvinceOfficer, User, WardOfficer, DistrictOfficer } from "../models/UserModel.js";
 const CompanyServices = {
     async getAll(filter, projection) {
         try {
@@ -13,8 +13,8 @@ const CompanyServices = {
     async create(data) {
         try {
             var user;
-            if (data.userRole == 'admin') {
-                const admin = new Admin(data);
+            if (data.userRole == 'province_officer') {
+                const admin = new ProvinceOfficer(data);
                 user = await admin.save();
             } else if (data.userRole == "ward_officer") {
                 const wardOfficer = new WardOfficer(data);

@@ -29,7 +29,7 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         default: "anonymous",
-        enum: ['anonymous', 'admin', 'ward_officer', 'district_officer'],
+        enum: ['anonymous', 'province_officer', 'ward_officer', 'district_officer'],
     },
     gender: {
         type: String,
@@ -41,7 +41,7 @@ const UserSchema = new Schema({
     }
 );
 const AnonymousSchema = new Schema(UserSchema);
-const AdminSchema = new Schema(UserSchema);
+const ProvinceSchema = new Schema(UserSchema);
 const WardOfficerSchema = new Schema(UserSchema);
 const DistrictOfficerSchema = new Schema(UserSchema);
 
@@ -55,6 +55,12 @@ WardOfficerSchema.add({
 
 DistrictOfficerSchema.add({
     assigned_areaid: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: 'District',
+    },
+    // Add config here
+    ward_config: {
         type: [Schema.Types.ObjectId],
         required: false,
         ref: 'Ward',
@@ -63,6 +69,6 @@ DistrictOfficerSchema.add({
 
 export const User = mongoose.model('User', UserSchema);
 export const WardOfficer = User.discriminator('WardOfficer', WardOfficerSchema);
-export const Admin = User.discriminator('Admin', AdminSchema);
+export const ProvinceOfficer = User.discriminator('ProvinceOfficer', ProvinceSchema);
 export const Anonymous = User.discriminator('Anonymous', AnonymousSchema);
 export const DistrictOfficer = User.discriminator('DistrictOfficer', DistrictOfficerSchema);

@@ -19,6 +19,7 @@ import adsBoarTypedRoute from "./routes/ads_board_type.route.js";
 import companyRoute from "./routes/company_route.js";
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
+import reportType from "./routes/report_type.route.js";
 import { sendEmail } from "./utils/sendEmail.js";
 
 dotenv.config();
@@ -38,6 +39,7 @@ const initializeExpress = (app) => {
 initializeExpress(app);
 
 /// etst
+app.use(reportType);
 app.use(locationRoute);
 app.use(wardRoute);
 app.use(districtRoute);

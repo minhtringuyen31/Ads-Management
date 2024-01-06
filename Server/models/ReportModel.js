@@ -10,9 +10,9 @@ const reportFormEnum = {
 const ReportSchema = new Schema(
   {
     report_form: {
-      type: String,
-      enum: Object.keys(reportFormEnum),
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'Type',
     },
     username: {
       type: String,
