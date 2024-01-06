@@ -13,6 +13,7 @@ import themes from "./themes";
 import NavigationScroll from "./layout/NavigationScroll";
 
 // ==============================|| APP ||============================== //
+//Merge branch
 
 const App = () => {
   const customization = useSelector((state) => state.customization);
