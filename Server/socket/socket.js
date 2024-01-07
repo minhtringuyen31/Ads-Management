@@ -34,7 +34,7 @@ const SocketListener = {
                     const newNotification = {
                         title: "Có 1 báo cáo mới !!!",
                         subtitle: "",
-                        content: { ...newReport },
+                        content: newReport,
                         type: "report",
                         clientId: newReport.clientId,
                     }

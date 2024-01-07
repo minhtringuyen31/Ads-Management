@@ -3,3 +3,72 @@
 [2024-01-07T10:04:42.667Z] INFO: ::1 - - [07/Jan/2024:10:04:42 +0000] "GET /location/healthcheck HTTP/1.1" 200 131 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 [2024-01-07T10:12:33.280Z] INFO: ::1 - - [07/Jan/2024:10:12:33 +0000] "GET /adsboards HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 [2024-01-07T10:12:38.268Z] INFO: ::1 - - [07/Jan/2024:10:12:38 +0000] "GET /notifications HTTP/1.1" 200 71 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:30:56.235Z] INFO: ::1 - - [07/Jan/2024:10:30:56 +0000] "POST /report HTTP/1.1" 201 522 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:31:26.335Z] INFO: ::1 - - [07/Jan/2024:10:31:26 +0000] "GET /notifications HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:31:50.913Z] INFO: ::1 - - [07/Jan/2024:10:31:50 +0000] "POST /report HTTP/1.1" 201 522 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:37:52.983Z] ERROR: InternalServerError: NotificationService is not defined
+    at create (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/report.controller.js:186:24)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2024-01-07T10:37:52.993Z] INFO: ::1 - - [07/Jan/2024:10:37:52 +0000] "POST /report HTTP/1.1" 500 61 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:38:10.461Z] INFO: ::1 - - [07/Jan/2024:10:38:10 +0000] "POST /report HTTP/1.1" 201 522 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:38:19.223Z] INFO: ::1 - - [07/Jan/2024:10:38:19 +0000] "GET /notifications HTTP/1.1" 200 759 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:38:20.459Z] ERROR: NotFoundError: This route does not exist
+    at notFound (file:///Users/buiquangthanh/Learning/Web-Advance/Server/helper/errorHandler.js:4:22)
+    at Layer.handle [as handle_request] (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:328:13)
+    at /Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:286:9
+    at Function.process_params (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:346:12)
+    at next (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:280:10)
+    at /Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:646:15
+    at next (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:265:14)
+    at Function.handle (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:175:3)
+    at router (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/index.js:47:12)
+[2024-01-07T10:38:20.464Z] INFO: ::1 - - [07/Jan/2024:10:38:20 +0000] "GET /favicon.ico HTTP/1.1" 404 52 "http://localhost:5001/notifications" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:40:31.342Z] INFO: ::1 - - [07/Jan/2024:10:40:31 +0000] "GET /notifications HTTP/1.1" 200 827 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:41:18.530Z] ERROR: InternalServerError: Cannot populate path `location` because it is not in your schema. Set the `strictPopulate` option to false to override.
+    at getAll (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/notification.controller.js:17:30)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2024-01-07T10:41:18.539Z] INFO: ::1 - - [07/Jan/2024:10:41:18 +0000] "GET /notifications HTTP/1.1" 500 146 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:42:01.669Z] INFO: ::1 - - [07/Jan/2024:10:42:01 +0000] "GET /notifications HTTP/1.1" 200 884 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:43:14.010Z] ERROR: InternalServerError: Unexpected token u in JSON at position 0
+    at create (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/report.controller.js:188:24)
+    at Layer.handle [as handle_request] (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/route.js:144:13)
+    at done (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/multer/lib/make-middleware.js:45:7)
+    at indicateDone (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/multer/lib/make-middleware.js:49:68)
+    at Multipart.<anonymous> (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/multer/lib/make-middleware.js:166:7)
+    at Multipart.emit (node:events:513:28)
+    at emitCloseNT (node:internal/streams/destroy:138:10)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+[2024-01-07T10:43:14.012Z] INFO: ::1 - - [07/Jan/2024:10:43:14 +0000] "POST /report HTTP/1.1" 500 67 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:43:35.449Z] ERROR: InternalServerError: Unexpected token u in JSON at position 0
+    at create (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/report.controller.js:188:24)
+    at Layer.handle [as handle_request] (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/layer.js:95:5)
+    at next (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/express/lib/router/route.js:144:13)
+    at done (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/multer/lib/make-middleware.js:45:7)
+    at indicateDone (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/multer/lib/make-middleware.js:49:68)
+    at Multipart.<anonymous> (/Users/buiquangthanh/Learning/Web-Advance/Server/node_modules/multer/lib/make-middleware.js:166:7)
+    at Multipart.emit (node:events:513:28)
+    at emitCloseNT (node:internal/streams/destroy:138:10)
+    at processTicksAndRejections (node:internal/process/task_queues:82:21)
+[2024-01-07T10:43:35.450Z] INFO: ::1 - - [07/Jan/2024:10:43:35 +0000] "POST /report HTTP/1.1" 500 67 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:43:44.314Z] ERROR: InternalServerError: Report validation failed: ward: Path `ward` is required., district: Path `district` is required.
+    at create (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/report.controller.js:188:24)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2024-01-07T10:43:44.316Z] INFO: ::1 - - [07/Jan/2024:10:43:44 +0000] "POST /report HTTP/1.1" 500 123 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:51:56.609Z] ERROR: InternalServerError: Report validation failed: ward: Path `ward` is required.
+    at create (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/report.controller.js:193:24)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2024-01-07T10:51:56.614Z] INFO: ::1 - - [07/Jan/2024:10:51:56 +0000] "POST /report HTTP/1.1" 500 83 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:52:41.126Z] ERROR: InternalServerError: Report validation failed: ward: Path `ward` is required.
+    at create (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/report.controller.js:194:24)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2024-01-07T10:52:41.134Z] INFO: ::1 - - [07/Jan/2024:10:52:41 +0000] "POST /report HTTP/1.1" 500 83 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:53:25.985Z] INFO: ::1 - - [07/Jan/2024:10:53:25 +0000] "POST /report HTTP/1.1" 201 512 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:53:38.455Z] INFO: ::1 - - [07/Jan/2024:10:53:38 +0000] "GET /notifications HTTP/1.1" 200 2480 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:54:41.291Z] INFO: ::1 - - [07/Jan/2024:10:54:41 +0000] "POST /report HTTP/1.1" 201 506 "-" "PostmanRuntime/7.36.0"
+[2024-01-07T10:55:40.005Z] ERROR: InternalServerError: Cannot populate path `content.board.content.adsboard_type` because it is not in your schema. Set the `strictPopulate` option to false to override.
+    at getAll (file:///Users/buiquangthanh/Learning/Web-Advance/Server/controllers/notification.controller.js:17:30)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2024-01-07T10:55:40.007Z] INFO: ::1 - - [07/Jan/2024:10:55:40 +0000] "GET /notifications HTTP/1.1" 500 173 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T10:56:45.270Z] INFO: ::1 - - [07/Jan/2024:10:56:45 +0000] "GET /notifications HTTP/1.1" 200 4591 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"

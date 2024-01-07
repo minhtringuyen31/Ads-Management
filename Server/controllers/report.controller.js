@@ -3,10 +3,11 @@ import ReportService from "../services/report.service.js";
 import UserService from "../services/user.service.js";
 import LocationService from "../services/location.service.js";
 import WardService from "../services/ward.service.js";
-import NotificationService from "../services/notification.service.js";
 import rabbitmq from "../message-broker/rabbitmq.js";
 const ModelName = "Report";
 const modelname = "report";
+import NotificationService from "../services/notification.service.js";
+
 import { fromJson } from "../helper/dto.js";
 import {
   createMongooseQuery,
@@ -16,6 +17,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { normalizeString } from "../utils/utils.js";
 import { extractPublicId } from "cloudinary-build-url";
 import DistrictService from "../services/district.service.js";
+import AdsBoardService from "../services/ads_board.service.js";
 const ReportController = {
   getAll: async (req, res, next) => {
     try {
@@ -124,11 +126,16 @@ const ReportController = {
 
       // Handle save changes when type = board or location
       if (reportData.type === 'board') {
-        reportData.district = reportData.board.location.district;
-        reportData.ward = reportData.board.location.ward;
+        const board = await AdsBoardService.getById(reportData.board);
+        reportData.district = board.location.district._id;
+        reportData.ward = board.location.ward._id;
       } else if (reportData.type === 'location') {
-        reportData.district = reportData.location.district;
-        reportData.ward = reportData.location.ward;
+        const location = await LocationService.getById(reportData.location);
+        console.log(location);
+        reportData.district = location.district._id;
+        reportData.ward = location.ward._id;
+
+
       }
       // End by Quang Thanh
 
@@ -138,6 +145,14 @@ const ReportController = {
       }
       const newReport = await ReportService.create(reportData);
       if (newReport) {
+        const newNotification = {
+          title: "Có 1 báo cáo mới !!!",
+          subtitle: "",
+          content: newReport,
+          type: "report",
+          clientId: newReport.clientId,
+        }
+        const data = await NotificationService.create(newNotification);
 
         // req.app.io.to(global.userList[newReport.clientId]).emit("new_report", data)
         req.app.io.emit("new_report", newReport)

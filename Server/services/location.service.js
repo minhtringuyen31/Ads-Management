@@ -53,7 +53,6 @@ const LocationService = {
                 .populate({
                     path: 'ward',
                     model: 'Ward',
-                    select: 'label -_id' // Select only the label field and exclude the _id
                 })
                 .populate({
                     path: "district",
