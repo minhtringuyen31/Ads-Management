@@ -3,7 +3,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
-  Checkbox,
   FormControlLabel,
   IconButton,
   Paper,
@@ -25,13 +24,15 @@ import { visuallyHidden } from '@mui/utils';
 import useHttp from 'hooks/use-http';
 import { getAllDistricts } from 'lib/api';
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import DistrictContext from 'store/district/district-context';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, district) => {
+const createData = (id, number, district) => {
   return {
     id,
+    number,
     district,
   };
 };
@@ -66,6 +67,12 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
+    id: 'number',
+    numeric: false,
+    disablePadding: false,
+    label: 'STT',
+  },
+  {
     id: 'district',
     numeric: false,
     disablePadding: true,
@@ -95,17 +102,6 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -193,6 +189,7 @@ const EnhancedTable = (props) => {
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const districtCtx = useContext(DistrictContext);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -226,6 +223,11 @@ const EnhancedTable = (props) => {
       );
     }
     setSelected(newSelected);
+  };
+
+  const handleClickDetail = (id) => {
+    console.log(id);
+    districtCtx.setDistrictId(id);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -262,7 +264,7 @@ const EnhancedTable = (props) => {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 150 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
@@ -282,23 +284,14 @@ const EnhancedTable = (props) => {
                 return (
                   <TableRow
                     hover
-                    role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
+                    onClick={() => handleClickDetail(row.id)}
                   >
-                    <TableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        onClick={(event) => handleClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
                       component='th'
                       id={labelId}
@@ -348,6 +341,7 @@ const EnhancedTable = (props) => {
 };
 
 const DistrictList = () => {
+  const districtCtx = useContext(DistrictContext);
   const {
     sendRequest,
     status,
@@ -361,11 +355,17 @@ const DistrictList = () => {
 
   const rows = useMemo(() => {
     if (loadedDistricts) {
-      return loadedDistricts.map((district) => {
-        return createData(district._id, district.label);
+      return loadedDistricts.map((district, index) => {
+        return createData(district._id, index + 1, district.label);
       });
     }
   }, [loadedDistricts]);
+
+  useEffect(() => {
+    if (status === 'completed' && rows !== null) {
+      districtCtx.setDistrictId(rows[0].id);
+    }
+  }, [rows]);
 
   if (error) {
     return <div>Có lỗi xảy ra</div>;

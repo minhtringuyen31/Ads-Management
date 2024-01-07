@@ -51,6 +51,21 @@ export const getAllDistricts = async () => {
   }
 };
 
+export const getWardsByDistrictId = async (id) => {
+  try {
+    const response = await instance.get(`${rootApi}/getWardsOfDistrict/${id}`);
+    const data = response.data;
+
+    if (response.statusText === 'OK') {
+      return data.data;
+    } else {
+      throw new Error('Could not fetch data.');
+    }
+  } catch (error) {
+    throw new Error('Request failed: ' + error.message);
+  }
+};
+
 // Ward API
 export const getAllWards = async () => {
   try {

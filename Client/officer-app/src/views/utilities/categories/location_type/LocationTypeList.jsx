@@ -3,7 +3,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
-  Checkbox,
   FormControlLabel,
   IconButton,
   Paper,
@@ -29,9 +28,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, key, locationtype) => {
+const createData = (id, number, key, locationtype) => {
   return {
     id,
+    number,
     key,
     locationtype,
   };
@@ -67,10 +67,16 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
+    id: 'number',
+    numeric: false,
+    disablePadding: false,
+    label: 'STT',
+  },
+  {
     id: 'locationtype',
     numeric: false,
     disablePadding: true,
-    label: 'Loại địa điểm',
+    label: 'Tên',
   },
   {
     id: 'detail',
@@ -96,17 +102,6 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -166,7 +161,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Các loại địa điểm
+          Các loại địa điểm
         </Typography>
       )}
 
@@ -263,7 +258,7 @@ const EnhancedTable = (props) => {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 150 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
@@ -290,16 +285,7 @@ const EnhancedTable = (props) => {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        onClick={(event) => handleClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
                       component='th'
                       id={labelId}
@@ -362,8 +348,13 @@ const LocationTypeList = () => {
 
   const rows = useMemo(() => {
     if (loadedLocationType) {
-      return loadedLocationType.map((location) => {
-        return createData(location._id, location.key, location.label);
+      return loadedLocationType.map((location, index) => {
+        return createData(
+          location._id,
+          index + 1,
+          location.key,
+          location.label
+        );
       });
     }
   }, [loadedLocationType]);

@@ -1,5 +1,7 @@
 // assets
 import {
+  IconList,
+  IconMapPins,
   IconPalette,
   IconShadow,
   IconTypography,
@@ -9,6 +11,8 @@ import {
 
 // constant
 const icons = {
+  IconList,
+  IconMapPins,
   IconTypography,
   IconPalette,
   IconShadow,
@@ -26,18 +30,18 @@ const utilities = {
     children: [
       {
         id: 'districts',
-        title: 'Danh sách quận',
+        title: 'Danh sách quận, phường',
         type: 'item',
-        url: '/utils/districts',
-        icon: icons.IconTypography,
+        url: '/utils/district/list',
+        icon: icons.IconMapPins,
         breadcrumbs: false,
       },
       {
-        id: 'wards',
-        title: 'Danh sách quận',
+        id: 'category',
+        title: 'Danh sách các danh mục',
         type: 'item',
-        url: '/utils/wards',
-        icon: icons.IconPalette,
+        url: '/utils/category/list',
+        icon: icons.IconList,
         breadcrumbs: false,
       },
       {

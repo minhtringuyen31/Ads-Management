@@ -3,7 +3,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
-  Checkbox,
   FormControlLabel,
   IconButton,
   Paper,
@@ -29,9 +28,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, key, adsboard) => {
+const createData = (id, number, key, adsboard) => {
   return {
     id,
+    number,
     key,
     adsboard,
   };
@@ -67,10 +67,16 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
+    id: 'number',
+    numeric: false,
+    disablePadding: false,
+    label: 'STT',
+  },
+  {
     id: 'adsboardtype',
     numeric: false,
     disablePadding: true,
-    label: 'Loại bảng quảng cáo',
+    label: 'Tên',
   },
   {
     id: 'detail',
@@ -96,17 +102,6 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -166,7 +161,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Các loại bảng quảng cáo
+          Các loại bảng quảng cáo
         </Typography>
       )}
 
@@ -263,7 +258,7 @@ const EnhancedTable = (props) => {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 150 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
@@ -290,16 +285,7 @@ const EnhancedTable = (props) => {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        onClick={(event) => handleClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
                       component='th'
                       id={labelId}
@@ -362,8 +348,13 @@ const AdsBoardTypeList = () => {
 
   const rows = useMemo(() => {
     if (loadedAdsboardType) {
-      return loadedAdsboardType.map((adsboard) => {
-        return createData(adsboard._id, adsboard.key, adsboard.label);
+      return loadedAdsboardType.map((adsboard, index) => {
+        return createData(
+          adsboard._id,
+          index + 1,
+          adsboard.key,
+          adsboard.label
+        );
       });
     }
   }, [loadedAdsboardType]);

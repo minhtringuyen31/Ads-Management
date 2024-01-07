@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 
 import Loadable from 'ui-component/Loadable';
-import CategoryManage from 'views/utilities/categories/CategoryManage';
 import MainLayout from '../layout/MainLayout/MainLayout';
 
 // import LocationDetail from "views/utilities/LocationDetail";
@@ -13,6 +12,12 @@ const LocationManagement = Loadable(
       '../views/utilities/list-location-adsboard/location/LocationManagement'
     )
   )
+);
+const CategoryManage = Loadable(
+  lazy(() => import('../views/utilities/categories/CategoryManage'))
+);
+const DistrictMangement = Loadable(
+  lazy(() => import('../views/utilities/district-manage/DistrictMangement'))
 );
 const LocationDetail = Loadable(
   lazy(() =>
@@ -123,6 +128,15 @@ const MainRoutes = {
             {
               path: 'list',
               element: <CategoryManage />,
+            },
+          ],
+        },
+        {
+          path: 'district',
+          children: [
+            {
+              path: 'list',
+              element: <DistrictMangement />,
             },
           ],
         },

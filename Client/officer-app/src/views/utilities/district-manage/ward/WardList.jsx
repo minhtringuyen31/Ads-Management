@@ -3,7 +3,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
-  Checkbox,
   FormControlLabel,
   IconButton,
   Paper,
@@ -23,15 +22,17 @@ import {
 import { alpha } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import useHttp from 'hooks/use-http';
-import { getAllWards } from 'lib/api';
+import { getWardsByDistrictId } from 'lib/api';
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import DistrictContext from 'store/district/district-context';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, ward) => {
+const createData = (id, number, ward) => {
   return {
     id,
+    number,
     ward,
   };
 };
@@ -66,6 +67,12 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
+    id: 'number',
+    numeric: false,
+    disablePadding: false,
+    label: 'STT',
+  },
+  {
     id: 'ward',
     numeric: false,
     disablePadding: true,
@@ -95,17 +102,6 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -262,7 +258,7 @@ const EnhancedTable = (props) => {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 150 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
@@ -289,16 +285,7 @@ const EnhancedTable = (props) => {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        onClick={(event) => handleClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
                       component='th'
                       id={labelId}
@@ -348,24 +335,26 @@ const EnhancedTable = (props) => {
 };
 
 const WardList = () => {
+  const districtCtx = useContext(DistrictContext);
+
   const {
     sendRequest,
     status,
-    data: loadedWards,
+    data: loadedWardsByDistrict,
     error,
-  } = useHttp(getAllWards, true);
+  } = useHttp(getWardsByDistrictId, true);
 
   useEffect(() => {
-    sendRequest();
-  }, [sendRequest]);
+    sendRequest(districtCtx.districtId);
+  }, [sendRequest, districtCtx.districtId]);
 
   const rows = useMemo(() => {
-    if (loadedWards) {
-      return loadedWards.map((ward) => {
-        return createData(ward._id, ward.label);
+    if (loadedWardsByDistrict) {
+      return loadedWardsByDistrict.map((ward, index) => {
+        return createData(ward._id, index + 1, ward.label);
       });
     }
-  }, [loadedWards]);
+  }, [loadedWardsByDistrict]);
 
   if (error) {
     return <div>Có lỗi xảy ra</div>;
