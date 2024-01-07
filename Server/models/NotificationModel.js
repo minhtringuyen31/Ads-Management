@@ -19,10 +19,13 @@ const NotificationSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    clientId: {
+        type: String
+    }
 },
     {
         timestamps: true,
     }
 );
 
-export const Location = mongoose.model('Location', NotificationSchema);
+export const NotificationModel = mongoose.model('Notification', NotificationSchema);

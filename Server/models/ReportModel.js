@@ -74,7 +74,7 @@ const ReportSchema = new Schema(
       },
     },
     // Add by Quang Thanh to support socket IO
-    code: {
+    clientId: {
       type: String,
     },
     ward: {

@@ -3,6 +3,7 @@ import ReportService from "../services/report.service.js";
 import UserService from "../services/user.service.js";
 import LocationService from "../services/location.service.js";
 import WardService from "../services/ward.service.js";
+import NotificationService from "../services/notification.service.js";
 import rabbitmq from "../message-broker/rabbitmq.js";
 const ModelName = "Report";
 const modelname = "report";
@@ -137,6 +138,9 @@ const ReportController = {
       }
       const newReport = await ReportService.create(reportData);
       if (newReport) {
+
+        // req.app.io.to(global.userList[newReport.clientId]).emit("new_report", data)
+        req.app.io.emit("new_report", newReport)
         res.status(201).json({
           message: ModelName + " created successfully",
           status: 201,
@@ -153,6 +157,8 @@ const ReportController = {
             );
           });
         }
+
+
         res.json({
           message: "Create location failed",
           status: 400,

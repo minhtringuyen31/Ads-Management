@@ -20,6 +20,7 @@ import companyRoute from "./routes/company_route.js";
 import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
 import reportType from "./routes/report_type.route.js";
+import notificationRoute from "./routes/notification.route.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import SocketListener from "./socket/socket.js";
 import { Server } from "socket.io";
@@ -46,6 +47,7 @@ initializeExpress(app);
 
 /// handle socket
 SocketListener.start(io);
+app.use(notificationRoute);
 app.use(reportType);
 app.use(locationRoute);
 app.use(wardRoute);

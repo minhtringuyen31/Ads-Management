@@ -1,3 +1,5 @@
+import NotificationService from "../services/notification.service.js";
+
 const SocketListener = {
     start: function (io) {
         io.on('connection', async function (socket) {
@@ -5,16 +7,16 @@ const SocketListener = {
             console.log('A user connected with socket id:', socket.id);
 
             // Giả sử cán bộ phường/quận gửi thông tin này khi kết nối
-            const { ward, district, uuid } = socket.handshake.query;
+            const { ward, district, clientId } = socket.handshake.query;
 
-            global.userList[uuid] = socket.id;
+            global.userList[clientId] = socket.id;
 
             // Tham gia vào room dựa trên phường/quận
             if (ward) {
-                socket.join(`ward_${ward}`);
+                socket.join(ward);
             }
             if (district) {
-                socket.join(`district_${district}`);
+                socket.join(district);
             }
 
             // Xử lý sự kiện new_report từ người dân
@@ -22,20 +24,31 @@ const SocketListener = {
                 console.log('Nhận báo cáo mới:', report);
 
                 // Lưu trữ báo cáo cùng với code
-                global.userList[report.code] = socket.id;
+                global.userList[report.clientId] = socket.id;
                 // Simulate a delay of 2 seconds
-                setTimeout(() => {
+
+
+                setTimeout(async () => {
                     // TODO: Save the report to the database here (replace the comment with your actual database saving code)
-                    const newReport = { ...report, code: report.code }
+
+                    const newNotification = {
+                        title: "Có 1 báo cáo mới !!!",
+                        subtitle: "",
+                        content: { ...newReport },
+                        type: "report",
+                        clientId: newReport.clientId,
+                    }
+                    const data = await NotificationService.create(newNotification);
+                    const newReport = { ...report, clientId: report.clientId }
                     console.log('Lưu trữ báo cáo:', socket.id);
                     // Gửi code trở lại cho người dân
 
                     // Gửi báo cáo đến cán bộ phường/quận
                     if (report.ward) {
-                        io.to(`ward_${report.ward}`).emit('new_report', newReport);
+                        io.to(report.ward).emit('new_notification', data);
                     }
                     if (report.district) {
-                        io.to(`district_${report.district}`).emit('new_report', newReport);
+                        io.to(report.district).emit('new_notification', data);
                     }
                     console.log('Báo cáo đã được lưu sau 2 giây');
                 }, 3000); // 2000 milliseconds = 2 seconds
@@ -45,7 +58,7 @@ const SocketListener = {
 
             socket.on('report_response', (response) => {
                 console.log("Report response:", response);
-                io.to(global.userList[response.code]).emit('report_response', {
+                io.to(global.userList[response.clientId]).emit('report_response', {
                     code: response.code,
                     message: response.message
                 });

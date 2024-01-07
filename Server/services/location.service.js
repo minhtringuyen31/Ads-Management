@@ -154,7 +154,7 @@ const LocationService = {
 
             // // Sử dụng phương thức updateMany() để cập nhật
             const result = await Report.updateMany({}, {
-                report_form: '659956539ca7ece247bb954c'
+                clientId: '1'
             });
 
             // Add by Quang Thanh on 07.12.2023 to rename all document in collection
