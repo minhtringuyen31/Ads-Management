@@ -31,7 +31,6 @@ const LocationInformation = ({ content }) => {
   const handleOpenReportModal = () => {
     setReportModalOpen(true);
   };
-
   const handleReportBtnOnclick = () => {
     handleOpenReportModal();
   };
@@ -41,7 +40,6 @@ const LocationInformation = ({ content }) => {
       position="relative"
       display="flex"
       flexDirection="column"
-      // justifyContent="space-between"
       sx={{ height: "100%" }}
     >
       <img

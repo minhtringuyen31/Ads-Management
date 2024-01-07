@@ -24,12 +24,15 @@ const style = {
 };
 
 const AdsItem = ({ item }) => {
-/**
- * useState
- */
+  /**
+   * useState
+   */
   const [adsDetailModalOpen, setAdsDetailModalOpen] = useState(false);
   const [reportModelOpen, setReportModalOpen] = useState(false);
 
+  /**
+   * @returns {void}
+   */
   const handleOpenDetailModal = () => {
     setReportModalOpen(false);
     setAdsDetailModalOpen(true);
@@ -42,11 +45,9 @@ const AdsItem = ({ item }) => {
     setAdsDetailModalOpen(false);
     setReportModalOpen(true);
   };
-
   const handleAdsItemOnClick = () => {
     handleOpenDetailModal();
   };
-
   const handleReportBtnOnclick = () => {
     handleOpenReportModal();
   };
@@ -102,7 +103,7 @@ const AdsItem = ({ item }) => {
             sx={{
               fontWeight: "bold",
             }}
-            onClick={()=>handleAdsItemOnClick()}
+            onClick={() => handleAdsItemOnClick()}
           >
             Chi tiết
           </Button>
@@ -114,7 +115,7 @@ const AdsItem = ({ item }) => {
             sx={{
               fontWeight: "bold",
             }}
-            onClick={()=>handleReportBtnOnclick(item.id)}
+            onClick={() => handleReportBtnOnclick(item.id)}
           >
             Báo cáo vi phạm
           </Button>
@@ -252,7 +253,11 @@ const AdsItem = ({ item }) => {
             </Typography>
           </Box>
           <Box>
-            <ReportForm agent={item._id} type={"board"} handleCloseModal={handleCloseModal}/>
+            <ReportForm
+              agent={item._id}
+              type={"board"}
+              handleCloseModal={handleCloseModal}
+            />
           </Box>
         </Box>
       </Modal>

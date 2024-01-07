@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Button, IconButton, SwipeableDrawer } from "@mui/material";
+import { Box, IconButton, SwipeableDrawer } from "@mui/material";
 import LocationInformation from "../LocationInformation/LocationInformation";
 import AdsList from "../AdsInformation/AdsList";
 import ReportList from "../Report/ReportList";
 import PropTypes from "prop-types";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Drawer({
   shape,
@@ -15,6 +15,10 @@ export default function Drawer({
 }) {
   const anchor = "left";
 
+  /**
+   *
+   * @returns {import("react").HtmlHTMLAttributes}
+   */
   const renderShapeEditor = () => {
     switch (shape) {
       case 1:
@@ -27,6 +31,7 @@ export default function Drawer({
         return <div>Not found area</div>;
     }
   };
+
   return (
     <Box height="100%" width="100%" display="relative'">
       <React.Fragment key={anchor}>
@@ -44,15 +49,19 @@ export default function Drawer({
           }}
         >
           <Box display="flex" justifyContent="flex-end" margin="5px">
-            <IconButton aria-label="Close" size="small" display="absolute" right={0} onClick={() => closeDrawer()}>
-              <CloseIcon/>
+            <IconButton
+              aria-label="Close"
+              size="small"
+              display="absolute"
+              right={0}
+              onClick={() => closeDrawer()}
+            >
+              <CloseIcon />
             </IconButton>
           </Box>
           {renderShapeEditor()}
         </SwipeableDrawer>
-        
       </React.Fragment>
-      
     </Box>
   );
 }

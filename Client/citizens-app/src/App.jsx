@@ -3,46 +3,45 @@ import { Box, FormControlLabel, IconButton, Switch } from "@mui/material";
 import Map from "./ui-components/MapContainer/Map";
 import Drawer from "./ui-components/Drawer/Drawer";
 import { useState } from "react";
-import { styled } from '@mui/material/styles';
-import SearchBar from "./ui-components/Search/SearchBar";
-import MyLocationIcon from '@mui/icons-material/MyLocation';
+import { styled } from "@mui/material/styles";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 /**
  * Custom Switch Style
  */
 const CustomSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
-  '& .MuiSwitch-track': {
+  "& .MuiSwitch-track": {
     borderRadius: 22 / 2,
-    '&::before, &::after': {
+    "&::before, &::after": {
       content: '""',
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
       width: 16,
       height: 16,
     },
-    '&::before': {
+    "&::before": {
       backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
         theme.palette.getContrastText(theme.palette.primary.main),
       )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
       left: 12,
     },
-    '&::after': {
+    "&::after": {
       backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
         theme.palette.getContrastText(theme.palette.primary.main),
       )}" d="M19,13H5V11H19V13Z" /></svg>')`,
       right: 12,
     },
   },
-  '& .MuiSwitch-thumb': {
-    boxShadow: 'none',
+  "& .MuiSwitch-thumb": {
+    boxShadow: "none",
     width: 16,
     height: 16,
     margin: 2,
   },
 }));
-
 
 function App() {
   /**
@@ -54,7 +53,6 @@ function App() {
   const [reportSwitch, setReportSwitch] = useState(false);
   const [boardSwitch, setBoardSwitch] = useState(true);
   const [currentLocation, setCurrentLocation] = useState({});
-
 
   /**
    * @return {void}
@@ -81,14 +79,14 @@ function App() {
       setShape(2);
       openDrawer();
     }
-  }
+  };
 
   /**
    * @return {void}
    */
   const handleBoardSwitchChange = () => {
     setBoardSwitch(!boardSwitch);
-  }
+  };
 
   /**
    * @return {void}
@@ -99,19 +97,18 @@ function App() {
         // const { latitude, longitude } = position.coords;
         const result = {
           lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }
+          lng: position.coords.longitude,
+        };
         setCurrentLocation(result);
       });
     }
     console.log("Current Location: ", currentLocation);
-  }
-  
+  };
 
   //Test
   console.log(isDrawerOpen);
   console.log("Drawer Content:", drawerContent);
-  console.log("Shape: ", shape)
+  console.log("Shape: ", shape);
 
   return (
     <Box>
@@ -132,17 +129,43 @@ function App() {
       {/* <Box position>
         <SearchBar/>
       </Box> */}
-      <Box position='absolute' bgcolor={'rgba(255, 255, 255, 0.75)'} display="flex" flexDirection="row" width="100" margin="10px" paddingLeft="10px" bottom={0} right={0} borderRadius={2} zIndex='1000'>
+      <Box
+        position="absolute"
+        bgcolor={"rgba(255, 255, 255, 0.75)"}
+        display="flex"
+        flexDirection="row"
+        width="100"
+        margin="10px"
+        paddingLeft="10px"
+        bottom={0}
+        right={0}
+        borderRadius={2}
+        zIndex="1000"
+      >
         <FormControlLabel
-          control={<CustomSwitch checked={boardSwitch} onChange={() => handleBoardSwitchChange()}  />}
+          control={
+            <CustomSwitch
+              checked={boardSwitch}
+              onChange={() => handleBoardSwitchChange()}
+            />
+          }
           label="Bảng QC"
         />
         <FormControlLabel
-          control={<CustomSwitch checked={reportSwitch} onChange={() => handleReportSwitchChange()} />}
+          control={
+            <CustomSwitch
+              checked={reportSwitch}
+              onChange={() => handleReportSwitchChange()}
+            />
+          }
           label="Báo cáo vi phạm"
         />
-        <IconButton onClick={()=>handleCurrentLocationClicked()}>
-          <MyLocationIcon/>
+        <IconButton onClick={() => handleCurrentLocationClicked()}>
+          <MyLocationIcon />
+        </IconButton>
+
+        <IconButton onClick={() => handleCurrentLocationClicked()}>
+          <NotificationsIcon />
         </IconButton>
       </Box>
     </Box>

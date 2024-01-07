@@ -8,7 +8,7 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -18,6 +18,9 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import axiosClient from "../../axiosConfig/axiosClient";
 import PropTypes from "prop-types";
 
+/**
+ * Validate Report Form Schema
+ */
 const validateSchema = Yup.object().shape({
   fullname: Yup.string(),
   email: Yup.string()
@@ -27,6 +30,9 @@ const validateSchema = Yup.object().shape({
   phoneNumber: Yup.string().max(255).required("Yêu cầu nhập số điện thoại"),
 });
 
+/**
+ * Default Input Value
+ */
 const initialValues = {
   fullname: "Nguyễn Văn A",
   email: "nva@gmail.com",
@@ -40,6 +46,11 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
    * useState
    */
   const [previews, setPreviews] = useState([]);
+  const [reportTypes, setReportTypes] = useState([]);
+
+  /**
+   * useRef
+   */
   const fileInputRef = useRef(null);
 
   /**
@@ -64,7 +75,6 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
       report_content: values.content,
       type: type,
     };
-
     switch (type) {
       case "location":
         postBody.location = agent;
@@ -79,29 +89,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
         console.log("Not found area");
         return <div>Not found area</div>;
     }
-
     console.log("Post: ", postBody);
-    // const postBody =
-    //   type === "location"
-    //     ? {
-    //         username: values.fullname,
-    //         email: values.email,
-    //         phone_number: values.phoneNumber,
-    //         report_form: values.reportType,
-    //         report_content: values.content,
-    //         type: type,
-    //         location: agent,
-    //       }
-    //     : {
-    //         username: values.fullname,
-    //         email: values.email,
-    //         phone_number: values.phoneNumber,
-    //         report_form: values.reportType,
-    //         report_content: values.content,
-    //         type: type,
-    //         board: agent,
-    //       };
-
     try {
       const response = await axiosClient.post(
         "report",
@@ -139,6 +127,24 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
   function onChangeReCaptcha(value) {
     console.log("Captcha value:", value);
   }
+
+  /**
+   * useeEffect
+   */
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axiosClient.get("reporttypes");
+        if (response.status == 200) {
+          console.log("Report Type: ", response.data);
+          setReportTypes(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <Box
@@ -260,10 +266,16 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
                 label="Hình thức báo cáo"
                 onChange={handleChange}
               >
-                <MenuItem value={"denounce"}>Tố cáo sai phạm</MenuItem>
+                {reportTypes.map((item) => (
+                  <MenuItem key={item._id} value={item._id}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+
+                {/* <MenuItem value={"denounce"}>Tố cáo sai phạm</MenuItem>
                 <MenuItem value={"register"}>Đăng ký nội dung</MenuItem>
                 <MenuItem value={"feedback"}>Đóng góp ý kiến</MenuItem>
-                <MenuItem value={"question"}>Giải đáp thắc mắc</MenuItem>
+                <MenuItem value={"question"}>Giải đáp thắc mắc</MenuItem> */}
               </Select>
             </FormControl>
 
