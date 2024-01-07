@@ -2,10 +2,11 @@ import "./App.css";
 import { Box, FormControlLabel, IconButton, Switch } from "@mui/material";
 import Map from "./ui-components/MapContainer/Map";
 import Drawer from "./ui-components/Drawer/Drawer";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import NotificationPopper from "./ui-components/Notification/NotificationPopper";
 
 /**
  * Custom Switch Style
@@ -53,6 +54,8 @@ function App() {
   const [reportSwitch, setReportSwitch] = useState(false);
   const [boardSwitch, setBoardSwitch] = useState(true);
   const [currentLocation, setCurrentLocation] = useState({});
+  const [isPopperOpen, setPopperOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   /**
    * @return {void}
@@ -61,16 +64,18 @@ function App() {
     setDrawerOpen(true);
   };
 
-  /**
-   * @return {void}
-   */
   const closeDrawer = () => {
     setDrawerOpen(false);
   };
 
-  /**
-   * @return {void}
-   */
+  const openPopper = () => {
+    setPopperOpen(true);
+  };
+
+  const closePopper = () => {
+    setPopperOpen(false);
+  };
+
   const handleReportSwitchChange = () => {
     setReportSwitch(!reportSwitch);
     if (isDrawerOpen && shape === 2) {
@@ -81,9 +86,6 @@ function App() {
     }
   };
 
-  /**
-   * @return {void}
-   */
   const handleBoardSwitchChange = () => {
     setBoardSwitch(!boardSwitch);
   };
@@ -91,7 +93,7 @@ function App() {
   /**
    * @return {void}
    */
-  const handleCurrentLocationClicked = () => {
+  const handleCurrentLocationBtnClicked = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         // const { latitude, longitude } = position.coords;
@@ -105,11 +107,17 @@ function App() {
     console.log("Current Location: ", currentLocation);
   };
 
+  const handleNotificationBtnClicked = (e) => {
+    setPopperOpen(!isPopperOpen);
+    setAnchorEl(anchorEl ? null : e.currentTarget);
+  };
+
   //Test
   console.log(isDrawerOpen);
   console.log("Drawer Content:", drawerContent);
   console.log("Shape: ", shape);
 
+  const anchorRef = useRef(null);
   return (
     <Box>
       <Map
@@ -141,6 +149,7 @@ function App() {
         right={0}
         borderRadius={2}
         zIndex="1000"
+        ref={anchorRef}
       >
         <FormControlLabel
           control={
@@ -160,13 +169,20 @@ function App() {
           }
           label="Báo cáo vi phạm"
         />
-        <IconButton onClick={() => handleCurrentLocationClicked()}>
+        <IconButton onClick={() => handleCurrentLocationBtnClicked()}>
           <MyLocationIcon />
         </IconButton>
 
-        <IconButton onClick={() => handleCurrentLocationClicked()}>
+        <IconButton onClick={(e) => handleNotificationBtnClicked(e)}>
           <NotificationsIcon />
         </IconButton>
+
+        <NotificationPopper
+          // openPopper={openPopper}
+          // closePopper={closePopper}
+          isPopperOpen={isPopperOpen}
+          anchorRef={anchorRef}
+        />
       </Box>
     </Box>
   );
