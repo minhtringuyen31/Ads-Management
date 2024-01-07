@@ -18,6 +18,7 @@ const WardController = {
         }
 
     },
+
     create: async (req, res, next) => {
         try {
 

@@ -4,11 +4,24 @@ const WardService = {
     async getAll(filter, projection) {
         try {
             const ward = await Ward.find(filter).select("-coordinates")
-            .populate({
-                path: "district",
-                model: "District", // Replace with the actual name of the User model
-                select: "-coordinates",
-              });
+                .populate({
+                    path: "district",
+                    model: "District", // Replace with the actual name of the User model
+                    select: "-coordinates",
+                });
+            return ward;
+        } catch (error) {
+            throw error;
+        }
+    },
+    async getAllByDistrictId(districtId) {
+        try {
+            const ward = await Ward.find({ district: districtId }).select("-coordinates")
+                .populate({
+                    path: "district",
+                    model: "District", // Replace with the actual name of the User model
+                    select: "-coordinates",
+                });
             return ward;
         } catch (error) {
             throw error;

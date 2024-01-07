@@ -83,6 +83,16 @@ const ReportSchema = new Schema(
     code: {
       type: String,
     },
+    ward: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Ward',
+    },
+    district: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'District',
+    },
   },
 
   {

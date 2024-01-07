@@ -2,6 +2,7 @@ import createError from "http-errors";
 import ReportService from "../services/report.service.js";
 import UserService from "../services/user.service.js";
 import LocationService from "../services/location.service.js";
+import WardService from "../services/ward.service.js";
 import rabbitmq from "../message-broker/rabbitmq.js";
 const ModelName = "Report";
 const modelname = "report";
@@ -11,46 +12,24 @@ import {
   createMongooseSortObject,
 } from "../helper/filter.js";
 import { v2 as cloudinary } from "cloudinary";
-
+import { normalizeString } from "../utils/utils.js";
 import { extractPublicId } from "cloudinary-build-url";
+import DistrictService from "../services/district.service.js";
 const ReportController = {
   getAll: async (req, res, next) => {
     try {
       const filter = req.body;
       const reports = await ReportService.getAll(filter);
-
-      const lists = reports.map((report) => {
-        if (report.type === "location" && report.location) {
-          // If the report type is location and there is a location, add the coordinate property
-          return {
-            ...report,
-            ward: report.location.ward,
-            district: report.location.ward.district,
-          };
-        } else if (
-          report.type === "board" &&
-          report.board &&
-          report.board.location
-        ) {
-          // If the report type is board and there is a board and a location_id, add the coordinate property
-          return {
-            ...report,
-            ward: report.board.location.ward,
-            district: report.board.location.ward.district,
-          };
-        }
-        return report;
-      });
-      let filteredLists = lists;
+      let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
       const assigned_areaid = user.assigned_areaid;
       if (user.__t === "WardOfficer") {
-        filteredLists = lists.filter(
-          (report) => report.ward === assigned_areaid
+        filteredLists = reports.filter(
+          (report) => report.ward._id === assigned_areaid
         );
       } else if (user.__t === "DistrictOfficer") {
-        filteredLists = lists.filter(
-          (report) => report.district === assigned_areaid
+        filteredLists = reports.filter(
+          (report) => report.district._id === assigned_areaid
         );
       }
 
@@ -60,6 +39,23 @@ const ReportController = {
         // size: filteredLists.length,
         // size_all: reports.length,
         data: filteredLists,
+      });
+    } catch (error) {
+      next(createError.InternalServerError(error.message));
+    }
+  },
+  getAllTesting: async (req, res, next) => {
+    try {
+      const filter = req.body;
+      const reports = await ReportService.getAll(filter);
+
+
+      res.json({
+        message: "Get " + modelname + " list successfully",
+        status: 200,
+        // size: filteredLists.length,
+        // size_all: reports.length,
+        data: reports,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
@@ -90,13 +86,51 @@ const ReportController = {
   create: async (req, res, next) => {
     try {
       const reportData = req.body;
-      // if (reportData.type === 'random') {
-      //   const randomData = reportData.randomLocation;
-      //   const districtRadomData = reportData.address.suburb;
-      //   const wardList = [];
-      //   const districtList = await LocationService.getAll();
+      // Add by Quang Thanh to handle save record when type = random location
+      if (reportData.type === 'random') {
+        const randomData = JSON.parse((reportData.random));
+        const districtLabelRadomData = JSON.parse(JSON.stringify(randomData.address)).suburb;
+        const wardLabelRadomData = JSON.parse(JSON.stringify(randomData.address)).quarter;
+        let district_id = '';
+        let ward_id = '';
+        // Process get district id and ward id 
+        const districtList = await DistrictService.getAll();
+        districtList.forEach((district) => {
+          if (normalizeString(district.label) === normalizeString(districtLabelRadomData)) {
+            district_id = district._id;
+          }
+        });
+        if (district_id && district_id != '') {
+          const wardList = await WardService.getAllByDistrictId(district_id);
+          wardList.forEach((ward) => {
+            if (normalizeString(ward.label) === normalizeString(wardLabelRadomData)) {
+              ward_id = ward._id;
+            }
+          });
+        }
+        // Update form 
+        reportData.coordinate = {}
+        reportData.coordinate['lat'] = randomData.lat;
+        reportData.coordinate['lng'] = randomData.lon;
+        if (district_id && district_id != '') {
+          reportData.district = district_id;
+        }
+        if (ward_id && ward_id != '') {
+          reportData.ward = ward_id;
+        }
 
-      // }
+      }
+
+      // Handle save changes when type = board or location
+      if (reportData.type === 'board') {
+        reportData.district = reportData.board.location.district;
+        reportData.ward = reportData.board.location.ward;
+      } else if (reportData.type === 'location') {
+        reportData.district = reportData.location.district;
+        reportData.ward = reportData.location.ward;
+      }
+      // End by Quang Thanh
+
       const files = req.files;
       if (files) {
         reportData.image = files.map((file) => file.path);

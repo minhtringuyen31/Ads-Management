@@ -10,25 +10,18 @@ const DistrictService = {
             throw error;
         }
     },
-    async getWardsOfDistrict(id) {
+    async getWardsOfDistrict(districtId) {
         try {
-            const wards = await Ward.aggregate([
-                {
-                    $match: {
-                        district_id: new mongoose.Types.ObjectId(id)
-                    }
-                },
-                {
-                    $project: {
-                        label: 1,
-                    }
-                }
-            ]);
-            return wards;
+            const ward = await Ward.find({ district: districtId }).select("-coordinates")
+                .populate({
+                    path: "district",
+                    model: "District", // Replace with the actual name of the User model
+                    select: "-coordinates",
+                });
+            return ward;
         } catch (error) {
             throw error;
         }
-
     },
 
     async create(data) {

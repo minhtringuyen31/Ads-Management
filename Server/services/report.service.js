@@ -76,6 +76,15 @@ const ReportService = {
           model: "User", // Replace with the actual name of the User model
           select: "-password",
         })
+        .populate({
+          path: "district",
+          model: "District", // Replace with the actual name of the User model
+          select: "-coordinates -__v -ward_ids",
+        }).populate({
+          path: "ward",
+          model: "Ward", // Replace with the actual name of the User model
+          select: "-coordinates -__v ",
+        })
         .lean()
         .exec();
       reports.forEach((report) => {
@@ -153,7 +162,7 @@ const ReportService = {
           path: "adsboard_type",
           model: "AdsBoardType", // Replace with the actual name of the Location model
         },
-      ],
+        ],
       })
       .populate({
         path: "operation.user",
