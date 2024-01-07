@@ -15,7 +15,7 @@ const authenticate = (req, res, next) => {
   }
   jwt.verify(token.toString(), secretKey, async (err, user) => {
     if (err) {
-      return res.status(401).json({ error: "Unauthorizeds" });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     req.user = user;
