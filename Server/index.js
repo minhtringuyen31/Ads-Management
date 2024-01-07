@@ -21,13 +21,19 @@ import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
 import reportType from "./routes/report_type.route.js";
 import { sendEmail } from "./utils/sendEmail.js";
-
+import SocketListener from "./socket/socket.js";
+import { Server } from "socket.io";
 dotenv.config();
 
 const app = express();
 const corsOptions = {
   origin: "http://localhost:" + process.env.PORT,
 };
+const server = http.createServer(app);
+const io = new Server(server);
+global.userList = {};
+app.io = io
+
 db();
 const initializeExpress = (app) => {
   app.use(cors());
@@ -38,7 +44,8 @@ const initializeExpress = (app) => {
 
 initializeExpress(app);
 
-/// etst
+/// handle socket
+SocketListener.start(io);
 app.use(reportType);
 app.use(locationRoute);
 app.use(wardRoute);

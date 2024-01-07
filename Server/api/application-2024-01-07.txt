@@ -1,0 +1,2 @@
+[2024-01-07T09:22:17.621Z] INFO: ::1 - - [07/Jan/2024:09:22:17 +0000] "GET /adsboards HTTP/1.1" 200 4504 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+[2024-01-07T09:22:22.424Z] INFO: ::1 - - [07/Jan/2024:09:22:22 +0000] "GET /locations HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
