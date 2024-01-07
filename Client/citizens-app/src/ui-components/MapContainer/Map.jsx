@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { createRef, useEffect, useMemo, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axiosClient from "../../axiosConfig/axiosClient";
@@ -10,7 +10,6 @@ import SearchBar from "../Search/SearchBar";
 // import dotenv from "dotenv";
 
 // dotenv.config();
-
 
 const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
   const [position, setPosition] = useState(null);
@@ -35,18 +34,9 @@ const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
 
   const reverseGeocode = async (lat, lng) => {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=vi`,
     );
     const data = await response.json();
-    // const mapillaryResponse = await fetch(
-    //   `https://api.mapillary.com/v3/images?client_id=YOUR_MAPILLARY_CLIENT_ID&closeto=${lng},${lat}&radius=50`
-    // );
-    // const mapillaryData = await mapillaryResponse.json();
-    // console.log("MapillaryData: ", mapillaryData)
-
-    // // Add images to the data
-    // data.images = mapillaryData.features.map((feature) => feature.properties.key);
-    //   console.log("Data: ", data)
     return data;
   };
 
@@ -57,8 +47,23 @@ const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
   );
 };
 
-const Map = ({ setShape, openDrawer, setDrawerContent, boardDisplayMode }) => {
+const Map = ({
+  setShape,
+  openDrawer,
+  setDrawerContent,
+  boardDisplayMode,
+  currentLocation,
+}) => {
   const [locationList, setLocationList] = useState([]);
+
+  const redIcon = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
 
   const planedMarkerIcon = new L.divIcon({
     className: "custom-svg-marker",
@@ -138,99 +143,88 @@ const Map = ({ setShape, openDrawer, setDrawerContent, boardDisplayMode }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {
-          boardDisplayMode ? locationList.map((location) => (
-            <Marker
-              position={location.coordinate}
-              key={location._id}
-              icon={location.is_planned ? planedMarkerIcon : notPlanedMarkerIcon}
-            >
-              <Popup>
-                <Typography fontWeight="bold">
-                  {location.ads_type.label}
-                </Typography>
-                <Typography>{location.location_type.label}</Typography>
-                <Typography>
-                  {location.address}, {location.ward.label},{" "}
-                  {location.district.label}
-                </Typography>
-
-                <Typography fontWeight="bold" fontStyle="italic">
-                  {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  onClick={() => handleDetailBtnClicked(location._id)}
-                >
-                  Chi tiết
-                </Button>
-              </Popup>
+          {currentLocation && currentLocation.lat && currentLocation.lng && (
+            <Marker position={currentLocation} icon={redIcon}>
+              <Popup>Your Location</Popup>
             </Marker>
-          )) : 
-          locationList
-          .filter((location) => location.is_planned === true)
-          .map((location) => (
-            <Marker
-              position={location.coordinate}
-              key={location._id}
-              icon={location.is_planned ? planedMarkerIcon : notPlanedMarkerIcon}
-            >
-              <Popup>
-                <Typography fontWeight="bold">
-                  {location.ads_type.label}
-                </Typography>
-                <Typography>{location.location_type.label}</Typography>
-                <Typography>
-                  {location.address}, {location.ward.label},{" "}
-                  {location.district.label}
-                </Typography>
-
-                <Typography fontWeight="bold" fontStyle="italic">
-                  {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  onClick={() => handleDetailBtnClicked(location._id)}
+          )}
+          {boardDisplayMode
+            ? locationList.map((location) => (
+                <Marker
+                  position={location.coordinate}
+                  key={location._id}
+                  icon={
+                    location.is_planned ? planedMarkerIcon : notPlanedMarkerIcon
+                  }
                 >
-                  Chi tiết
-                </Button>
-              </Popup>
-            </Marker>
-          ))
-          }
+                  <Popup>
+                    <Typography fontWeight="bold">
+                      {location.ads_type.label}
+                    </Typography>
+                    <Typography>{location.location_type.label}</Typography>
+                    <Typography>
+                      {location.address}, {location.ward.label},{" "}
+                      {location.district.label}
+                    </Typography>
+
+                    <Typography fontWeight="bold" fontStyle="italic">
+                      {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
+                    </Typography>
+                    <Button
+                      variant="outlined"
+                      onClick={() => handleDetailBtnClicked(location._id)}
+                    >
+                      Chi tiết
+                    </Button>
+                  </Popup>
+                </Marker>
+              ))
+            : locationList
+                .filter((location) => location.is_planned === true)
+                .map((location) => (
+                  <Marker
+                    position={location.coordinate}
+                    key={location._id}
+                    icon={
+                      location.is_planned
+                        ? planedMarkerIcon
+                        : notPlanedMarkerIcon
+                    }
+                  >
+                    <Popup>
+                      <Typography fontWeight="bold">
+                        {location.ads_type.label}
+                      </Typography>
+                      <Typography>{location.location_type.label}</Typography>
+                      <Typography>
+                        {location.address}, {location.ward.label},{" "}
+                        {location.district.label}
+                      </Typography>
+
+                      <Typography fontWeight="bold" fontStyle="italic">
+                        {location.is_planned
+                          ? "ĐÃ QUY HOẠCH"
+                          : "CHƯA QUY HOẠCH"}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleDetailBtnClicked(location._id)}
+                      >
+                        Chi tiết
+                      </Button>
+                    </Popup>
+                  </Marker>
+                ))}
           <LocationMarker
             setLocationInfo={setDrawerContent}
             handleButtonClicked={handleButtonClicked}
           />
+          {/* <MapEvents currentLocation={currentLocation}/> */}
         </MapContainer>
         <Box position="absolute" right="5%" top="2%" width="35%" zIndex={10000}>
-        <SearchBar/>
+          <SearchBar />
+        </Box>
       </Box>
-      </Box>
- 
-      
-
-      {/* <Box
-        display="flex"
-        justifyContent="end"
-        alignItems="center"
-        gap="5px"
-        // width="100vw"
-        // height="100vh"
-        bgcolor="#e2e8f0"
-        position={"absolute"}
-        right={2}
-      >
-        <Button variant="outlined" onClick={() => handleButtonClicked(1)}>
-          Location
-        </Button>
-        <Button variant="contained" onClick={() => handleButtonClicked(2)}>
-          Report
-        </Button>
-        <Button variant="outlined" onClick={() => handleButtonClicked(3)}>
-          Ads Panel
-        </Button>
-      </Box> */}
     </Box>
   );
 };
@@ -241,7 +235,8 @@ Map.propTypes = {
   setShape: PropTypes.func.isRequired,
   openDrawer: PropTypes.func.isRequired,
   setDrawerContent: PropTypes.func.isRequired,
-  boardDisplayMode: PropTypes.bool.isRequired
+  boardDisplayMode: PropTypes.bool.isRequired,
+  currentLocation: PropTypes.object.isRequired,
 };
 
 LocationMarker.propTypes = {

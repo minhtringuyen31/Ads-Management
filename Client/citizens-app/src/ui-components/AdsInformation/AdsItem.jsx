@@ -252,7 +252,7 @@ const AdsItem = ({ item }) => {
             </Typography>
           </Box>
           <Box>
-            <ReportForm agent={item._id} type={"board"}/>
+            <ReportForm agent={item._id} type={"board"} handleCloseModal={handleCloseModal}/>
           </Box>
         </Box>
       </Modal>

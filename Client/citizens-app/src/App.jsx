@@ -1,10 +1,11 @@
 import "./App.css";
-import { Box, FormControlLabel, Switch } from "@mui/material";
+import { Box, FormControlLabel, IconButton, Switch } from "@mui/material";
 import Map from "./ui-components/MapContainer/Map";
 import Drawer from "./ui-components/Drawer/Drawer";
 import { useState } from "react";
 import { styled } from '@mui/material/styles';
 import SearchBar from "./ui-components/Search/SearchBar";
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 /**
  * Custom Switch Style
@@ -52,6 +53,7 @@ function App() {
   const [drawerContent, setDrawerContent] = useState({});
   const [reportSwitch, setReportSwitch] = useState(false);
   const [boardSwitch, setBoardSwitch] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState({});
 
 
   /**
@@ -84,8 +86,25 @@ function App() {
   /**
    * @return {void}
    */
-  const handleBoardSwitchChange = () =>{
+  const handleBoardSwitchChange = () => {
     setBoardSwitch(!boardSwitch);
+  }
+
+  /**
+   * @return {void}
+   */
+  const handleCurrentLocationClicked = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        // const { latitude, longitude } = position.coords;
+        const result = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+        setCurrentLocation(result);
+      });
+    }
+    console.log("Current Location: ", currentLocation);
   }
   
 
@@ -101,6 +120,7 @@ function App() {
         openDrawer={openDrawer}
         setDrawerContent={setDrawerContent}
         boardDisplayMode={boardSwitch}
+        currentLocation={currentLocation}
       />
       <Drawer
         shape={shape}
@@ -121,6 +141,9 @@ function App() {
           control={<CustomSwitch checked={reportSwitch} onChange={() => handleReportSwitchChange()} />}
           label="Báo cáo vi phạm"
         />
+        <IconButton onClick={()=>handleCurrentLocationClicked()}>
+          <MyLocationIcon/>
+        </IconButton>
       </Box>
     </Box>
   );

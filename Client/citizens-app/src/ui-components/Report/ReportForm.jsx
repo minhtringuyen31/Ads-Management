@@ -18,8 +18,6 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import axiosClient from "../../axiosConfig/axiosClient";
 import PropTypes from "prop-types";
 
-
-
 const validateSchema = Yup.object().shape({
   fullname: Yup.string(),
   email: Yup.string()
@@ -37,7 +35,7 @@ const initialValues = {
   content: "",
 };
 
-const ReportForm = ({agent, type, handleCloseModal}) => {
+const ReportForm = ({ agent, type, handleCloseModal }) => {
   /**
    * useState
    */
@@ -52,48 +50,76 @@ const ReportForm = ({agent, type, handleCloseModal}) => {
   };
 
   /**
-   * @param {*} values 
-   * @param {*} type 
-   * @param {*} agent 
+   * @param {*} values
+   * @param {*} type
+   * @param {*} agent
    * @return {void}
    */
   const handleSubmitReportForm = async (values) => {
-    const postBody =
-      type === "location"
-        ? {
-            username: values.fullname,
-            email: values.email,
-            phone_number: values.phoneNumber,
-            report_form: values.reportType,
-            report_content: values.content,
-            type: type,
-            location: agent,
-          }
-        : {
-            username: values.fullname,
-            email: values.email,
-            phone_number: values.phoneNumber,
-            report_form: values.reportType,
-            report_content: values.content,
-            type: type,
-            board: agent,
-          };
+    const postBody = {
+      username: values.fullname,
+      email: values.email,
+      phone_number: values.phoneNumber,
+      report_form: values.reportType,
+      report_content: values.content,
+      type: type,
+    };
 
-          try {
-            const response = await axiosClient.post("report", JSON.stringify(postBody));
-            if (response.status == 201) {
-              console.log("New Report: ", response.data);
-              const savedReports = JSON.parse(localStorage.getItem('reports')) || [];
-              savedReports.push(response.data.data._id);
-              localStorage.setItem('reports', JSON.stringify(savedReports));
-            }
-          } catch (error) {
-            console.log(error)
-          }
+    switch (type) {
+      case "location":
+        postBody.location = agent;
+        break;
+      case "board":
+        postBody.board = agent;
+        break;
+      case "random":
+        postBody.random = agent;
+        break;
+      default:
+        console.log("Not found area");
+        return <div>Not found area</div>;
+    }
+
+    console.log("Post: ", postBody);
+    // const postBody =
+    //   type === "location"
+    //     ? {
+    //         username: values.fullname,
+    //         email: values.email,
+    //         phone_number: values.phoneNumber,
+    //         report_form: values.reportType,
+    //         report_content: values.content,
+    //         type: type,
+    //         location: agent,
+    //       }
+    //     : {
+    //         username: values.fullname,
+    //         email: values.email,
+    //         phone_number: values.phoneNumber,
+    //         report_form: values.reportType,
+    //         report_content: values.content,
+    //         type: type,
+    //         board: agent,
+    //       };
+
+    try {
+      const response = await axiosClient.post(
+        "report",
+        JSON.stringify(postBody),
+      );
+      if (response.status == 201) {
+        console.log("New Report: ", response.data);
+        const savedReports = JSON.parse(localStorage.getItem("reports")) || [];
+        savedReports.push(response.data.data._id);
+        localStorage.setItem("reports", JSON.stringify(savedReports));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /**
-   * @param {*} event 
+   * @param {*} event
    * @return {void}
    */
   const handleBrowseImageChange = (event) => {
@@ -237,9 +263,7 @@ const ReportForm = ({agent, type, handleCloseModal}) => {
                 <MenuItem value={"denounce"}>Tố cáo sai phạm</MenuItem>
                 <MenuItem value={"register"}>Đăng ký nội dung</MenuItem>
                 <MenuItem value={"feedback"}>Đóng góp ý kiến</MenuItem>
-                <MenuItem value={"question"}>
-                  Giải đáp thắc mắc
-                </MenuItem>
+                <MenuItem value={"question"}>Giải đáp thắc mắc</MenuItem>
               </Select>
             </FormControl>
 
@@ -347,7 +371,7 @@ const ReportForm = ({agent, type, handleCloseModal}) => {
                   textTransform: "none",
                   fontWeight: "bold",
                 }}
-                onClick={()=>handleCloseModal()}
+                onClick={() => handleCloseModal()}
               >
                 Hủy
               </Button>
@@ -378,5 +402,6 @@ export default ReportForm;
 
 ReportForm.propTypes = {
   agent: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  handleCloseModal: PropTypes.func.isRequired,
 };

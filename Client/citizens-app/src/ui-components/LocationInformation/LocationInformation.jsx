@@ -16,10 +16,15 @@ const style = {
   borderRadius: 10,
 };
 
-
 const LocationInformation = ({ content }) => {
+  /**
+   * useState
+   */
   const [reportModelOpen, setReportModalOpen] = useState(false);
 
+  /**
+   * @return {void}
+   */
   const handleCloseModal = () => {
     setReportModalOpen(false);
   };
@@ -32,54 +37,54 @@ const LocationInformation = ({ content }) => {
   };
 
   return (
-  <Box
-    position="relative"
-    display="flex"
-    flexDirection="column"
-    // justifyContent="space-between"
-    sx={{ height: "100%" }}
-  >
-    <img
-      src="https://tourscanner.com/blog/wp-content/uploads/2022/06/fun-things-to-do-in-Ho-Chi-Minh-City-Vietnam.jpg"
-      width="100%"
-      height="225px"
-    ></img>
-    <Box margin="10px">
-      <Typography variant="h6">{content.name}</Typography>
-      <Divider />
-      <Box display="flex" alignItems="center" marginTop="5px">
-        <LocationOnIcon />
-        <Typography
-          sx={{
-            fontSize: "12px",
-          }}
-        >
-          {content.display_name}
-        </Typography>
-      </Box>
-    </Box>
     <Box
+      position="relative"
       display="flex"
-      position="absolute"
-      bottom="10px"
-      marginX="auto"
-      justifyContent="center"
-      width="100%"
+      flexDirection="column"
+      // justifyContent="space-between"
+      sx={{ height: "100%" }}
     >
-      <Button
-        variant="outlined"
-        startIcon={<ReportIcon />}
-        color="error"
-        sx={{
-          fontWeight: "bold",
-        }}
-        onClick={()=>handleReportBtnOnclick()}
+      <img
+        src="https://tourscanner.com/blog/wp-content/uploads/2022/06/fun-things-to-do-in-Ho-Chi-Minh-City-Vietnam.jpg"
+        width="100%"
+        height="225px"
+      ></img>
+      <Box margin="10px">
+        <Typography variant="h6">{content.name}</Typography>
+        <Divider />
+        <Box display="flex" alignItems="center" marginTop="5px">
+          <LocationOnIcon />
+          <Typography
+            sx={{
+              fontSize: "12px",
+            }}
+          >
+            {content.display_name}
+          </Typography>
+        </Box>
+      </Box>
+      <Box
+        display="flex"
+        position="absolute"
+        bottom="10px"
+        marginX="auto"
+        justifyContent="center"
+        width="100%"
       >
-        Báo cáo vi phạm
-      </Button>
-    </Box>
+        <Button
+          variant="outlined"
+          startIcon={<ReportIcon />}
+          color="error"
+          sx={{
+            fontWeight: "bold",
+          }}
+          onClick={() => handleReportBtnOnclick()}
+        >
+          Báo cáo vi phạm
+        </Button>
+      </Box>
 
-    <Modal
+      <Modal
         open={reportModelOpen}
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
@@ -105,11 +110,15 @@ const LocationInformation = ({ content }) => {
             </Typography>
           </Box>
           <Box>
-            <ReportForm agent={""} type={"board"} handleCloseModal={handleCloseModal}/>
+            <ReportForm
+              agent={content}
+              type={"random"}
+              handleCloseModal={handleCloseModal}
+            />
           </Box>
         </Box>
       </Modal>
-  </Box>
+    </Box>
   );
 };
 
