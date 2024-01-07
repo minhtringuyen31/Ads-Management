@@ -37,6 +37,11 @@ const ReportService = {
           ],
         })
         .populate({
+          path: "report_form",
+          model: "ReportType",
+          select: "-__t -__v",
+        })
+        .populate({
           path: "board",
           model: "AdsBoard", // Replace with the actual name of the Board model
           populate: [{
@@ -87,9 +92,6 @@ const ReportService = {
         })
         .lean()
         .exec();
-      reports.forEach((report) => {
-        report.report_form = reportFormEnum[report.report_form];
-      });
 
       return reports;
     } catch (error) {
@@ -128,6 +130,10 @@ const ReportService = {
             select: "-__t -__v ",
           },
         ],
+      }).populate({
+        path: "report_form",
+        model: "ReportType",
+        select: "-__t -__v",
       })
       .populate({
         path: "board",
@@ -177,16 +183,12 @@ const ReportService = {
     // } else {
     //   report.address = report.board.location.address;
     // }
-
-    report.report_form = reportFormEnum[report.report_form];
-
     return report;
   },
 
   async create(objectData) {
     const newObject = new Report(objectData);
     let object = await newObject.save();
-    object.report_form = reportFormEnum[object.report_form];
     return object;
     // const result = await Report.updateMany({}, {
     //   operation: {}
@@ -195,7 +197,6 @@ const ReportService = {
 
   async update(id, updateData) {
     let object = await Report.findByIdAndUpdate(id, updateData, { new: true });
-    object.report_form = reportFormEnum[object.report_form];
     return object;
   },
 

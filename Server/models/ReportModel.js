@@ -1,12 +1,6 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
-const reportFormEnum = {
-  denounce: "Tố giác sai phạm",
-  register: "Đăng ký nội dung",
-  feedback: "Đóng góp ý kiến",
-  question: "Giải đáp thắc mắc",
-};
 const ReportSchema = new Schema(
   {
     report_form: {
