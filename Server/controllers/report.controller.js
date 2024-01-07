@@ -1,6 +1,7 @@
 import createError from "http-errors";
 import ReportService from "../services/report.service.js";
 import UserService from "../services/user.service.js";
+import LocationService from "../services/location.service.js";
 import rabbitmq from "../message-broker/rabbitmq.js";
 const ModelName = "Report";
 const modelname = "report";
@@ -52,7 +53,7 @@ const ReportController = {
           (report) => report.district === assigned_areaid
         );
       }
-      
+
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
@@ -89,6 +90,13 @@ const ReportController = {
   create: async (req, res, next) => {
     try {
       const reportData = req.body;
+      // if (reportData.type === 'random') {
+      //   const randomData = reportData.randomLocation;
+      //   const districtRadomData = reportData.address.suburb;
+      //   const wardList = [];
+      //   const districtList = await LocationService.getAll();
+
+      // }
       const files = req.files;
       if (files) {
         reportData.image = files.map((file) => file.path);

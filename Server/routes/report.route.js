@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/reports', authenticate, ReportController.getAll);
 router.get('/reports/citizent', ReportController.getAll);
 router.get('/report/:id', ReportController.getById);
-router.post('/report', createReportValidation, uploadCloud.array('image'), ReportController.create);
+router.post('/report', uploadCloud.array('image'), ReportController.create);
 router.put('/report/:id', updateReportValidation, uploadCloud.array('image'), ReportController.update);
 router.delete('/report/:id', ReportController.delete);
 

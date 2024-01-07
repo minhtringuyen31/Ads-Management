@@ -14,6 +14,16 @@ const ReportSchema = new Schema(
       required: true,
       ref: 'Type',
     },
+    coordinate: {
+      lat: { // x
+        type: Number,
+        required: false,
+      },
+      lng: { // y
+        type: Number,
+        required: false,
+      },
+    },
     username: {
       type: String,
       required: true,
@@ -32,7 +42,7 @@ const ReportSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["location", "board"],
+      enum: ["location", "board", 'random'],
       required: true,
     },
     location: {
