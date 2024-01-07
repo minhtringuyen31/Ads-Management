@@ -138,6 +138,8 @@ const LicenAdsboardList = () => {
         console.error('Error cancel request: ', error);
       }
       setOpenModalConfirm(false);
+      setOpenModalConfirmAgree(false);
+      setOpenModalConfirmDeny(false);
     }
   };
 
@@ -187,6 +189,14 @@ const LicenAdsboardList = () => {
           open={openModalDetail}
           handleClose={() => setOpenModalDetail(false)}
           licenDetail={selectedRow}
+          handleOpenAgreeModel={(event) => {
+            event.stopPropagation();
+            handleOpenModelConfirmAgree(selectedRow._id);
+          }}
+          handleOpenDenyModel={(event) => {
+            event.stopPropagation();
+            handleOpenModelConfirmDeny(selectedRow._id);
+          }}
         />
       )}
       <Scrollbar>
