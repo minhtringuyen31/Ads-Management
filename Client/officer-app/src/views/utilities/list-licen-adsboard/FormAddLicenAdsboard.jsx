@@ -17,7 +17,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../ImageUpload";
 import MapBox from "../list-location-adsboard/map/MapBox";
 
 // STYLE CONTAINER
@@ -107,7 +107,7 @@ const FormAddLicenAdsboard = () => {
 
   const handleCloseSuccessAlert = () => {
     setShowSuccessAlert(false);
-    navigate("/bussiness/unit_price/");
+    navigate("/utils/authorize_requests");
   };
 
   const handleCloseFailAlert = () => {
@@ -159,6 +159,43 @@ const FormAddLicenAdsboard = () => {
     label: type.label,
   }));
 
+  //New data
+  const createFormData = (values) => {
+    const formData = new FormData();
+    formData.append("new_ads_board[location]", values.locationId);
+    formData.append(
+      "new_ads_board[adsboard_type]",
+      values.adsboardInfo.adsboard_type
+    );
+    formData.append("new_ads_board[width]", values.adsboardInfo.width);
+    formData.append("new_ads_board[height]", values.adsboardInfo.height);
+    formData.append(
+      "new_ads_board[contract_end_date]",
+      values.adsboardInfo.end_date
+    );
+    formData.append(
+      "new_ads_board[contract_start_date]",
+      values.adsboardInfo.start_date
+    );
+    values.adsboardInfo.img.forEach((file) =>
+      formData.append("new_ads_board[image]", file)
+    );
+    formData.append("new_ads_board[name]", values.companyInfo.name);
+    formData.append("new_ads_board[address]", values.companyInfo.address);
+    formData.append(
+      "new_ads_board[contact_name_person]",
+      values.companyInfo.namePeople
+    );
+    formData.append("new_ads_board[phone]", values.companyInfo.phoneNumber);
+    formData.append("new_ads_board[email]", values.companyInfo.email);
+    formData.append(
+      "new_ads_board[description]",
+      values.companyInfo.description
+    );
+
+    return formData;
+  };
+
   const formik = useFormik({
     initialValues: {
       locationId: "",
@@ -180,7 +217,6 @@ const FormAddLicenAdsboard = () => {
       },
     },
     onSubmit: async (values, { resetForm }) => {
-      console.log("Form submission started - isLoading set to true");
       setIsLoading(true);
       let data = {
         ...values,
@@ -190,40 +226,8 @@ const FormAddLicenAdsboard = () => {
           adsboard_type: selectedAdsBoar.id,
         },
       };
+      const formData = createFormData(data);
       try {
-        const formData = new FormData();
-        formData.append("new_ads_board[location]", data.locationId);
-        formData.append(
-          "new_ads_board[adsboard_type]",
-          data.adsboardInfo.adsboard_type
-        );
-        formData.append("new_ads_board[width]", data.adsboardInfo.width);
-        formData.append("new_ads_board[height]", data.adsboardInfo.height);
-        formData.append(
-          "new_ads_board[contract_end_date]",
-          data.adsboardInfo.end_date
-        );
-        formData.append(
-          "new_ads_board[contract_start_date]",
-          data.adsboardInfo.start_date
-        );
-        data.adsboardInfo.img.map((file) =>
-          formData.append("new_ads_board[image]", file)
-        );
-
-        formData.append("new_ads_board[name]", data.companyInfo.name);
-        formData.append("new_ads_board[address]", data.companyInfo.address);
-        formData.append(
-          "new_ads_board[contact_name_person]",
-          data.companyInfo.namePeople
-        );
-        formData.append("new_ads_board[phone]", data.companyInfo.phoneNumber);
-        formData.append("new_ads_board[email]", data.companyInfo.email);
-        formData.append(
-          "new_ads_board[description]",
-          data.companyInfo.description
-        );
-
         const response = await axios.post(
           "http://14.225.192.121/authorizeRequest",
           formData
@@ -234,15 +238,12 @@ const FormAddLicenAdsboard = () => {
         } else {
           setShowFailAlert(true);
         }
-        console.log("res: ", response);
       } catch (error) {
-        console.error("Error fetching coordinates: ", error);
+        console.error("Error submitting form: ", error);
         setShowFailAlert(true);
       } finally {
-        console.log("Form submission ended - isLoading set to false");
         setIsLoading(false);
       }
-      console.log("Final data: ", data);
     },
   });
 

@@ -60,81 +60,81 @@ const AuthorizeRequestDetail = Loadable(
 );
 
 const MainRoutes = {
-  path: '/',
+  path: "/",
   element: <MainLayout />,
   children: [
     {
-      path: 'dashboard',
+      path: "dashboard",
       element: <Home />,
     },
     {
-      path: 'utils',
+      path: "utils",
       children: [
         {
-          path: 'locations',
+          path: "locations",
           element: <LocationManagement />,
         },
         {
-          path: 'location/:locationID',
+          path: "location/:locationID",
           element: <LocationDetail />,
         },
         {
-          path: 'location/request_edit_form',
+          path: "location/request_edit_form",
           element: <RequestEditLocation />,
-        }
+        },
       ],
     },
     {
-      path: 'utils',
+      path: "utils",
       children: [
         {
-          path: 'adsboards',
+          path: "adsboards",
           element: <BoardManagement />,
         },
       ],
     },
     {
-      path: 'utils',
+      path: "utils",
       children: [
         {
-          path: 'authorize_requests',
+          path: "authorize_requests",
           element: <LicenAdsboardList />,
         },
         {
-          path: 'authorize_request/create_form',
+          path: "authorize_request/create_form",
           element: <FormAddLicenAdsboard />,
         },
         {
-          path: 'report',
+          path: "report",
           children: [
             {
-              path: 'list',
+              path: "list",
               element: <ReportList />,
             },
             {
-              path: 'detail',
+              path: "detail",
               element: <ReportDetail />,
             },
           ],
         },
         {
-          path: 'category',
+          path: "category",
           children: [
             {
-              path: 'list',
+              path: "list",
               element: <CategoryManage />,
             },
           ],
         },
         {
-          path: 'authorize',
+          path: "authorize",
           children: [
             {
-              path: 'list',
+              path: "list",
               element: <AuthorizeRequestList />,
             },
             {
-              path: 'detail',
+              path: "detail",
               element: <AuthorizeRequestDetail />,
             },
           ],

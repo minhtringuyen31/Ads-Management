@@ -318,7 +318,6 @@ const LicenAdsboardList = () => {
             labelDisplayedRows={({ from, to, count }) => {
               return "" + from + " - " + to + " của " + count;
             }}
-
           />
         </Box>
       </Scrollbar>

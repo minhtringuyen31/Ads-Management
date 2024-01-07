@@ -26,9 +26,9 @@ const LocationManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleReqEditLocation = (event) => {
+  const handleReqEditLocation = (event, locationID) => {
     event.stopPropagation();
-    navigate("/utils/location/request_edit_form");
+    navigate("/utils/location/request_edit_form", { state: { locationID } });
   };
 
   useEffect(() => {
@@ -167,7 +167,7 @@ const LocationManagement = () => {
                       <Button
                         endIcon={<EditIcon />}
                         variant="outlined"
-                        onClick={handleReqEditLocation}
+                        onClick={(e) => handleReqEditLocation(e, row._id)}
                       >
                         Yêu cầu chỉnh sửa
                       </Button>
