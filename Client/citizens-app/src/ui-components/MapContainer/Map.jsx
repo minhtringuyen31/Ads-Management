@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import PropTypes from "prop-types";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axiosClient from "../../axiosConfig/axiosClient";
 import { useMapEvents } from "react-leaflet";
 import SearchBar from "../Search/SearchBar";
+import PropTypes from "prop-types";
 // import dotenv from "dotenv";
 
 // dotenv.config();
@@ -250,7 +250,7 @@ const Map = ({
           />
           {/* <MapEvents currentLocation={currentLocation}/> */}
         </MapContainer>
-        <Box position="absolute" right="5%" top="2%" width="35%" zIndex={10000}>
+        <Box position="absolute" right="5%" top="2%" width="35%" zIndex={500}>
           <SearchBar />
         </Box>
       </Box>

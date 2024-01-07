@@ -142,7 +142,7 @@ function App() {
         bgcolor={"rgba(255, 255, 255, 0.75)"}
         display="flex"
         flexDirection="row"
-        width="100"
+        width="auto"
         margin="10px"
         paddingLeft="10px"
         bottom={0}
@@ -182,6 +182,7 @@ function App() {
           // closePopper={closePopper}
           isPopperOpen={isPopperOpen}
           anchorRef={anchorRef}
+          popperWidth="auto"
         />
       </Box>
     </Box>

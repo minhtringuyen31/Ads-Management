@@ -11,8 +11,7 @@ import {
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import { ReportOffRounded } from "@mui/icons-material";
-import { formatDistanceToNow } from 'date-fns';
-
+import { formatDistanceToNow } from "date-fns";
 
 const imageList = [
   {
@@ -35,7 +34,7 @@ const TimeAgo = ({ timestamp }) => {
   const timeAgo = formatDistanceToNow(new Date(timestamp), { addSuffix: true });
   return <span>{timeAgo}</span>;
 };
-const ReportItem = ({item}) => {
+const ReportItem = ({ item }) => {
   return (
     <Box
       margin="10px"
@@ -51,21 +50,17 @@ const ReportItem = ({item}) => {
         justifyContent="space-between"
       >
         <Box display="flex" flexDirection="column">
-        {/* <IconButton aria-label="delete" size="small">
+          {/* <IconButton aria-label="delete" size="small">
   <DeleteIcon fontSize="inherit" />
 </IconButton> */}
           <Typography fontSize="16px" fontWeight="bold">
             {item.board.adsboard_type.label}
           </Typography>
           <Typography fontSize="14px" color="#70757a" marginY="2px">
-          {item.type === "board" ? (
-            <>
-              {item.board.location.address}
-            </>
+            {item.type === "board" ? (
+              <>{item.board.location.address}</>
             ) : (
-              <>
-                {item.location.address}
-              </>
+              <>{item.location.address}</>
             )}
           </Typography>
 
@@ -101,12 +96,20 @@ const ReportItem = ({item}) => {
           </Box>
         </Box>
         <Box display="flex" flexDirection="row" marginTop="10px">
-          <Typography fontSize={14} color="#70757a" marginRight={1}>Hình thưc báo cáo:</Typography>
-          <Typography fontSize={14}>{item.report_form}</Typography>
+          <Typography fontSize={14} color="#70757a" marginRight={1}>
+            Hình thưc báo cáo:
+          </Typography>
+          <Typography fontSize={14}>{item.report_form.label}</Typography>
         </Box>
         <Box marginTop="5px">
-          <Typography fontSize={14} color="#70757a">Nội dung: </Typography>
-          <Typography fontSize={14} component="div" dangerouslySetInnerHTML={{ __html: item.report_content }} />
+          <Typography fontSize={14} color="#70757a">
+            Nội dung:{" "}
+          </Typography>
+          <Typography
+            fontSize={14}
+            component="div"
+            dangerouslySetInnerHTML={{ __html: item.report_content }}
+          />
         </Box>
       </Box>
       <Box marginTop={1}>
@@ -130,6 +133,5 @@ const ReportItem = ({item}) => {
 export default ReportItem;
 
 ReportItem.propTypes = {
-  item: PropTypes.object.isRequired
+  item: PropTypes.object.isRequired,
 };
-

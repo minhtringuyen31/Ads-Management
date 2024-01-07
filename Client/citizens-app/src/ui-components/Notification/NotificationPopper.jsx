@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Box, Fade, Popper } from "@mui/material";
+import NotificationItem from "./NotificationItem";
 
 const NotificationPopper = ({
   //   openPopper,
@@ -19,8 +20,16 @@ const NotificationPopper = ({
     >
       {({ TransitionProps }) => (
         <Fade {...TransitionProps} timeout={350}>
-          <Box sx={{ border: 1, p: 1, bgcolor: "background.paper" }}>
-            The content of the Popper.
+          <Box
+            sx={{
+              borderRadius: 2,
+              bgcolor: "background.paper",
+              marginBottom: 1,
+              width: "400px",
+            }}
+          >
+            <NotificationItem />
+            <NotificationItem />
           </Box>
         </Fade>
       )}

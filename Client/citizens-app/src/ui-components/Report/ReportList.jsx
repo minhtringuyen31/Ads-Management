@@ -1,6 +1,6 @@
 import { List, Box, Typography } from "@mui/material";
 import ReportItem from "./ReportItem";
-import { reports } from "../../mockData";
+// import { reports } from "../../mockData";
 import axiosClient from "../../axiosConfig/axiosClient";
 import { useEffect, useState } from "react";
 
@@ -34,7 +34,7 @@ const ReportList = () => {
     fetchReports();
   }, [reportIds]);
 
-  console.log("Report List: ",reports)
+  console.log("Report List: ", reports);
   return (
     <Box height="100%" display="flex" flexDirection="column">
       <Box height="50px" display="flex" alignItems="center" paddingLeft="20px">
