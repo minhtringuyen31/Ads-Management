@@ -7,7 +7,7 @@ import rabbitmq from "../message-broker/rabbitmq.js";
 const ModelName = "Report";
 const modelname = "report";
 import NotificationService from "../services/notification.service.js";
-
+import { Report } from "../models/ReportModel.js";
 import { fromJson } from "../helper/dto.js";
 import {
   createMongooseQuery,
@@ -22,17 +22,19 @@ const ReportController = {
   getAll: async (req, res, next) => {
     try {
       const filter = req.body;
-      const reports = await ReportService.getAll(filter);
+       const reports = await ReportService.getAll(filter);
+      
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
-      const assigned_areaid = user.assigned_areaid;
+      const assigned_areaid = user.assigned_areaid.toString();
       if (user.__t === "WardOfficer") {
         filteredLists = reports.filter(
-          (report) => report.ward._id === assigned_areaid
+          (report) => report.ward._id .toString()=== assigned_areaid
         );
       } else if (user.__t === "DistrictOfficer") {
+        console.log(assigned_areaid)
         filteredLists = reports.filter(
-          (report) => report.district._id === assigned_areaid
+          (report) => report.district._id.toString() === assigned_areaid
         );
       }
 

@@ -6,6 +6,7 @@ import http from "http";
 import logger from "./utils/logger.js";
 import { errorHandler, notFound } from "./helper/errorHandler.js";
 import db from "./configs/db.js";
+import redisClient, {set, get} from "./configs/redis.js";
 import locationRoute from "./routes/location.route.js";
 import locationTypeRoute from "./routes/locationtype.route.js";
 import wardRoute from "./routes/ward.route.js";
@@ -36,6 +37,29 @@ global.userList = {};
 app.io = io
 
 db();
+redisClient.ping((err, reply) => {
+  if (err) {
+    console.error("Error connecting to Redis:", err);
+  } else {
+    console.log("Connected to Redis:", reply);
+  }
+});
+// const testRedisOperations = async () => {
+//   try {
+//     // Thực hiện set giá trị
+    
+//     const result = await redisClient.get('thien');
+//     console.log('Result from Redis:', result);
+//   } catch (error) {
+//     console.error('Error during Redis operations:', error);
+//   } finally {
+//     // Đóng kết nối sau khi thực hiện xong
+//     redisClient.disconnect();
+//   }
+// };
+
+// // Gọi hàm thực hiện các thao tác Redis
+// testRedisOperations();
 const initializeExpress = (app) => {
   app.use(cors());
   app.use(express.json());
