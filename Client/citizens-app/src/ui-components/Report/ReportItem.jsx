@@ -97,7 +97,7 @@ const ReportItem = ({ item }) => {
         </Box>
         <Box display="flex" flexDirection="row" marginTop="10px">
           <Typography fontSize={14} color="#70757a" marginRight={1}>
-            Hình thưc báo cáo:
+            Hình thức báo cáo:
           </Typography>
           <Typography fontSize={14}>{item.report_form.label}</Typography>
         </Box>

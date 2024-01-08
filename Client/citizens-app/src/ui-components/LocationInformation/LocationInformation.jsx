@@ -1,9 +1,9 @@
 import { Box, Typography, Button, Divider, Modal } from "@mui/material";
-import ReportIcon from "@mui/icons-material/Report";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import ReportForm from "../Report/ReportForm";
+import ReportIcon from "@mui/icons-material/Report";
 
 const style = {
   position: "absolute",

@@ -96,7 +96,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
         JSON.stringify(postBody),
       );
       if (response.status == 201) {
-        console.log("New Report: ", response.data);
+        console.log("New Report: ", response);
         const savedReports = JSON.parse(localStorage.getItem("reports")) || [];
         savedReports.push(response.data.data._id);
         localStorage.setItem("reports", JSON.stringify(savedReports));

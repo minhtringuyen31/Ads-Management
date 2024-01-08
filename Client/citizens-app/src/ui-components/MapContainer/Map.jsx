@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -7,9 +7,23 @@ import axiosClient from "../../axiosConfig/axiosClient";
 import { useMapEvents } from "react-leaflet";
 import SearchBar from "../Search/SearchBar";
 import PropTypes from "prop-types";
+import ReportIcon from "@mui/icons-material/Report";
+import FindInPageIcon from "@mui/icons-material/FindInPage";
+import ReportForm from "../Report/ReportForm";
 // import dotenv from "dotenv";
 
 // dotenv.config();
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "white",
+
+  boxShadow: 24,
+  borderRadius: 10,
+};
 
 const LocationMarker = ({ setLocationInfo, handleButtonClicked }) => {
   /**
@@ -73,7 +87,8 @@ const Map = ({
    */
   const [locationList, setLocationList] = useState([]);
   const center = useMemo(() => ({ lat: 10.823099, lng: 106.629662 }), []);
-
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState({});
   /**
    * Definte Marker Styled
    */
@@ -129,6 +144,19 @@ const Map = ({
   const handleDetailBtnClicked = (locationId) => {
     setDrawerContent({ locationId: locationId });
     handleButtonClicked(3);
+  };
+
+  const handleReportBtnClicked = (location) => {
+    setSelectedLocation(location);
+    setModalOpen(true);
+  };
+
+  useEffect(() => {
+    setModalOpen(true);
+  }, [selectedLocation]);
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
   /**
@@ -199,12 +227,34 @@ const Map = ({
                     <Typography fontWeight="bold" fontStyle="italic">
                       {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
                     </Typography>
-                    <Button
-                      variant="outlined"
-                      onClick={() => handleDetailBtnClicked(location._id)}
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      justifyContent="start"
                     >
-                      Chi tiết
-                    </Button>
+                      <Button
+                        variant="outlined"
+                        startIcon={<FindInPageIcon />}
+                        sx={{
+                          fontWeight: "bold",
+                          marginRight: 2,
+                        }}
+                        onClick={() => handleDetailBtnClicked(location._id)}
+                      >
+                        Chi tiết
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        startIcon={<ReportIcon />}
+                        color="error"
+                        sx={{
+                          fontWeight: "bold",
+                        }}
+                        onClick={() => handleReportBtnClicked(location)}
+                      >
+                        Báo cáo
+                      </Button>
+                    </Box>
                   </Popup>
                 </Marker>
               ))
@@ -254,6 +304,38 @@ const Map = ({
           <SearchBar />
         </Box>
       </Box>
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          style={style}
+          bgcolor={"white"}
+          width="40%"
+          height="90%"
+          padding={3}
+        >
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Typography fontSize={20} fontWeight="bold" color="#475569">
+              {selectedLocation.display_name}
+            </Typography>
+            <Typography fontSize={12} color="#70757a">
+              {selectedLocation.address}
+            </Typography>
+          </Box>
+          <Box>
+            <ReportForm
+              agent={selectedLocation._id}
+              type={"location"}
+              handleCloseModal={handleCloseModal}
+            />
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };
