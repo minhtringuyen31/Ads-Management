@@ -2,6 +2,7 @@ import NotificationService from "../services/notification.service.js";
 
 const SocketListener = {
     start: function (io) {
+        console.log("Socket is running");
         io.on('connection', async function (socket) {
 
             console.log('A user connected with socket id:', socket.id);

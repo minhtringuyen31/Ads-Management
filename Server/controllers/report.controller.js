@@ -92,8 +92,8 @@ const ReportController = {
       // Add by Quang Thanh to handle save record when type = random location
       if (reportData.type === 'random') {
         const randomData = JSON.parse((reportData.random));
-        const districtLabelRadomData = JSON.parse(JSON.stringify(randomData.address)).suburb;
-        const wardLabelRadomData = JSON.parse(JSON.stringify(randomData.address)).quarter;
+        const districtLabelRadomData = randomData.address.suburb;
+        const wardLabelRadomData = randomData.address.quarter;
         let district_id = '';
         let ward_id = '';
         // Process get district id and ward id 

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const DistrictService = {
     async getAll(filter, projection) {
         try {
-            const district = await District.find(filter).select(projection);
+            const district = await District.find(filter).select('-coordinates');
             return district;
         } catch (error) {
             throw error;
