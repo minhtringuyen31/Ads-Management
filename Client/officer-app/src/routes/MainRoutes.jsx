@@ -1,8 +1,8 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
-import Loadable from 'ui-component/Loadable';
-import CategoryManage from 'views/utilities/categories/CategoryManage';
-import MainLayout from '../layout/MainLayout/MainLayout';
+import Loadable from "ui-component/Loadable";
+import CategoryManage from "views/utilities/categories/CategoryManage";
+import MainLayout from "../layout/MainLayout/MainLayout";
 
 // import LocationDetail from "views/utilities/LocationDetail";
 
@@ -10,52 +10,66 @@ import MainLayout from '../layout/MainLayout/MainLayout';
 const LocationManagement = Loadable(
   lazy(() =>
     import(
-      '../views/utilities/list-location-adsboard/location/LocationManagement'
+      "../views/utilities/list-location-adsboard/location/LocationManagement"
     )
   )
 );
 const LocationDetail = Loadable(
   lazy(() =>
-    import('../views/utilities/list-location-adsboard/location/LocationDetail')
+    import("../views/utilities/list-location-adsboard/location/LocationDetail")
   )
 );
 const RequestEditLocation = Loadable(
-  lazy(() => 
-    import('../views/utilities/list-location-adsboard/location/FormRequestEditLocation')
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/FormRequestEditLocation"
+    )
   )
 );
 
 const BoardManagement = Loadable(
   lazy(() =>
-    import('../views/utilities/list-location-adsboard/adsboard/BoardManagement')
+    import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
   )
 );
+const RequestEditAdsboard = Loadable(
+  lazy(() => 
+    import(
+      "../views/utilities/list-location-adsboard/adsboard/FormRequestEditAdsboard"
+    )
+  )
+)
 
 const LicenAdsboardList = Loadable(
-  lazy(() => import('../views/utilities/list-licen-adsboard/LicenAdsboardList'))
+  lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
 );
 
-const Home = Loadable(lazy(() => import('../views/dashboard/DashboardHome')));
+const Home = Loadable(lazy(() => import("../views/dashboard/DashboardHome")));
 
 const FormAddLicenAdsboard = Loadable(
   lazy(() =>
-    import('../views/utilities/list-licen-adsboard/FormAddLicenAdsboard')
+    import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard")
   )
 );
 const ReportList = Loadable(
-  lazy(() => import('../views/utilities/report-manage/ReportList'))
+  lazy(() => import("../views/utilities/report-manage/ReportList"))
 );
 const ReportDetail = Loadable(
-  lazy(() => import('../views/utilities/report-manage/ReportDetail'))
+  lazy(() => import("../views/utilities/report-manage/ReportDetail"))
 );
 const AuthorizeRequestList = Loadable(
   lazy(() =>
-    import('../views/utilities/authorize_request/AuthorizeRequestList')
+    import("../views/utilities/authorize_request/AuthorizeRequestList")
   )
 );
 const AuthorizeRequestDetail = Loadable(
   lazy(() =>
-    import('../views/utilities/authorize_request/AuthorizeRequestDetail')
+    import("../views/utilities/authorize_request/AuthorizeRequestDetail")
+  )
+);
+const EditRequestList = Loadable(
+  lazy(() =>
+    import("../views/utilities/list-location-adsboard/RequestEditList")
   )
 );
 
@@ -82,20 +96,18 @@ const MainRoutes = {
           path: "location/request_edit_form",
           element: <RequestEditLocation />,
         },
-      ],
-    },
-    {
-      path: "utils",
-      children: [
         {
           path: "adsboards",
           element: <BoardManagement />,
         },
-      ],
-    },
-    {
-      path: "utils",
-      children: [
+        {
+          path: "adsboard/request_edit_form",
+          element: <RequestEditAdsboard />,
+        },
+        {
+          path: "edit_requests",
+          element: <EditRequestList />,
+        },
         {
           path: "authorize_requests",
           element: <LicenAdsboardList />,
@@ -104,6 +116,12 @@ const MainRoutes = {
           path: "authorize_request/create_form",
           element: <FormAddLicenAdsboard />,
         },
+      ],
+    },
+
+    {
+      path: "utils",
+      children: [
         {
           path: "report",
           children: [

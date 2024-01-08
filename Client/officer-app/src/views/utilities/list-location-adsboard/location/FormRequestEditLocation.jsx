@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Field, useFormik, FormikProvider } from "formik";
 import {
@@ -8,8 +8,8 @@ import {
   Button,
   Box,
   Typography,
-  // Snackbar,
-  // Alert,
+  Snackbar,
+  Alert,
   // CircularProgress,
   Autocomplete,
   TextareaAutosize,
@@ -17,8 +17,6 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageUpload from "../../ImageUpload";
-// import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-// import Autocomplete from "@mui/material/Autocomplete";
 
 // STYLE CONTAINER
 const ContainerStyle = {
@@ -73,6 +71,7 @@ const planningOptions = [
 ];
 const FormRequestEditLocation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const locationID = location.state?.locationID;
   const [locationData, setLocationData] = useState({});
 
@@ -95,6 +94,17 @@ const FormRequestEditLocation = () => {
   // Ảnh
   const [existingImages, setExistingImages] = useState([]); // State for managing existing images from locationData
   const [newImages, setNewImages] = useState([]); // State for managing new images uploaded via ImageUpload component
+
+  //Showw Alert
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showFailAlert, setShowFailAlert] = useState(false);
+  const handleCloseSuccessAlert = () => {
+    setShowSuccessAlert(false);
+    navigate("/utils/edit_requests");
+  };
+  const handleCloseFailAlert = () => {
+    setShowFailAlert(false);
+  };
 
   // Fetch location types
   useEffect(() => {
@@ -168,13 +178,6 @@ const FormRequestEditLocation = () => {
         setDisplayName(fetchedLocationData.display_name || "");
 
         // Copy image into new_image
-        // if (fetchedLocationData.image) {
-        //   // Sao chép hình ảnh hiện tại vào newImages
-        //   const initialImages = fetchedLocationData.image.map((url) => ({
-        //     preview: url, // Giả sử 'url' là đường dẫn URL của hình ảnh
-        //   }));
-        //   setNewImages(initialImages);
-        // }
         if (fetchedLocationData.image) {
           setNewImages(fetchedLocationData.image);
           setExistingImages(fetchedLocationData.image);
@@ -214,31 +217,26 @@ const FormRequestEditLocation = () => {
     imageUploadRef.current.handleRemoveImageByUrl(imageToRemove);
   };
 
-  // //Tạo data
-  // const createFormData = (values) => {
-  //   const formData = new FormData();
-  // }
-  // const formik = useFormik({
-  //   initialValues: {
-  //     locationid: locationData._id,
-  //     location_type: locationData.location_type._id,
-  //     ads_type: locationData.ads_type._id,
-  //     image: locationData.image,
-  //     is_planned: locationData.is_planned,
-  //     display_name: locationData.display_name,
-  //   },
-  //   onSubmit: async (values) => {
-  //     const respone = await axios.post("http://14.225.192.121/editRequest");
-  //   },
-  // });
+  // New data
+  const createFormData = (values) => {
+    const formData = new FormData();
+    formData.append("type", values.type);
+    formData.append("newInformation[id]", values.locationID);
+    formData.append("newInformation[display_name]", values.display_name);
+    formData.append("newInformation[coordinate]", values.coordinate);
+    formData.append("newInformation[address]", values.address);
+    formData.append("newInformation[ward]", values.ward._id);
+    formData.append("newInformation[district]", values.district._id);
+    formData.append("newInformation[location_type]", values.location_type._id);
+    formData.append("newInformation[ads_type]", values.ads_type._id);
+    formData.append("is_planned", values.is_planned);
 
-  // const locationTypeOptions = locationTypes.map((type) => ({
-  //   _id: type._id,
-  //   label: type.label,
-  // }));
+    return formData;
+  };
 
   const formik = useFormik({
     initialValues: {
+      id: locationData.id ?? "",
       coordinate: locationData.coordinate ?? {},
       address: locationData.address ?? "",
       ward: locationData.ward ?? "",
@@ -249,6 +247,7 @@ const FormRequestEditLocation = () => {
       is_planned: locationData.is_planned ?? "",
       display_name: locationData.display_name ?? "",
       reason: "",
+      type: "location",
     },
     onSubmit: async (values, { resetForm }) => {
       values.coordinate = locationData.coordinate || {};
@@ -256,7 +255,24 @@ const FormRequestEditLocation = () => {
       values.ward = locationData.ward || "";
       values.district = locationData.district || "";
 
-      console.log(values);
+      console.log("Data submit: ", values);
+
+      const formData = createFormData(values);
+      try {
+        const response = await axios.post(
+          "http://14.225.192.121/editRequest",
+          formData
+        );
+        if (response.status === 201) {
+          resetForm({});
+          setShowSuccessAlert(true);
+        } else {
+          setShowFailAlert(true);
+        }
+      } catch (error) {
+        console.error("Error submitting form", error);
+        setShowFailAlert(true);
+      }
     },
   });
 
@@ -495,6 +511,42 @@ const FormRequestEditLocation = () => {
           {/* End: FOOTER */}
         </form>
       </FormikProvider>
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={2000}
+        onClose={handleCloseSuccessAlert}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={handleCloseSuccessAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          Tạo yêu cầu cấp phép thành công
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={showFailAlert}
+        autoHideDuration={1000}
+        onClose={handleCloseFailAlert}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={handleCloseFailAlert}
+          severity="error"
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          Tạo yêu cầu cấp phép lỗi!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -244,6 +244,8 @@ const LicenAdsboardList = () => {
                             ? "Đã được duyệt"
                             : row.status === "canceled"
                             ? "Đã hủy"
+                            : row.status === "rejected"
+                            ? "Đã bị từ chối"
                             : row.status
                         }
                         color={
@@ -252,6 +254,8 @@ const LicenAdsboardList = () => {
                             : row.status === "completed"
                             ? "success"
                             : row.status === "canceled"
+                            ? "default"
+                            : row.status === "rejected"
                             ? "error"
                             : "default"
                         }
