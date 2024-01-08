@@ -22,14 +22,14 @@ const ReportController = {
   getAll: async (req, res, next) => {
     try {
       const filter = req.body;
-       const reports = await ReportService.getAll(filter);
-      
+      const reports = await ReportService.getAll(filter);
+
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
       const assigned_areaid = user.assigned_areaid.toString();
       if (user.__t === "WardOfficer") {
         filteredLists = reports.filter(
-          (report) => report.ward._id .toString()=== assigned_areaid
+          (report) => report.ward._id.toString() === assigned_areaid
         );
       } else if (user.__t === "DistrictOfficer") {
         console.log(assigned_areaid)
@@ -93,9 +93,13 @@ const ReportController = {
       const reportData = req.body;
       // Add by Quang Thanh to handle save record when type = random location
       if (reportData.type === 'random') {
+        console.log(reportData);
         const randomData = JSON.parse((reportData.random));
+        console.log(randomData);
         const districtLabelRadomData = randomData.address.suburb;
+        console.log(districtLabelRadomData);
         const wardLabelRadomData = randomData.address.quarter;
+        console.log(wardLabelRadomData);
         let district_id = '';
         let ward_id = '';
         // Process get district id and ward id 
