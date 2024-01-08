@@ -13,6 +13,8 @@ import {
   Select,
 } from "@mui/material";
 import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 const validateSchema = Yup.object().shape({
   fullname: Yup.string(),
@@ -61,10 +63,53 @@ const CreateAccount = () => {
     };
     console.log("Post Body: ", postBody);
   };
+
+  /**
+   * useeEffect
+   */
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get("http://14.225.192.121/districts");
+        if (response.status === 200) {
+          console.log("District List: ", response.data);
+          setDistrictList(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [selectedRole]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `http://14.225.192.121/getWardsOfDistrict/${selectedDistrict}`,
+        );
+        if (response.status === 200) {
+          console.log("Ward List: ", response.data);
+          setWardList(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [selectedDistrict]);
+
   return (
     <>
       <MainCard title="Tạo mới tài khoản ">
-        <Box display="flex" flexDirection="column" justifyContent="start">
+        <Box
+          width="60%"
+          height="690px"
+          display="flex"
+          flexDirection="column"
+          justifyContent="start"
+          paddingX={5}
+        >
           <Formik
             initialValues={initialValues}
             validationSchema={validateSchema}
@@ -84,7 +129,7 @@ const CreateAccount = () => {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  padding: 2,
+                  padding: 4,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -92,7 +137,7 @@ const CreateAccount = () => {
                 <FormControl
                   fullWidth
                   error={Boolean(touched.fullname) && errors.fullname}
-                  sx={{ marginTop: "10px" }}
+                  sx={{ marginTop: "20px" }}
                 >
                   <InputLabel htmlFor="outlined-adornment-fullname">
                     Họ và tên
@@ -120,7 +165,7 @@ const CreateAccount = () => {
                 <FormControl
                   fullWidth
                   error={Boolean(touched.email) && errors.email}
-                  sx={{ marginTop: "15px" }}
+                  sx={{ marginTop: "25px" }}
                 >
                   <InputLabel htmlFor="outlined-adornment-email">
                     Địa chỉ email
@@ -148,7 +193,7 @@ const CreateAccount = () => {
                 <FormControl
                   fullWidth
                   error={Boolean(touched.phoneNumber) && errors.phoneNumber}
-                  sx={{ marginTop: "15px" }}
+                  sx={{ marginTop: "25px" }}
                 >
                   <InputLabel htmlFor="outlined-adornment-phoneNumber">
                     Số điện thoại
@@ -176,7 +221,7 @@ const CreateAccount = () => {
                 <FormControl
                   fullWidth
                   error={Boolean(touched.password) && errors.password}
-                  sx={{ marginTop: "15px" }}
+                  sx={{ marginTop: "25px" }}
                 >
                   <InputLabel htmlFor="outlined-adornment-password">
                     Mật khẩu
@@ -201,7 +246,7 @@ const CreateAccount = () => {
                   )}
                 </FormControl>
 
-                <FormControl fullWidth sx={{ marginTop: "15px" }}>
+                <FormControl fullWidth sx={{ marginTop: "25px" }}>
                   <InputLabel htmlFor="outlined-adornment-role">
                     Phân cấp
                   </InputLabel>
@@ -229,8 +274,8 @@ const CreateAccount = () => {
                   )}
                 </FormControl>
 
-                {selectedRole === "district_officer" ? (
-                  <FormControl fullWidth sx={{ marginTop: "15px" }}>
+                {selectedRole === "district_officer" && (
+                  <FormControl fullWidth sx={{ marginTop: "25px" }}>
                     <InputLabel htmlFor="outlined-adornment-district">
                       Quận
                     </InputLabel>
@@ -241,8 +286,11 @@ const CreateAccount = () => {
                       label="Quận"
                       onChange={handleChange}
                     >
-                      <MenuItem value={"1"}>Quận</MenuItem>
-                      <MenuItem value={"2"}>Quận</MenuItem>
+                      {districtList.map((district) => (
+                        <MenuItem key={district._id} value={district._id}>
+                          {district.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                     {touched.assignArea && errors.assignArea && (
                       <FormHelperText
@@ -253,9 +301,11 @@ const CreateAccount = () => {
                       </FormHelperText>
                     )}
                   </FormControl>
-                ) : (
+                )}
+
+                {selectedRole === "ward_officer" && (
                   <>
-                    <FormControl fullWidth sx={{ marginTop: "15px" }}>
+                    <FormControl fullWidth sx={{ marginTop: "25px" }}>
                       <InputLabel htmlFor="outlined-adornment-district">
                         Quận
                       </InputLabel>
@@ -269,8 +319,11 @@ const CreateAccount = () => {
                           setSelectedDistrict(e.target.value); // Update selectedRole
                         }}
                       >
-                        <MenuItem value={"1"}>Quận</MenuItem>
-                        <MenuItem value={"2"}>Quận</MenuItem>
+                        {districtList.map((district) => (
+                          <MenuItem key={district._id} value={district._id}>
+                            {district.label}
+                          </MenuItem>
+                        ))}
                       </Select>
                       {touched.district && errors.district && (
                         <FormHelperText
@@ -282,7 +335,7 @@ const CreateAccount = () => {
                       )}
                     </FormControl>
 
-                    <FormControl fullWidth sx={{ marginTop: "15px" }}>
+                    <FormControl fullWidth sx={{ marginTop: "25px" }}>
                       <InputLabel htmlFor="outlined-adornment-ward">
                         Phường
                       </InputLabel>
@@ -293,8 +346,11 @@ const CreateAccount = () => {
                         label="Phường"
                         onChange={handleChange}
                       >
-                        <MenuItem value={"1"}>Phường</MenuItem>
-                        <MenuItem value={"2"}>Phường</MenuItem>
+                        {wardList.map((ward) => (
+                          <MenuItem key={ward._id} value={ward._id}>
+                            {ward.label}
+                          </MenuItem>
+                        ))}
                       </Select>
                       {touched.assignArea && errors.assignArea && (
                         <FormHelperText
@@ -307,6 +363,23 @@ const CreateAccount = () => {
                     </FormControl>
                   </>
                 )}
+                <Box width="10%" margin={2}>
+                  <Button
+                    disableElevation
+                    // disabled={isSubmitting}
+                    fullWidth
+                    size="medium"
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      textTransform: "none",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Tạo
+                  </Button>
+                </Box>
               </form>
             )}
           </Formik>

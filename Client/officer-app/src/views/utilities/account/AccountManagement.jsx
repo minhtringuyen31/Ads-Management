@@ -18,6 +18,12 @@ import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router";
 
+const role = {
+  province_officer: "Cán bộ cấp Tỉnh",
+  district_officer: "Cán bộ cấp Quận/Huyện",
+  ward_officer: "Cán bộ cấp Phường/Xã",
+};
+
 const AccountManagement = () => {
   const theme = useTheme();
   const [accounts, setAccounts] = useState([]);
@@ -36,6 +42,10 @@ const AccountManagement = () => {
 
   const handleCreateNewBtnClick = () => {
     navigate("/utils/create_account");
+  };
+
+  const renderOfficerRole = (userRole) => {
+    return userRole === "" ? "Chưa phân cấp" : role[userRole];
   };
 
   useEffect(() => {
@@ -140,7 +150,7 @@ const AccountManagement = () => {
                     <TableCell>{account.email}</TableCell>
                     <TableCell>{account.phone}</TableCell>
                     <TableCell>{}</TableCell>
-                    <TableCell>{account.userRole}</TableCell>
+                    <TableCell>{renderOfficerRole(account.userRole)}</TableCell>
                     <TableCell>Phường 3</TableCell>
                   </TableRow>
                 ))}
