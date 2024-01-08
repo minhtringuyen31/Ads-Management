@@ -95,9 +95,8 @@ const ReportController = {
       if (reportData.type === 'random') {
         console.log(reportData);
         const randomData = reportData.random;
-        const districtLabelRadomData = ((randomData.address)).suburb;
-
-        const wardLabelRadomData = ((randomData.address)).quarter;
+        const districtLabelRadomData = randomData.address.suburb;
+        const wardLabelRadomData = randomData.address.quarter;
         console.log(wardLabelRadomData);
         let district_id = '';
         let ward_id = '';
@@ -120,6 +119,7 @@ const ReportController = {
         reportData.coordinate = {}
         reportData.coordinate['lat'] = randomData.lat;
         reportData.coordinate['lng'] = randomData.lon;
+        reportData.random = randomData;
         if (district_id && district_id != '') {
           reportData.district = district_id;
         }

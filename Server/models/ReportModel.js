@@ -87,6 +87,10 @@ const ReportSchema = new Schema(
       required: true,
       ref: 'District',
     },
+    random: {
+      type: Object,
+      default: false,
+    }
   },
 
   {
