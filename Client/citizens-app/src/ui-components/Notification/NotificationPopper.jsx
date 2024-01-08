@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import { Box, Fade, Popper } from "@mui/material";
 import NotificationItem from "./NotificationItem";
+import { useContext, useEffect } from "react";
+import { SocketContext } from "../../provider/SocketProvider";
 
 const NotificationPopper = ({
   //   openPopper,
@@ -10,6 +12,14 @@ const NotificationPopper = ({
 }) => {
   console.log("Popper open: ", isPopperOpen);
   const id = isPopperOpen ? "simple-popper" : undefined;
+  const socket = useContext(SocketContext);
+
+  useEffect(() => {
+    socket.on("notification", (notificationData) => {
+      console.log("Notification: ", notificationData);
+    });
+  }, [socket]);
+
   return (
     <Popper
       id={id}
