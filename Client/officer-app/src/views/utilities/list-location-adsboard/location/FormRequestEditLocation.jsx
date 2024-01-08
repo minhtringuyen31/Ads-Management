@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Field, useFormik, FormikProvider } from "formik";
@@ -78,6 +78,8 @@ const FormRequestEditLocation = () => {
 
   //Lây danh sách Location Types
   const [locationTypes, setLocationTypes] = useState([]);
+  // In ParentComponent
+  const imageUploadRef = useRef();
   const [selectedLoctionType, setSelectedLocationType] = useState(null);
 
   //Lấy danh sách Ads tpye
@@ -173,10 +175,10 @@ const FormRequestEditLocation = () => {
         //   }));
         //   setNewImages(initialImages);
         // }
-        if (fetchLocationData.image) {
-          setNewImages(fetchLocationData.image);
-          setExistingImages(fetchLocationData.image);
-          console.log(fetchLocationData.image);
+        if (fetchedLocationData.image) {
+          setNewImages(fetchedLocationData.image);
+          setExistingImages(fetchedLocationData.image);
+          console.log(fetchedLocationData.image);
         }
       } catch (error) {
         console.error("Error fetching location data", error);
@@ -190,18 +192,27 @@ const FormRequestEditLocation = () => {
 
   // Images
   // Xử lý khi có hình ảnh mới được tải lên từ ImageUpload
-  // const handleImageUpload = (uploadedImages) => {
-  //   // Kết hợp hình ảnh mới với hình ảnh hiện tại
-  //   setNewImages((prevImages) => [...prevImages, ...uploadedImages]);
-  //   // setNewImages(uploadedImages);
-  // };
+  const handleImageUpload = (uploadedImages) => {
+    console.log(uploadedImages);
+    const ImageUpload = [];
+    uploadedImages.map((image) => {
+      // setExistingImages((prevImages) => [...prevImages, image.preview]);
+      ImageUpload.push(image.preview);
+    });
+
+    // // Kết hợp hình ảnh mới với hình ảnh hiện tại
+    setExistingImages(Array.from(new Set([...existingImages, ...ImageUpload])));
+    // setNewImages(uploadedImages);
+  };
   // Xử lý xóa hình ảnh từ newImages
-  // const handleRemoveImage = (imageToRemove) => {
-  //   setNewImages((prevImages) =>
-  //     prevImages.filter((image) => image.preview !== imageToRemove.preview)
-  //   );
-  //   URL.revokeObjectURL(imageToRemove.preview); // Giải phóng bộ nhớ
-  // };
+  const handleRemoveImage = (imageToRemove) => {
+    console.log(imageToRemove);
+    const newexistingImages = existingImages.filter(
+      (image) => image !== imageToRemove
+    );
+    setExistingImages(Array.from(new Set(newexistingImages)));
+    imageUploadRef.current.handleRemoveImageByUrl(imageToRemove);
+  };
 
   // //Tạo data
   // const createFormData = (values) => {
@@ -226,10 +237,37 @@ const FormRequestEditLocation = () => {
   //   label: type.label,
   // }));
 
+  const formik = useFormik({
+    initialValues: {
+      coordinate: locationData.coordinate ?? {},
+      address: locationData.address ?? "",
+      ward: locationData.ward ?? "",
+      district: locationData.district ?? "",
+      location_type: locationData.location_type ?? "",
+      ads_type: locationData.ads_type ?? "",
+      image: locationData.image ?? "",
+      is_planned: locationData.is_planned ?? "",
+      display_name: locationData.display_name ?? "",
+      reason: "",
+    },
+    onSubmit: async (values, { resetForm }) => {
+      values.coordinate = locationData.coordinate || {};
+      values.address = locationData.address || "";
+      values.ward = locationData.ward || "";
+      values.district = locationData.district || "";
+
+      console.log(values);
+    },
+  });
+
   return (
     <>
-      <FormikProvider>
-        <form style={ContainerStyle}>
+      <FormikProvider value={formik}>
+        <form
+          style={ContainerStyle}
+          onSubmit={formik.handleSubmit}
+          encType="multipart/form-data"
+        >
           {/* Begin: HEADER */}
           <Typography>
             <h2>Yêu cầu chỉnh sửa điểm đặt</h2>
@@ -240,10 +278,17 @@ const FormRequestEditLocation = () => {
           <Box style={FormBodyStyle}>
             <Box style={FormBodyItemStyle}>
               <Box style={FormBodyItemContentStyle}>
-                <TextField
-                  // component={TextField}
+                <Field
+                  component={TextField}
                   label="Địa chỉ"
                   value={locationData.address}
+                  name="address"
+                  onChange={(e) =>
+                    formik.setFieldValue("address", e.target.value)
+                  }
+                  onSubmit={(e) =>
+                    formik.setFieldValue("address", locationData.address)
+                  }
                   style={{
                     width: "100%",
                   }}
@@ -254,11 +299,14 @@ const FormRequestEditLocation = () => {
                     shrink: true,
                   }}
                 />
-                <TextField
-                  // component={TextField}
+                <Field
+                  component={TextField}
                   label="Tên hiển thị"
                   value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                  onChange={(e) => {
+                    setDisplayName(e.target.value);
+                    formik.setFieldValue("display_name", e.target.value);
+                  }}
                   style={{
                     width: "100%",
                   }}
@@ -272,6 +320,7 @@ const FormRequestEditLocation = () => {
                     getOptionLabel={(option) => option.label}
                     onChange={(_event, newValue) => {
                       setSelectedLocationType(newValue);
+                      formik.setFieldValue("location_type", newValue._id);
                     }}
                     value={selectedLoctionType}
                     // isOptionEqualToValue={(option, value) =>
@@ -333,6 +382,7 @@ const FormRequestEditLocation = () => {
                     getOptionLabel={(option) => option.label}
                     onChange={(_event, newValue) => {
                       setSelectedAdsType(newValue);
+                      formik.setFieldValue("ads_type", newValue._id);
                     }}
                     value={selectedAdsType}
                     renderInput={(params) => (
@@ -352,6 +402,7 @@ const FormRequestEditLocation = () => {
                     getOptionLabel={(option) => option.label}
                     onChange={(_event, newValue) => {
                       setSelectedPlanningStatus(newValue);
+                      formik.setFieldValue("is_planned", newValue.value);
                     }}
                     value={selectedPlanningStatus}
                     renderInput={(params) => (
@@ -369,6 +420,9 @@ const FormRequestEditLocation = () => {
                   minRows={5}
                   aria-label="Lí do"
                   placeholder="Lí do chỉnh sửa điểm đặt"
+                  onChange={(e) =>
+                    formik.setFieldValue("reason", e.target.value)
+                  }
                   style={{
                     maxWidth: "100%",
                     minWidth: "50%",
@@ -383,6 +437,49 @@ const FormRequestEditLocation = () => {
                   // name="companyInfo.description"
                   // onChange={formik.handleChange}
                   // id="companyInfo.description"
+                />
+                <Typography>
+                  <h4>Hình ảnh điểm đặt</h4>
+                </Typography>
+                <Box sx={{ display: "flex", gap: 2 }}>
+                  {existingImages.map((image, index) => (
+                    <Box
+                      key={index}
+                      position="relative"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        border: "1px dashed gray",
+                        borderRadius: "0.25rem",
+                        width: "6.5rem",
+                        height: "6.5rem",
+                      }}
+                    >
+                      <img
+                        src={image}
+                        alt={`Image ${index}`}
+                        style={{
+                          width: "6rem",
+                          height: "6rem",
+                          borderRadius: "0.25rem",
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => handleRemoveImage(image)}
+                        sx={{ position: "absolute", top: 0, right: 0 }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+                  ))}
+                </Box>
+                <ImageUpload
+                  ref={imageUploadRef}
+                  onUpload={handleImageUpload}
+                  showImages={false}
                 />
               </Box>
             </Box>

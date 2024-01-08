@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import { Box, Button, IconButton } from "@mui/material";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,7 +10,7 @@ const Input = styled("input")({
   display: "none",
 });
 
-const ImageUpload = ({ onUpload }) => {
+const ImageUpload = forwardRef(({ onUpload, showImages = true }, ref) => {
   const [images, setImages] = useState([]);
 
   const handleFileChange = (event) => {
@@ -28,8 +27,17 @@ const ImageUpload = ({ onUpload }) => {
     URL.revokeObjectURL(imageToRemove.preview); // Free up memory
   };
 
+  const handleRemoveImageByUrl = (imageToRemove) => {
+    setImages(images.filter((image) => image.preview !== imageToRemove));
+    URL.revokeObjectURL(imageToRemove.preview); // Free up memory
+  };
+  useImperativeHandle(ref, () => ({
+    handleRemoveImageByUrl,
+  }));
+
   useEffect(() => {
     onUpload(images);
+    console.log(images);
   }, [images]);
 
   return (
@@ -48,7 +56,6 @@ const ImageUpload = ({ onUpload }) => {
           multiple
           type="file"
           onChange={handleFileChange}
-          disabled={images.length >= 2}
         />
         <Button
           variant="outlined"
@@ -59,49 +66,50 @@ const ImageUpload = ({ onUpload }) => {
             width: "6.5rem",
             height: "6.5rem",
           }}
-          disabled={images.length >= 2}
         >
           Upload images
         </Button>
       </Label>
-      <Box display="flex" justifyContent="center" flexWrap="wrap" gap={2}>
-        {images.map((image, index) => (
-          <Box
-            key={index}
-            position="relative"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              border: "1px dashed gray",
-              borderRadius: "0.25rem",
-              width: "6.5rem",
-              height: "6.5rem",
-            }}
-          >
-            <img
-              src={image.preview}
-              alt={`upload-preview-${index}`}
+      {showImages && (
+        <Box display="flex" justifyContent="center" flexWrap="wrap" gap={2}>
+          {images.map((image, index) => (
+            <Box
+              key={index}
+              position="relative"
               style={{
-                width: "6rem",
-                height: "6rem",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                border: "1px dashed gray",
                 borderRadius: "0.25rem",
+                width: "6.5rem",
+                height: "6.5rem",
               }}
-            />
-            <IconButton
-              size="small"
-              color="error"
-              onClick={() => handleRemoveImage(image)}
-              sx={{ position: "absolute", top: 0, right: 0 }}
             >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
-        ))}
-      </Box>
+              <img
+                src={image.preview}
+                alt={`upload-preview-${index}`}
+                style={{
+                  width: "6rem",
+                  height: "6rem",
+                  borderRadius: "0.25rem",
+                }}
+              />
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => handleRemoveImage(image)}
+                sx={{ position: "absolute", top: 0, right: 0 }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          ))}
+        </Box>
+      )}
     </Box>
   );
-};
+});
 
 const Label = styled("label")({
   // Add styles for label if needed
