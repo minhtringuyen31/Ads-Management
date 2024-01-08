@@ -4,6 +4,8 @@ const UserController = {
     getAll: async (req, res, next) => {
         try {
             const filter = req.body
+            global.io.emit("test", "123")
+
             const users = await UserService.getAll(filter, '');
             if (!users) {
                 return next(createError.BadRequest("User list not found"))
@@ -61,7 +63,7 @@ const UserController = {
         try {
             const { id } = req.params;
             const location = await UserService.getById(id);
-            
+
             if (!location) {
                 return next(createError.BadRequest("User not found"))
             }

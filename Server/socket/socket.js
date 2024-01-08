@@ -20,6 +20,7 @@ const SocketListener = {
                 socket.join(district);
             }
 
+
             // Xử lý sự kiện new_report từ người dân
             socket.on('new_report', (report) => {
                 console.log('Nhận báo cáo mới:', report);
@@ -32,16 +33,16 @@ const SocketListener = {
                 setTimeout(async () => {
                     // TODO: Save the report to the database here (replace the comment with your actual database saving code)
 
-                    const newNotification = {
-                        title: "Có 1 báo cáo mới !!!",
-                        subtitle: "",
-                        content: newReport,
-                        type: "report",
-                        clientId: newReport.clientId,
-                    }
-                    console.log(newNotification)
-                    const data = await NotificationService.create(newNotification);
-                    const newReport = { ...report, clientId: report.clientId }
+                    // const newNotification = {
+                    //     title: "Có 1 báo cáo mới !!!",
+                    //     subtitle: "",
+                    //     content: newReport,
+                    //     type: "report",
+                    //     clientId: newReport.clientId,
+                    // }
+                    // console.log(newNotification)
+                    // const data = await NotificationService.create(newNotification);
+                    // const newReport = { ...report, clientId: report.clientId }
                     console.log('Lưu trữ báo cáo:', socket.id);
                     // Gửi code trở lại cho người dân
 

@@ -148,17 +148,23 @@ const ReportController = {
       }
       const newReport = await ReportService.create(reportData);
       if (newReport) {
-        // const newNotification = {
-        //   title: "Có 1 báo cáo mới !!!",
-        //   subtitle: "",
-        //   content: newReport,
-        //   type: "report",
-        //   clientId: newReport.clientId,
-        // }
-        // const data = await NotificationService.create(newNotification);
+        const newNotification = {
+          title: "Có 1 báo cáo mới !!!",
+          subtitle: "",
+          content: newReport,
+          type: "report",
+          clientId: newReport.clientId,
+        }
+        const data = await NotificationService.create(newNotification);
+        console.log(data);
+        // Gửi báo cáo đến cán bộ phường/quận
+        if (newReport.ward) {
+          global.io.to(newReport.ward.toString()).emit('new_notification', data);
+        }
+        if (newReport.district) {
+          global.io.to(newReport.district.toString()).emit('new_notification', data);
+        }
 
-        // req.app.io.to(global.userList[newReport.clientId]).emit("new_report", data)
-        global.io.emit("new_report", newReport)
         res.status(201).json({
           message: ModelName + " created successfully",
           status: 201,

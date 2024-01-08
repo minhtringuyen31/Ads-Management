@@ -74,8 +74,6 @@ const initializeExpress = (app) => {
 };
 
 initializeExpress(app);
-
-/// handle socket
 SocketListener.start(io);
 app.use(notificationRoute);
 app.use(reportType);
@@ -92,6 +90,8 @@ app.use(reportRoute);
 app.use(editRequestRoute);
 app.use(authorizeRequestRoute);
 app.use(authRoute);
+/// handle socket
+
 app.use(notFound);
 app.use(errorHandler);
 
