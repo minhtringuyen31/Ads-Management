@@ -6,7 +6,7 @@ import http from "http";
 import logger from "./utils/logger.js";
 import { errorHandler, notFound } from "./helper/errorHandler.js";
 import db from "./configs/db.js";
-import redisClient, {set, get} from "./configs/redis.js";
+import redisClient, { set, get } from "./configs/redis.js";
 import locationRoute from "./routes/location.route.js";
 import locationTypeRoute from "./routes/locationtype.route.js";
 import wardRoute from "./routes/ward.route.js";
@@ -32,9 +32,15 @@ const corsOptions = {
   origin: "http://localhost:" + process.env.PORT,
 };
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Cho phép tất cả nguồn, hoặc chỉ định nguồn cụ thể
+    methods: ["GET", "POST"]
+  }
+});
 global.userList = {};
-app.io = io
+
+global.io = io; //added
 
 db();
 redisClient.ping((err, reply) => {
@@ -47,7 +53,7 @@ redisClient.ping((err, reply) => {
 // const testRedisOperations = async () => {
 //   try {
 //     // Thực hiện set giá trị
-    
+
 //     const result = await redisClient.get('thien');
 //     console.log('Result from Redis:', result);
 //   } catch (error) {
@@ -89,7 +95,7 @@ app.use(authRoute);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log("Server is running on ports: " + process.env.PORT);
   console.log("http://localhost:" + process.env.PORT);
 });

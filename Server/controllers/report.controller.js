@@ -26,7 +26,7 @@ const ReportController = {
 
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
-      const assigned_areaid = user.assigned_areaid.toString();
+      const assigned_areaid = user.assigned_areaid._id
       if (user.__t === "WardOfficer") {
         filteredLists = reports.filter(
           (report) => report.ward._id.toString() === assigned_areaid
@@ -93,11 +93,9 @@ const ReportController = {
       const reportData = JSON.parse(JSON.stringify(req.body))
       // Add by Quang Thanh to handle save record when type = random location
       if (reportData.type === 'random') {
-        console.log(reportData);
         const randomData = reportData.random;
         const districtLabelRadomData = randomData.address.suburb;
         const wardLabelRadomData = randomData.address.quarter;
-        console.log(wardLabelRadomData);
         let district_id = '';
         let ward_id = '';
         // Process get district id and ward id 
@@ -150,17 +148,17 @@ const ReportController = {
       }
       const newReport = await ReportService.create(reportData);
       if (newReport) {
-        const newNotification = {
-          title: "Có 1 báo cáo mới !!!",
-          subtitle: "",
-          content: newReport,
-          type: "report",
-          clientId: newReport.clientId,
-        }
-        const data = await NotificationService.create(newNotification);
+        // const newNotification = {
+        //   title: "Có 1 báo cáo mới !!!",
+        //   subtitle: "",
+        //   content: newReport,
+        //   type: "report",
+        //   clientId: newReport.clientId,
+        // }
+        // const data = await NotificationService.create(newNotification);
 
         // req.app.io.to(global.userList[newReport.clientId]).emit("new_report", data)
-        req.app.io.emit("new_report", newReport)
+        global.io.emit("new_report", newReport)
         res.status(201).json({
           message: ModelName + " created successfully",
           status: 201,

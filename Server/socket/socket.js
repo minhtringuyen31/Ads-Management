@@ -3,13 +3,13 @@ import NotificationService from "../services/notification.service.js";
 const SocketListener = {
     start: function (io) {
         console.log("Socket is running");
-        io.on('connection', function (socket) {
+        io.on('connection', async function (socket) {
 
             console.log('A user connected with socket id:', socket.id);
 
             // Giả sử cán bộ phường/quận gửi thông tin này khi kết nối
             const { ward, district, clientId } = socket.handshake.query;
-
+            console.log(ward, district, clientId);
             global.userList[clientId] = socket.id;
 
             // Tham gia vào room dựa trên phường/quận
@@ -39,6 +39,7 @@ const SocketListener = {
                         type: "report",
                         clientId: newReport.clientId,
                     }
+                    console.log(newNotification)
                     const data = await NotificationService.create(newNotification);
                     const newReport = { ...report, clientId: report.clientId }
                     console.log('Lưu trữ báo cáo:', socket.id);

@@ -3,7 +3,15 @@ import { ProvinceOfficer, User, WardOfficer, DistrictOfficer } from "../models/U
 const UserService = {
     async getAll(filter, projection) {
         try {
-            const user = await User.find(filter).select(projection);
+            const user = await User.find(filter).populate({
+                path: "assigned_areaid",
+                model: "Ward", // Replace with the actual name of the Location model
+                select: "-coordinates",
+            }).populate({
+                path: "assigned_areaid",
+                model: "District", // Replace with the actual name of the Location model
+                select: "-coordinates",
+            }).lean().exec();
             return user;
         } catch (error) {
             throw error;
@@ -36,13 +44,29 @@ const UserService = {
         try {
             let user = await User.findById(id);
             if (user.__t === "DistrictOfficer") {
-                const user = await DistrictOfficer.findById(id);
+                user = await DistrictOfficer.findById(id).populate({
+                    path: "assigned_areaid",
+                    model: "Ward", // Replace with the actual name of the Location model
+                    select: "-coordinates",
+                }).populate({
+                    path: "assigned_areaid",
+                    model: "District", // Replace with the actual name of the Location model
+                    select: "-coordinates",
+                }).lean().exec();
             }
             else if (user.__t === "WardOfficer") {
-                const user = await WardOfficer.findById(id);
+                user = await WardOfficer.findById(id).populate({
+                    path: "assigned_areaid",
+                    model: "Ward", // Replace with the actual name of the Location model
+                    select: "-coordinates",
+                }).populate({
+                    path: "assigned_areaid",
+                    model: "District", // Replace with the actual name of the Location model
+                    select: "-coordinates",
+                }).lean().exec();;
             }
             else {
-                const user = await User.findById(id);
+                user = await User.findById(id);
             }
             return user;
         } catch (error) {
