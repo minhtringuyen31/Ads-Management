@@ -90,15 +90,14 @@ const ReportController = {
 
   create: async (req, res, next) => {
     try {
-      const reportData = req.body;
+      const reportData = JSON.parse(JSON.stringify(req.body))
       // Add by Quang Thanh to handle save record when type = random location
       if (reportData.type === 'random') {
         console.log(reportData);
-        const randomData = JSON.parse((reportData.random));
-        console.log(randomData);
-        const districtLabelRadomData = randomData.address.suburb;
-        console.log(districtLabelRadomData);
-        const wardLabelRadomData = randomData.address.quarter;
+        const randomData = reportData.random;
+        const districtLabelRadomData = ((randomData.address)).suburb;
+
+        const wardLabelRadomData = ((randomData.address)).quarter;
         console.log(wardLabelRadomData);
         let district_id = '';
         let ward_id = '';
