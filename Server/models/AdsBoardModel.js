@@ -23,12 +23,10 @@ const AdsBoardSchema = new Schema({
     contract_end_date: {
         type: Date,
         required: true,
-
     },
     contract_start_date: {
         type: Date,
         required: true,
-
     },
     image: {
         type: [String],
