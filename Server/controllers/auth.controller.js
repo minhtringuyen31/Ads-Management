@@ -7,6 +7,7 @@ import otpGenerator from "otp-generator";
 import redis, {get, set} from "../configs/redis.js"
 import UserService from "../services/user.service.js";
 import nodemailer from "nodemailer";
+import rabbitmq from "../message-broker/rabbitmq.js";
 const AuthController = {
   login: async(req, res, next) => {
     const { loginCredential, password } = req.body;
@@ -86,7 +87,7 @@ const AuthController = {
       }
       const otp = otpGenerator.generate(6, {digits: true, upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
       await set(email, otp, 60);
-      
+      //ok
     }
     catch(error){
       return res.status(500).json({message: "Internal Server Error"});
