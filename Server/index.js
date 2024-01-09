@@ -22,9 +22,12 @@ import userRoute from "./routes/user.route.js";
 import authRoute from "./routes/auth.route.js";
 import reportType from "./routes/report_type.route.js";
 import notificationRoute from "./routes/notification.route.js";
+import logRoute from "./routes/log.route.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import SocketListener from "./socket/socket.js";
 import { Server } from "socket.io";
+import path from 'path';
+const __dirname = path.resolve();
 dotenv.config();
 
 const app = express();
@@ -67,6 +70,7 @@ redisClient.ping((err, reply) => {
 // // Gọi hàm thực hiện các thao tác Redis
 // testRedisOperations();
 const initializeExpress = (app) => {
+  app.use(express.static(path.join(__dirname, 'public')));
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -88,6 +92,7 @@ app.use(companyRoute);
 app.use(userRoute);
 app.use(reportRoute);
 app.use(editRequestRoute);
+app.use(logRoute);
 app.use(authorizeRequestRoute);
 app.use(authRoute);
 /// handle socket

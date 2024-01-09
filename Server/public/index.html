@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Log Reader</title>
+    <link rel="stylesheet" href="log.css">
+</head>
+
+<body>
+    <div class="logger-ui">
+        <h1>LOG READER</h1>
+        <!-- ... other necessary HTML elements ... -->
+        <div class="date-picker-container">
+            <!-- Date Picker Elements -->
+            <input type="date" id="dateFrom">
+            <input type="date" id="dateTo">
+            <button id="searchButton">Search</button>
+        </div>
+
+        <!-- Table for displaying logs -->
+        <table id="logsTable">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Level</th>
+                    <th>Status Code</th>
+                    <th>Request</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Log rows will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="log.js"></script>
+</body>
+
+</html>
