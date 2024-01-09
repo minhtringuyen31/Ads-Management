@@ -52,7 +52,7 @@ const CreateAccount = () => {
 
   const handleSelectedDistrict = () => {};
 
-  const handleSubmitForm = (values) => {
+  const handleSubmitForm = async (values) => {
     const postBody = {
       fullname: values.fullname,
       email: values.email,
@@ -62,6 +62,22 @@ const CreateAccount = () => {
       assign_areaid: values.assignArea,
     };
     console.log("Post Body: ", postBody);
+    console.log("Post Body: ", JSON.stringify(postBody));
+    try {
+      const response = await axios.post(
+        "http://14.225.192.121/user",
+        JSON.stringify(postBody),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      console.log("New Account: ", response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /**
