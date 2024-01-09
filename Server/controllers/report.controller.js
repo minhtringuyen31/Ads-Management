@@ -26,13 +26,16 @@ const ReportController = {
 
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
-      const assigned_areaid = user.assigned_areaid._id
+      //console.log("user", user)
+     
       if (user.__t === "WardOfficer") {
+        const assigned_areaid = user.assigned_areaid._id.toString();
         filteredLists = reports.filter(
           (report) => report.ward._id.toString() === assigned_areaid
         );
       } else if (user.__t === "DistrictOfficer") {
-        console.log(assigned_areaid)
+        //console.log("assigned_areaid")
+        const assigned_areaid = user.assigned_areaid._id.toString();
         filteredLists = reports.filter(
           (report) => report.district._id.toString() === assigned_areaid
         );
@@ -41,7 +44,7 @@ const ReportController = {
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
-        // size: filteredLists.length,
+        size: filteredLists.length,
         // size_all: reports.length,
         data: filteredLists,
       });

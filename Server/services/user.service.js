@@ -46,12 +46,7 @@ const UserService = {
             if (user.__t === "DistrictOfficer") {
                 user = await DistrictOfficer.findById(id).populate({
                     path: "assigned_areaid",
-                    model: "Ward", // Replace with the actual name of the Location model
-                    select: "-coordinates",
-                }).populate({
-                    path: "assigned_areaid",
                     model: "District", // Replace with the actual name of the Location model
-                    select: "-coordinates",
                 }).lean().exec();
             }
             else if (user.__t === "WardOfficer") {
@@ -59,15 +54,23 @@ const UserService = {
                     path: "assigned_areaid",
                     model: "Ward", // Replace with the actual name of the Location model
                     select: "-coordinates",
-                }).populate({
-                    path: "assigned_areaid",
-                    model: "District", // Replace with the actual name of the Location model
-                    select: "-coordinates",
+                    populate: {
+                        path: "district",
+                        model: "District", // Replace with the actual name of the Location model
+                    },
                 }).lean().exec();;
             }
             else {
                 user = await User.findById(id);
             }
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    },
+    async getByEmail(email) {
+        try {
+            const user = await User.findOne({email: email})
             return user;
         } catch (error) {
             throw error;
