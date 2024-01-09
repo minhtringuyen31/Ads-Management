@@ -62,12 +62,12 @@ const LocationService = {
                 .populate({
                     path: 'ads_type',
                     model: 'Type', // Replace with the actual name of the AdsType model
-                    select: 'label -_id -__t' // Select only the label field and exclude the _id
+                    select: 'label -__t' // Select only the label field and exclude the _id
                 })
                 .populate({
                     path: 'location_type',
                     model: 'Type', // Replace with the actual name of the LocationType model
-                    select: 'label -_id -__t' // Select only the label field and exclude the _id
+                    select: 'label -__t' // Select only the label field and exclude the _id
                 }).exec();
 
 
