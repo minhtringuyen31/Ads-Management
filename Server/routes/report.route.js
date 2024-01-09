@@ -11,6 +11,7 @@ import uploadCloud from '../middlewares/uploader.js';
 const router = express.Router();
 
 router.get('/reports', authenticate, ReportController.getAll);
+router.get('/reportGroup', authenticate, ReportController.groupReport);
 router.get('/reports/citizent', ReportController.getAllTesting);
 router.get('/report/:id', ReportController.getById);
 router.post('/report', uploadCloud.array('image'), ReportController.create);

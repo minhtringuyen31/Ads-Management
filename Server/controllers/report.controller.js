@@ -44,9 +44,91 @@ const ReportController = {
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
-        size: filteredLists.length,
+        //size: filteredLists.length,
         // size_all: reports.length,
         data: filteredLists,
+      });
+    } catch (error) {
+      next(createError.InternalServerError(error.message));
+    }
+  },
+  groupReport: async (req, res, next) => {
+    try {
+      const filter = req.body;
+      const reports = await ReportService.getAll(filter);
+
+      let filteredLists = reports;
+      const user = await UserService.getById(req.user.userId);
+      //console.log("user", user)
+     
+      if (user.__t === "WardOfficer") {
+        const assigned_areaid = user.assigned_areaid._id.toString();
+        filteredLists = reports.filter(
+          (report) => report.ward._id.toString() === assigned_areaid
+        );
+      } else if (user.__t === "DistrictOfficer") {
+        //console.log("assigned_areaid")
+        const assigned_areaid = user.assigned_areaid._id.toString();
+        filteredLists = reports.filter(
+          (report) => report.district._id.toString() === assigned_areaid
+        );
+      }
+
+      const lists = filteredLists.map((report) => {
+        if (report.type === "location" && report.location) {
+          // If the report type is location and there is a location, add the coordinate property
+          return {
+            ...report,
+            lat: report.location.coordinate.lat,
+            lng: report.location.coordinate.lng,
+          };
+        } else if (
+          report.type === "board" &&
+          report.board &&
+          report.board.location
+        ) {
+          // If the report type is board and there is a board and a location_id, add the coordinate property
+          return {
+            ...report,
+            lat: report.board.location.coordinate.lat,
+            lng: report.board.location.coordinate.lng,
+          };
+        } else if (
+          report.type === "random" &&
+          report.random
+        ) {
+          // If the report type is board and there is a board and a location_id, add the coordinate property
+          return {
+            ...report,
+            lat: report.lat,
+            lng: report.lng,
+          };
+        }
+        console.log("test", report)
+        return report;
+      });
+
+      const groupedLocations = lists.reduce((acc, report) => {
+        const key = `${report.lat}_${report.lng}`;
+    
+        if (!acc[key]) {
+            acc[key] = { lat: report.lat, lng: report.lng, reportList: [] };
+        }
+    
+        acc[key].reportList.push(report);
+    
+        return acc;
+    }, {});
+    
+    // Chuyển đổi đối tượng các địa điểm đã được nhóm thành một mảng
+    const locations = Object.values(groupedLocations);
+
+      res.json({
+        message: "Get " + modelname + " list successfully",
+        status: 200,
+        //size: filteredLists.length,
+        // size_all: reports.length,
+        data: locations,
       });
     } catch (error) {
       next(createError.InternalServerError(error.message));
