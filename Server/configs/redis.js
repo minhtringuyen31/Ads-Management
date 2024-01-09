@@ -21,8 +21,9 @@ client2.on("error", (err) => {
   console.error("Redis connection error:", err);
 });
 
-export const set = (key, value, callback) => {
-  client2.set(key, value, (err, reply) => {
+export const set = (key, value, expireInSeconds, callback) => {
+  // Sử dụng SETEX để thiết lập giá trị và thời gian hết hạn
+  client2.setex(key, expireInSeconds, value, (err, reply) => {
     if (err) {
       console.error(err);
       callback(err, null);

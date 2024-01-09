@@ -30,6 +30,7 @@ const UserController = {
             if (!location) {
                 return next(createError.BadRequest("User not found"))
             }
+            
             res.json({
                 message: "Create User successfully",
                 status: 200,
