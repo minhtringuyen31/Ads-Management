@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import PlaceIcon from "@mui/icons-material/Place";
 import ClearIcon from "@mui/icons-material/Clear";
 import axios from "axios";
+import PropTypes from "prop-types";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,7 +63,7 @@ const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
-const SearchBar = () => {
+const SearchBar = ({ setSearchLocation }) => {
   /**
    * useState
    */
@@ -79,6 +80,10 @@ const SearchBar = () => {
   const handleInput = (event) => {
     console.log("Input: ", event.target.value);
     setKeyword(event.target.value);
+  };
+
+  const handleSearchItemClicked = (location) => {
+    setSearchLocation(location);
   };
 
   /**
@@ -132,7 +137,16 @@ const SearchBar = () => {
           dense={true}
         >
           {results.map((item) => (
-            <ListItem key={item.place_id}>
+            <ListItem
+              key={item.place_id}
+              onClick={() => handleSearchItemClicked(item)}
+              sx={{
+                ":hover": {
+                  backgroundColor: "lightgray",
+                  cursor: "pointer",
+                },
+              }}
+            >
               <ListItemIcon>
                 <PlaceIcon />
               </ListItemIcon>
@@ -146,3 +160,7 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+
+SearchBar.propTypes = {
+  setSearchLocation: PropTypes.func.isRequired,
+};

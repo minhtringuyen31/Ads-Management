@@ -14,11 +14,11 @@ const NotificationPopper = ({
   const id = isPopperOpen ? "simple-popper" : undefined;
   const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    socket.on("notification", (notificationData) => {
-      console.log("Notification: ", notificationData);
-    });
-  }, [socket]);
+  // useEffect(() => {
+  //   socket.on("notification", (notificationData) => {
+  //     console.log("Notification: ", notificationData);
+  //   });
+  // }, [socket]);
 
   return (
     <Popper

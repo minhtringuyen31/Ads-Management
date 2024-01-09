@@ -2,7 +2,7 @@ import "./App.css";
 import { Box, FormControlLabel, IconButton, Switch } from "@mui/material";
 import Map from "./ui-components/MapContainer/Map";
 import Drawer from "./ui-components/Drawer/Drawer";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -57,6 +57,8 @@ function App() {
   const [isPopperOpen, setPopperOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
+  const [center, setCenter] = useState({ lat: 10.823099, lng: 106.629662 });
+
   /**
    * @return {void}
    */
@@ -96,7 +98,6 @@ function App() {
   const handleCurrentLocationBtnClicked = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        // const { latitude, longitude } = position.coords;
         const result = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
@@ -104,7 +105,6 @@ function App() {
         setCurrentLocation(result);
       });
     }
-    console.log("Current Location: ", currentLocation);
   };
 
   const handleNotificationBtnClicked = (e) => {
@@ -126,6 +126,7 @@ function App() {
         setDrawerContent={setDrawerContent}
         boardDisplayMode={boardSwitch}
         currentLocation={currentLocation}
+        center={center}
       />
       <Drawer
         shape={shape}
