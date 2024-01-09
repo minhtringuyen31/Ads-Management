@@ -56,10 +56,10 @@ const RequestEditList = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = useCallback((event) => {
     setRowsPerPage(parseInt(event.target.value), 10);
     setPage(0);
-  };
+  }, []);
 
   return (
     <MainCard title="Danh sách yêu cầu chỉnh sửa điểm đặt và bảng quảng cáo">

@@ -32,8 +32,7 @@ const BoardManagement = () => {
 
   const handleReqEditAdsboard = (event, adsboardID) => {
     event.stopPropagation();
-  console.log("adsboard ID: ", adsboardID);
-    navigate("ultils/adsboard/request_edit_form", { state: { adsboardID } });
+    navigate("/utils/adsboard/request_edit_form", { state: { adsboardID } });
     event.stopPropagation();
   };
 

@@ -77,9 +77,10 @@ const FormRequestEditLocation = () => {
 
   //Lây danh sách Location Types
   const [locationTypes, setLocationTypes] = useState([]);
+  const [selectedLoctionType, setSelectedLocationType] = useState(null);
+
   // In ParentComponent
   const imageUploadRef = useRef();
-  const [selectedLoctionType, setSelectedLocationType] = useState(null);
 
   //Lấy danh sách Ads tpye
   const [adsTypes, setAdsTypes] = useState([]);
@@ -219,28 +220,46 @@ const FormRequestEditLocation = () => {
 
   // New data
   const createFormData = (values) => {
-    const formData = new FormData();
-    formData.append("type", values.type);
-    formData.append("newInformation[id]", values.locationID);
-    formData.append("newInformation[display_name]", values.display_name);
-    formData.append("newInformation[coordinate]", values.coordinate);
-    formData.append("newInformation[address]", values.address);
-    formData.append("newInformation[ward]", values.ward._id);
-    formData.append("newInformation[district]", values.district._id);
-    formData.append("newInformation[location_type]", values.location_type._id);
-    formData.append("newInformation[ads_type]", values.ads_type._id);
-    formData.append("is_planned", values.is_planned);
+    // const formData = new FormData();
+    // formData.append("type", values.type);
+    // formData.append("newInformation[id]", values.id);
+    // formData.append("newInformation[display_name]", values.display_name);
+    // formData.append("newInformation[coordinate]", values.coordinate);
+    // formData.append("newInformation[address]", values.address);
+    // formData.append("newInformation[ward]", values.ward._id);
+    // formData.append("newInformation[district]", values.district._id);
+    // formData.append("newInformation[location_type]", values.location_type);
+    // formData.append("newInformation[ads_type]", values.ads_type);
+    // formData.append("newInformation[is_planned]", values.is_planned);
+    // formData.append("reason", "Yêu cầu");
+
+    const formData = {
+      type: values.type,
+      reason:"Yêu cầu từ Thảo Minh",
+      newInformation: {
+        id: values.id,
+        display_name: values.display_name,
+        coordinate: values.coordinate,
+        address: values.address,
+        ward: values.ward,
+        district: values.district,
+        location_type: values.location_type,
+        ads_type: values.ads_type,
+        is_planned: values.is_planned,
+      },
+    };
 
     return formData;
   };
 
   const formik = useFormik({
     initialValues: {
-      id: locationData.id ?? "",
+      id: locationData._id ?? "",
       coordinate: locationData.coordinate ?? {},
       address: locationData.address ?? "",
       ward: locationData.ward ?? "",
       district: locationData.district ?? "",
+
       location_type: locationData.location_type ?? "",
       ads_type: locationData.ads_type ?? "",
       image: locationData.image ?? "",
@@ -250,14 +269,30 @@ const FormRequestEditLocation = () => {
       type: "location",
     },
     onSubmit: async (values, { resetForm }) => {
+      values.id = locationData._id || "";
       values.coordinate = locationData.coordinate || {};
       values.address = locationData.address || "";
       values.ward = locationData.ward || "";
       values.district = locationData.district || "";
 
-      console.log("Data submit: ", values);
-
+      if (values.location_type === "") {
+        values.location_type = locationData.location_type._id || "";
+      }
+      if (values.ads_type === "") {
+        values.ads_type = locationData.ads_type._id || "";
+      }
+      if (values.image === "") {
+        values.image = locationData.image || "";
+      }
+      if (values.is_planned === "") {
+        values.is_planned = locationData.is_planned || "";
+      }
+      if (values.display_name === "") {
+        values.display_name = locationData.display_name || "";
+      }
+      console.log(locationData);
       const formData = createFormData(values);
+     
       try {
         const response = await axios.post(
           "http://14.225.192.121/editRequest",
