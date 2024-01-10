@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
+import { GetUser } from "store/auth/auth-config";
 import { useTheme } from "@mui/material/styles";
 import {
   Table,
@@ -12,26 +13,33 @@ import {
   CircularProgress,
   Chip,
   TablePagination,
+  Select,
+  InputLabel,
+  MenuItem,
+  FormControl,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import FeaturedVideoOutlinedIcon from "@mui/icons-material/FeaturedVideoOutlined";
+import DoneIcon from "@mui/icons-material/Done";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import MainCard from "ui-component/cards/MainCard";
 import Scrollbar from "ui-component/scrollbar/Scrollbar";
-
-const styleBox = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "0.75rem",
-};
+import ModalAccept from "../list-licen-adsboard/ModalAccept";
 
 const RequestEditList = () => {
+  const userRole = GetUser().userRole;
   const theme = useTheme();
 
   const [requestList, setRequestList] = useState([]);
+  const [typeFilter, setTypeFilter] = useState("Tất cả");
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //Modal confirm
+  const [cancelId, setCancelId] = useState(null);
+  const [openModalConfirmAgree, setOpenModalConfirmAgree] = useState(false);
+  const [openModalConfirmDeny, setOpenModalConfirmDeny] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,6 +63,40 @@ const RequestEditList = () => {
     fetchData();
   }, []);
 
+  const handleAgree = async (status) => {
+    if (cancelId) {
+      console.log("ID nè", cancelId);
+      try {
+        const respone = await axios.put(
+          `http://14.225.192.121/editRequest/${cancelId}`,
+          {
+            status: status,
+          }
+        );
+        setRequestList(
+          requestList.map((request) => {
+            console.log("req: ", request);
+            if (request._id === cancelId) {
+              console.log("vô đây khum");
+              return {
+                ...request,
+                status: status,
+              };
+            } else {
+              return request;
+            }
+          })
+        );
+        console.log(respone);
+      } catch (error) {
+        console.error("Error cancel request: ", error);
+      }
+      setOpenModalConfirmAgree(false);
+      setOpenModalConfirmDeny(false);
+    }
+  };
+
+  //Pagination
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -64,15 +106,54 @@ const RequestEditList = () => {
     setPage(0);
   }, []);
 
+  //Filter
+  const handleChangeTypeFilter = (event) => {
+    setTypeFilter(event.target.value);
+  };
+  const filteredRequestList = requestList.filter((row) =>
+    typeFilter === "Tất cả" ? true : row.type === typeFilter
+  );
+
+  //Modal
+  const handleOpenModelConfirmAgree = (id) => {
+    setCancelId(id);
+    setOpenModalConfirmAgree(true);
+  };
+  const handleOpenModelConfirmDeny = (id) => {
+    setCancelId(id);
+    setOpenModalConfirmDeny(true);
+  };
+
   return (
     <MainCard title="Danh sách yêu cầu chỉnh sửa điểm đặt và bảng quảng cáo">
       <Scrollbar>
         <Box>
-          <Box style={styleBox}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <span></span>
-            <Button variant="contained" color="primary" endIcon={<AddIcon />}>
-              Yêu cầu mới
-            </Button>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel id="demo-simple-select-autowidth-label">
+                Loại yêu cầu
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={typeFilter}
+                onChange={handleChangeTypeFilter}
+                autoWidth
+                label="Loại yêu cầu"
+              >
+                <MenuItem value="Tất cả">
+                  <em>Tất cả</em>
+                </MenuItem>
+                <MenuItem value={"location"}>Điểm đặt</MenuItem>
+                <MenuItem value={"board"}>Bảng quảng cáo</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
           <Table>
             <TableHead sx={{ backgroundColor: theme.palette.primary.light }}>
@@ -81,11 +162,17 @@ const RequestEditList = () => {
                 <TableCell sx={{ fontWeight: "bold" }}> Địa chỉ</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Loại yêu cầu</TableCell>
                 <TableCell sx={{ fontWeight: "bold" }}>Tình trạng</TableCell>
+                {userRole === "province_officer" && (
+                  <>
+                    <TableCell sx={{ width: "7.5%" }}></TableCell>
+                    <TableCell sx={{ width: "7.5%" }}></TableCell>
+                  </>
+                )}
               </TableRow>
             </TableHead>
 
             <TableBody>
-              {requestList
+              {filteredRequestList
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => (
                   <TableRow hover key={row.id} sx={{ cursor: "pointer" }}>
@@ -145,6 +232,83 @@ const RequestEditList = () => {
                         variant="filled"
                       />
                     </TableCell>
+                    {userRole === "province_officer" && (
+                      <>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            color="success"
+                            startIcon={<DoneIcon />}
+                            sx={{
+                              fontWeight: "bold",
+                            }}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOpenModelConfirmAgree(row._id);
+                            }}
+                            disabled={
+                              row.status === "completed" ||
+                              row.status === "canceled" ||
+                              row.status === "rejected"
+                            }
+                          >
+                            Duyệt
+                          </Button>
+                          <ModalAccept
+                            open={openModalConfirmAgree}
+                            handleDisagree={(event) => {
+                              event.stopPropagation();
+                              setOpenModalConfirmAgree(false);
+                            }}
+                            handleAgree={(event) => {
+                              event.stopPropagation();
+                              handleAgree("completed");
+                            }}
+                            title={"Xác nhận"}
+                            content={
+                              "Bạn chắc chắn muốn duyệt yêu cầu cấp phép này?"
+                            }
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            startIcon={<HighlightOffIcon />}
+                            sx={{
+                              fontWeight: "bold",
+                            }}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOpenModelConfirmDeny(row._id);
+                              // event.stopPropagation();
+                            }}
+                            disabled={
+                              row.status === "completed" ||
+                              row.status === "canceled" ||
+                              row.status === "rejected"
+                            }
+                          >
+                            Loại
+                          </Button>
+                          <ModalAccept
+                            open={openModalConfirmDeny}
+                            handleDisagree={(event) => {
+                              event.stopPropagation();
+                              setOpenModalConfirmDeny(false);
+                            }}
+                            handleAgree={(event) => {
+                              event.stopPropagation();
+                              handleAgree("rejected");
+                            }}
+                            title={"Xác nhận"}
+                            content={
+                              "Bạn chắc chắn muốn loại yêu cầu cấp phép này?"
+                            }
+                          />
+                        </TableCell>
+                      </>
+                    )}
                   </TableRow>
                 ))}
             </TableBody>
