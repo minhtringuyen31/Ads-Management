@@ -27,7 +27,7 @@ const ReportController = {
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
       //console.log("user", user)
-     
+
       if (user.__t === "WardOfficer") {
         const assigned_areaid = user.assigned_areaid._id.toString();
         filteredLists = reports.filter(
@@ -60,7 +60,7 @@ const ReportController = {
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
       //console.log("user", user)
-     
+
       if (user.__t === "WardOfficer") {
         const assigned_areaid = user.assigned_areaid._id.toString();
         filteredLists = reports.filter(
@@ -93,10 +93,7 @@ const ReportController = {
             lat: report.board.location.coordinate.lat,
             lng: report.board.location.coordinate.lng,
           };
-        } else if (
-          report.type === "random" &&
-          report.random
-        ) {
+        } else if (report.type === "random" && report.random) {
           // If the report type is board and there is a board and a location_id, add the coordinate property
           return {
             ...report,
@@ -104,24 +101,24 @@ const ReportController = {
             lng: report.lng,
           };
         }
-        console.log("test", report)
+        console.log("test", report);
         return report;
       });
 
       const groupedLocations = lists.reduce((acc, report) => {
         const key = `${report.lat}_${report.lng}`;
-    
+
         if (!acc[key]) {
-            acc[key] = { lat: report.lat, lng: report.lng, reportList: [] };
+          acc[key] = { lat: report.lat, lng: report.lng, reportList: [] };
         }
-    
+
         acc[key].reportList.push(report);
-    
+
         return acc;
-    }, {});
-    
-    // Chuyển đổi đối tượng các địa điểm đã được nhóm thành một mảng
-    const locations = Object.values(groupedLocations);
+      }, {});
+
+      // Chuyển đổi đối tượng các địa điểm đã được nhóm thành một mảng
+      const locations = Object.values(groupedLocations);
 
       res.json({
         message: "Get " + modelname + " list successfully",
@@ -138,7 +135,6 @@ const ReportController = {
     try {
       const filter = req.body;
       const reports = await ReportService.getAll(filter);
-
 
       res.json({
         message: "Get " + modelname + " list successfully",
@@ -175,55 +171,58 @@ const ReportController = {
 
   create: async (req, res, next) => {
     try {
-      const reportData = JSON.parse(JSON.stringify(req.body))
+      const reportData = JSON.parse(JSON.stringify(req.body));
       // Add by Quang Thanh to handle save record when type = random location
-      if (reportData.type === 'random') {
+      if (reportData.type === "random") {
         const randomData = reportData.random;
         const districtLabelRadomData = randomData.address.suburb;
         const wardLabelRadomData = randomData.address.quarter;
-        let district_id = '';
-        let ward_id = '';
-        // Process get district id and ward id 
+        let district_id = "";
+        let ward_id = "";
+        // Process get district id and ward id
         const districtList = await DistrictService.getAll();
         districtList.forEach((district) => {
-          if (normalizeString(district.label) === normalizeString(districtLabelRadomData)) {
+          if (
+            normalizeString(district.label) ===
+            normalizeString(districtLabelRadomData)
+          ) {
             district_id = district._id;
           }
         });
-        if (district_id && district_id != '') {
+        if (district_id && district_id != "") {
           const wardList = await WardService.getAllByDistrictId(district_id);
           wardList.forEach((ward) => {
-            if (normalizeString(ward.label) === normalizeString(wardLabelRadomData)) {
+            if (
+              normalizeString(ward.label) ===
+              normalizeString(wardLabelRadomData)
+            ) {
               ward_id = ward._id;
             }
           });
         }
-        // Update form 
-        reportData.coordinate = {}
-        reportData.coordinate['lat'] = randomData.lat;
-        reportData.coordinate['lng'] = randomData.lon;
+        // Update form
+        reportData.coordinate = {};
+        reportData.coordinate["lat"] = randomData.lat;
+        reportData.coordinate["lng"] = randomData.lon;
         reportData.random = randomData;
-        if (district_id && district_id != '') {
+        if (district_id && district_id != "") {
           reportData.district = district_id;
         }
-        if (ward_id && ward_id != '') {
+        if (ward_id && ward_id != "") {
           reportData.ward = ward_id;
         }
-
       }
 
       // Handle save changes when type = board or location
-      if (reportData.type === 'board') {
+      if (reportData.type === "board") {
         const board = await AdsBoardService.getById(reportData.board);
         reportData.district = board.location.district._id;
         reportData.ward = board.location.ward._id;
-      } else if (reportData.type === 'location') {
+      } else if (reportData.type === "location") {
         const location = await LocationService.getById(reportData.location);
         console.log(location);
         reportData.district = location.district._id;
         reportData.ward = location.ward._id;
-
-
       }
       // End by Quang Thanh
 
@@ -239,15 +238,19 @@ const ReportController = {
           content: newReport,
           type: "report",
           clientId: newReport.clientId,
-        }
+        };
         const data = await NotificationService.create(newNotification);
         console.log(data);
         // Gửi báo cáo đến cán bộ phường/quận
         if (newReport.ward) {
-          global.io.to(newReport.ward.toString()).emit('new_notification', data);
+          global.io
+            .to(newReport.ward.toString())
+            .emit("new_notification", data);
         }
         if (newReport.district) {
-          global.io.to(newReport.district.toString()).emit('new_notification', data);
+          global.io
+            .to(newReport.district.toString())
+            .emit("new_notification", data);
         }
 
         res.status(201).json({
@@ -266,7 +269,6 @@ const ReportController = {
             );
           });
         }
-
 
         res.json({
           message: "Create location failed",
@@ -317,7 +319,6 @@ const ReportController = {
           data: updatedObject,
         });
       }
-
       if (updateData.operation) {
         const message = await ReportService.getById(updatedObject._id);
         rabbitmq.publishMessage("MAIL", message);

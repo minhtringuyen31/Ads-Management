@@ -10,6 +10,7 @@ const reportFormEnum = {
 export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log(errors)
     return res.status(400).json({ errors: errors.array() });
   }
   next();
@@ -47,9 +48,10 @@ export const createReportValidation = [
   handleValidationErrors,
 ];
 
-export const updateReportValidation = () => [
+export const updateReportValidation = [
   param("id").isMongoId().withMessage("ID báo cáo không hợp lệ"),
   body("status")
+  .optional()
     .isIn(["pending", "completed"])
     .withMessage("Trạng thái không hợp lệ"),
   body("operation.user")

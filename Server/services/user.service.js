@@ -79,17 +79,18 @@ const UserService = {
     async update(id, data) {
         try {
             const user = await User.findById(id);
+            let updatedUser;
             if (user.__t === "DistrictOfficer") {
-                const updatedUser = await DistrictOfficer.findByIdAndUpdate(id, data);
+                updatedUser = await DistrictOfficer.findByIdAndUpdate(id, data);
             }
             else if (user.__t === "WardOfficer") {
-                const updatedUser = await WardOfficer.findByIdAndUpdate(id, data);
+                updatedUser = await WardOfficer.findByIdAndUpdate(id, data);
             }
             else {
-                const updatedUser = await User.findByIdAndUpdate(id, data);
+                updatedUser = await User.findByIdAndUpdate(id, data);
             }
 
-            return user;
+            return updatedUser;
         } catch (error) {
             throw error;
         }
