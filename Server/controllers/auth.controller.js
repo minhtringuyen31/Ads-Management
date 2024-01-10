@@ -92,6 +92,7 @@ const AuthController = {
         otp: otp, 
         expire: 60,
       }
+      await set(email, otp, 60);
       rabbitmq.publishMessage("OTP", message);
       return res.json({
         message: "Request sent successfully"
