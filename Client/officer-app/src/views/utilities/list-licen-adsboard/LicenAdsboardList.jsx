@@ -250,7 +250,7 @@ const LicenAdsboardList = () => {
                         }
                         color={
                           row.status === "pending"
-                            ? "primary"
+                            ? "info"
                             : row.status === "completed"
                             ? "success"
                             : row.status === "canceled"
@@ -259,8 +259,8 @@ const LicenAdsboardList = () => {
                             ? "error"
                             : "default"
                         }
-                        variant="outlined"
-                        sx={{ borderRadius: "12px" }}
+                        variant="filled"
+                        // sx={{ borderRadius: "12px" }}
                       />
                     </TableCell>
                     <TableCell>

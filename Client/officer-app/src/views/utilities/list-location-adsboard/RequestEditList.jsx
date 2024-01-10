@@ -14,6 +14,8 @@ import {
   TablePagination,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import FeaturedVideoOutlinedIcon from "@mui/icons-material/FeaturedVideoOutlined";
 import MainCard from "ui-component/cards/MainCard";
 import Scrollbar from "ui-component/scrollbar/Scrollbar";
 
@@ -36,7 +38,7 @@ const RequestEditList = () => {
       try {
         const response = await axios.get("http://14.225.192.121/editRequests");
         let sortedData = response.data.data.sort(
-          (a, b) => new Date(b.createAt) - new Date(a.createAt)
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
 
         sortedData = sortedData.map((item, index) => ({
@@ -45,12 +47,13 @@ const RequestEditList = () => {
         }));
 
         setRequestList(sortedData);
+        console.log(sortedData);
       } catch (error) {
         console.error("Error fetching request list: ", error);
       }
     };
     fetchData();
-  });
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -95,11 +98,25 @@ const RequestEditList = () => {
                         : ""}
                     </TableCell>
                     <TableCell>
-                      {row.type === "location"
-                        ? "Điểm đặt"
-                        : row.type === "board"
-                        ? "Bảng quảng cáo"
-                        : row.type}
+                      <Chip
+                        label={
+                          row.type === "location"
+                            ? "Điểm đặt"
+                            : row.type === "board"
+                            ? "Bảng quảng cáo"
+                            : row.type
+                        }
+                        variant="outlined"
+                        icon={
+                          row.type === "location" ? (
+                            <LocationOnOutlinedIcon />
+                          ) : row.type === "board" ? (
+                            <FeaturedVideoOutlinedIcon />
+                          ) : (
+                            <LocationOnOutlinedIcon />
+                          )
+                        }
+                      />
                     </TableCell>
                     <TableCell>
                       <Chip
@@ -116,7 +133,7 @@ const RequestEditList = () => {
                         }
                         color={
                           row.status === "pending"
-                            ? "primary"
+                            ? "info"
                             : row.status === "completed"
                             ? "success"
                             : row.status === "canceled"
@@ -125,8 +142,7 @@ const RequestEditList = () => {
                             ? "error"
                             : "default"
                         }
-                        variant="outlined"
-                        sx={{ borderRadius: "12px" }}
+                        variant="filled"
                       />
                     </TableCell>
                   </TableRow>

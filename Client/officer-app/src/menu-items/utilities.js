@@ -4,7 +4,7 @@ import {
   IconShadow,
   IconTypography,
   IconWindmill,
-  IconLocation,
+  IconMapPin,
 } from '@tabler/icons';
 
 // constant
@@ -13,7 +13,7 @@ const icons = {
   IconPalette,
   IconShadow,
   IconWindmill,
-  IconLocation,
+  IconMapPin,
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -45,7 +45,7 @@ const utilities = {
         title: 'Danh sách điểm đặt',
         type: 'item',
         url: '/utils/locations',
-        icon: icons.IconLocation,
+        icon: icons.IconMapPin,
         breadcrumbs: false,
       },
       {
@@ -100,7 +100,7 @@ const utilities = {
         title: 'Danh sách điểm đặt',
         type: 'item',
         url: '/utils/locations',
-        icon: icons.IconTypography,
+        icon: icons.IconMapPin,
         breadcrumbs: false,
       },
       {
@@ -147,7 +147,7 @@ const utilities = {
         title: 'Danh sách điểm đặt',
         type: 'item',
         url: '/utils/locations',
-        icon: icons.IconTypography,
+        icon: icons.IconMapPin,
         breadcrumbs: false,
       },
       {

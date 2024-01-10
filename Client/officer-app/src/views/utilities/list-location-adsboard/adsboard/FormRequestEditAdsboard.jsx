@@ -156,6 +156,8 @@ const FormRequestEditAdsboard = () => {
         adsboardData.contract_start_date ?? dayjs("01/01/2021").toISOString(),
       end_date:
         adsboardData.contract_end_date ?? dayjs("01/01/2021").toISOString(),
+      reason: "",
+      type: "board",
     },
     onSubmit: async (values, { resetForm }) => {
       values.id = adsboardData._id || "";
@@ -168,13 +170,24 @@ const FormRequestEditAdsboard = () => {
       if (values.width === 0) {
         values.width = adsboardData.width;
       }
-      if (values.start_date === dayjs("01/01/2021")) {
-        values.start_date = dayjs(
-          adsboardData.contract_start_date
-        ).toISOString();
+      if (values.start_date) {
+        // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
+        if (dayjs.isDayjs(values.start_date)) {
+          values.start_date = values.start_date.toISOString();
+        } else if (values.start_date === dayjs("01/01/2021").toISOString()) {
+          // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
+          values.start_date = adsboardData.contract_start_date;
+        }
       }
-      if (values.end_date === dayjs("01/01/2021")) {
-        values.end_date = adsboardData.contract_end_date;
+
+      if (values.end_date) {
+        // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
+        if (dayjs.isDayjs(values.end_date)) {
+          values.end_date = values.end_date.toISOString();
+        } else if (values.end_date === dayjs("01/01/2021").toISOString()) {
+          // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
+          values.end_date = adsboardData.contract_end_date;
+        }
       }
 
       console.log("Data submit: ", values);
@@ -263,7 +276,6 @@ const FormRequestEditAdsboard = () => {
                         formik.setFieldValue("height", e.target.value);
                       }}
                       required
-                      // id="adsboardInfo.height"
                       label="Chiều cao"
                       defaultValue=""
                       style={{ width: "50%" }}
@@ -278,7 +290,6 @@ const FormRequestEditAdsboard = () => {
                         setWidth(e.target.value);
                         formik.setFieldValue("width", e.target.value);
                       }}
-                      // id="adsboardInfo.width"
                       label="Chiều rộng"
                       defaultValue=""
                       style={{ width: "50%" }}
@@ -303,15 +314,8 @@ const FormRequestEditAdsboard = () => {
                         format="DD/MM/YYYY"
                         onChange={(newValue) => {
                           setStartDate(newValue);
-                          formik.setFieldValue(
-                            "start_date",
-                            newValue.toISOString()
-                          );
+                          formik.setFieldValue("start_date", newValue);
                         }}
-                        // id="adsboardInfo.start_date"
-                        // onChange={(newValue) => {
-                        //   setStartDate(newValue);
-                        // }}
                         value={startDate}
                       />
                     </LocalizationProvider>
@@ -332,10 +336,30 @@ const FormRequestEditAdsboard = () => {
                           );
                         }}
                         value={endDate}
-                        // id="adsboardInfo.end_date"
                       />
                     </LocalizationProvider>
                   </Box>
+
+                  <TextareaAutosize
+                    minRows={5}
+                    aria-label="Lí do"
+                    placeholder="Lí do chỉnh sửa bảng quảng cáo"
+                    onChange={(e) =>
+                      formik.setFieldValue("reason", e.target.value)
+                    }
+                    style={{
+                      maxWidth: "100%",
+                      minWidth: "50%",
+
+                      fontFamily: "'Roboto',sans-serif",
+                      border: "1px solid #ccc",
+                      borderRadius: "0.75rem",
+                      backgroundColor: "#f8fafc",
+                      padding: "1rem",
+                      fontSize: "14px",
+                    }}
+                    
+                  />
                 </Box>
               </Box>
             </Box>
