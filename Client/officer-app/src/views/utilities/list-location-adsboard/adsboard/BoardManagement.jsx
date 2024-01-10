@@ -13,6 +13,7 @@ import {
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import Scrollbar from "ui-component/scrollbar/Scrollbar";
 import "../styles.scss";
@@ -29,6 +30,10 @@ const BoardManagement = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleNewLicense = () => {
+    navigate("/utils/authorize_request/create_form");
+  };
 
   const handleReqEditAdsboard = (event, adsboardID) => {
     event.stopPropagation();
@@ -77,14 +82,29 @@ const BoardManagement = () => {
     setPage(0);
   };
 
-  //adsboard/request_edit_form
-
   console.log("Data adsboard: ", filteredData);
 
   return (
     <MainCard title="Quản lý bảng quảng cáo">
       <Scrollbar>
         <Box className="data-grid-container">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "0.75rem",
+            }}
+          >
+            <span></span> {/* Phần trống bên trái */}
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<AddIcon />}
+              onClick={handleNewLicense}
+            >
+              Cấp phép mới
+            </Button>
+          </Box>
           <Table>
             <TableHead
               sx={{
@@ -92,21 +112,25 @@ const BoardManagement = () => {
               }}
             >
               <TableRow>
-                <TableCell sx={{ fontWeight: "bold" }}>STT</TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "35%" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "5%" }}>
+                  STT
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", width: "30%" }}>
                   Địa chỉ
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
                   Loại bảng quảng cáo
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>Kích thước</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "10%" }}>
+                  Kích thước
+                </TableCell>
+                <TableCell sx={{ fontWeight: "bold", width: "11.9%" }}>
                   Bắt đầu hợp đồng
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "11.9%" }}>
                   Kết thúc hợp đồng
                 </TableCell>
-                <TableCell></TableCell>
+                <TableCell sx={{ width: "17.25%" }}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -21,12 +21,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import Scrollbar from "ui-component/scrollbar/Scrollbar";
 
-const styleBox = {
-  display: "flex",
-  justifyContent: "space-between",
-  marginBottom: "0.75rem",
-};
-
 const LicenAdsboardList = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -169,7 +163,13 @@ const LicenAdsboardList = () => {
       )}
       <Scrollbar>
         <Box>
-          <Box style={styleBox}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "0.75rem",
+            }}
+          >
             <span></span> {/* Phần trống bên trái */}
             <Button
               variant="contained"
