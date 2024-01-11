@@ -33,21 +33,21 @@ const imageList = [
 const NoticeDetailModal = ({ reportId, isModalOpen, handleCloseModal }) => {
   const [report, setReport] = useState({});
 
-  //   useEffect(() => {
-  //     async function fetchData() {
-  //       try {
-  //         console.log("ReportId: ", reportId);
-  //         const response = await axiosClient.get(`report${reportId}`);
-  //         if (response.status == 200) {
-  //           console.log("LocationDetail: ", response.data);
-  //           setReport(response.data.data);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //     fetchData();
-  //   });
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        console.log("ReportId: ", reportId);
+        const response = await axiosClient.get(`report${reportId}`);
+        if (response.status == 200) {
+          console.log("Report Detail: ", response.data);
+          setReport(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  });
 
   return (
     <Modal

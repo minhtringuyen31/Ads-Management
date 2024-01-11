@@ -10,6 +10,8 @@ import PropTypes from "prop-types";
 import ReportIcon from "@mui/icons-material/Report";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import ReportForm from "../Report/ReportForm";
+import MarkerClusterGroup from "react-leaflet-cluster";
+
 // import dotenv from "dotenv";
 
 // dotenv.config();
@@ -293,69 +295,16 @@ const Map = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-
-          {boardDisplayMode
-            ? locationList.map((location) => (
-                <Marker
-                  position={location.coordinate}
-                  key={location._id}
-                  icon={renderIcon(location.is_planned, location.adsBoardSize)}
-                >
-                  <Popup>
-                    <Typography fontWeight="bold">
-                      {location.ads_type.label}
-                    </Typography>
-                    <Typography>{location.location_type.label}</Typography>
-                    <Typography>
-                      {location.address}, {location.ward.label},{" "}
-                      {location.district.label}
-                    </Typography>
-
-                    <Typography fontWeight="bold" fontStyle="italic">
-                      {location.is_planned ? "ĐÃ QUY HOẠCH" : "CHƯA QUY HOẠCH"}
-                    </Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      justifyContent="start"
-                    >
-                      <Button
-                        variant="outlined"
-                        startIcon={<FindInPageIcon />}
-                        sx={{
-                          fontWeight: "bold",
-                          marginRight: 2,
-                        }}
-                        onClick={() => handleDetailBtnClicked(location._id)}
-                      >
-                        Chi tiết
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        startIcon={<ReportIcon />}
-                        color="error"
-                        sx={{
-                          fontWeight: "bold",
-                        }}
-                        onClick={() => handleReportBtnClicked(location)}
-                      >
-                        Báo cáo
-                      </Button>
-                    </Box>
-                  </Popup>
-                </Marker>
-              ))
-            : locationList
-                .filter((location) => location.is_planned === true)
-                .map((location) => (
+          <MarkerClusterGroup>
+            {boardDisplayMode
+              ? locationList.map((location) => (
                   <Marker
                     position={location.coordinate}
                     key={location._id}
-                    icon={
-                      location.adsBoardSize
-                        ? planedMarkerIcon
-                        : secondaryPlanedMarkerIcon
-                    }
+                    icon={renderIcon(
+                      location.is_planned,
+                      location.adsBoardSize,
+                    )}
                   >
                     <Popup>
                       <Typography fontWeight="bold">
@@ -372,15 +321,74 @@ const Map = ({
                           ? "ĐÃ QUY HOẠCH"
                           : "CHƯA QUY HOẠCH"}
                       </Typography>
-                      <Button
-                        variant="outlined"
-                        onClick={() => handleDetailBtnClicked(location._id)}
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        justifyContent="start"
                       >
-                        Chi tiết
-                      </Button>
+                        <Button
+                          variant="outlined"
+                          startIcon={<FindInPageIcon />}
+                          sx={{
+                            fontWeight: "bold",
+                            marginRight: 2,
+                          }}
+                          onClick={() => handleDetailBtnClicked(location._id)}
+                        >
+                          Chi tiết
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          startIcon={<ReportIcon />}
+                          color="error"
+                          sx={{
+                            fontWeight: "bold",
+                          }}
+                          onClick={() => handleReportBtnClicked(location)}
+                        >
+                          Báo cáo
+                        </Button>
+                      </Box>
                     </Popup>
                   </Marker>
-                ))}
+                ))
+              : locationList
+                  .filter((location) => location.is_planned === true)
+                  .map((location) => (
+                    <Marker
+                      position={location.coordinate}
+                      key={location._id}
+                      icon={
+                        location.adsBoardSize
+                          ? planedMarkerIcon
+                          : secondaryPlanedMarkerIcon
+                      }
+                    >
+                      <Popup>
+                        <Typography fontWeight="bold">
+                          {location.ads_type.label}
+                        </Typography>
+                        <Typography>{location.location_type.label}</Typography>
+                        <Typography>
+                          {location.address}, {location.ward.label},{" "}
+                          {location.district.label}
+                        </Typography>
+
+                        <Typography fontWeight="bold" fontStyle="italic">
+                          {location.is_planned
+                            ? "ĐÃ QUY HOẠCH"
+                            : "CHƯA QUY HOẠCH"}
+                        </Typography>
+                        <Button
+                          variant="outlined"
+                          onClick={() => handleDetailBtnClicked(location._id)}
+                        >
+                          Chi tiết
+                        </Button>
+                      </Popup>
+                    </Marker>
+                  ))}
+          </MarkerClusterGroup>
           <LocationMarker
             setLocationInfo={setDrawerContent}
             handleButtonClicked={handleButtonClicked}

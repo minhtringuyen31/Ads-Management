@@ -39,6 +39,7 @@ const initialValues = {
   phoneNumber: "093773333",
   reportType: "",
   content: "",
+  img: [],
 };
 
 const ReportForm = ({ agent, type, handleCloseModal }) => {
@@ -52,6 +53,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
    * useRef
    */
   const fileInputRef = useRef(null);
+  const formikRef = useRef(null);
 
   /**
    * @return {void}
@@ -74,6 +76,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
       report_form: values.reportType,
       report_content: values.content,
       type: type,
+      img: values.img,
     };
     switch (type) {
       case "location":
@@ -122,6 +125,14 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
       };
       fileReader.readAsDataURL(selectedFile);
     }
+
+    const files = Array.from(event.target.files);
+    const mappedFiles = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    console.log("mapped file: ", formikRef);
+    formikRef.current.setFieldValue("img", mappedFiles);
   };
 
   function onChangeReCaptcha(value) {
@@ -157,6 +168,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
         initialValues={initialValues}
         validationSchema={validateSchema}
         onSubmit={handleSubmitReportForm}
+        innerRef={formikRef}
       >
         {({
           errors,
@@ -165,6 +177,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
           handleSubmit,
           touched,
           values,
+          setFieldValue,
         }) => (
           <form
             noValidate
