@@ -73,6 +73,10 @@ const CreateAccount = Loadable(
   lazy(() => import("../views/utilities/account/CreateAccount")),
 );
 
+const AssignRole = Loadable(
+  lazy(() => import("../views/utilities/account/AssignRole")),
+);
+
 const MainRoutes = {
   path: "/",
   element: <MainLayout />,
@@ -165,6 +169,10 @@ const MainRoutes = {
         {
           path: "create_account",
           element: <CreateAccount />,
+        },
+        {
+          path: "assign_role",
+          element: <AssignRole />,
         },
       ],
     },
