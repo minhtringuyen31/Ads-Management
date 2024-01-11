@@ -1,6 +1,4 @@
 import winston from 'winston';
-//import logrotateStream from 'logrotate-stream';
-import path from 'path';
 import fs from 'fs';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import moment from "moment-timezone";
@@ -9,7 +7,6 @@ const logDirectory = "./logs"
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
-
 const logger = winston.createLogger({
     levels: {
         error: 0,
@@ -21,8 +18,12 @@ const logger = winston.createLogger({
     },
     format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
         winston.format.printf(
             (info) => {
+                if (info instanceof Error) {
+                    return `${info.timestamp} [${info.label}] ${info.level}: ${info.message} ${info.stack}`;
+                }
                 const formattedTimestamp = moment(info.timestamp).tz('Asia/Ho_Chi_Minh').format('ddd, DD MMM YYYY HH:mm:ss');
                 console.log(formattedTimestamp)
                 return `timestamp: ${formattedTimestamp}| level: ${info.level}| ${info.message}`
@@ -30,12 +31,27 @@ const logger = winston.createLogger({
         )
     ),
     transports: [
+        // Console transport
         new winston.transports.Console(),
+
+        // Access log file transport
         new DailyRotateFile({
-            level: 'info',  // Xác định mức log cho transport này
-            frequency: '24h', // Xác định tần suất tạo file log mới
+            level: 'info',
+            frequency: '24h',
             dirname: logDirectory,
             filename: 'access-%DATE%.log',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: false,
+            maxSize: '20m',
+            maxFiles: '14d'
+        }),
+
+        // Error log file transport
+        new DailyRotateFile({
+            level: 'error',
+            frequency: '24h',
+            dirname: logDirectory,
+            filename: 'error-%DATE%.log',
             datePattern: 'YYYY-MM-DD',
             zippedArchive: false,
             maxSize: '20m',
@@ -43,10 +59,12 @@ const logger = winston.createLogger({
         })
     ],
 });
-// Tạo một stream cho morgan
+
+// Stream for Morgan
 logger.stream = {
     write: function (message) {
         logger.info(message.trim());
     }
 };
+
 export default logger;
