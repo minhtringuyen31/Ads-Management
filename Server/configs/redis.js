@@ -21,29 +21,37 @@ client2.on("error", (err) => {
   console.error("Redis connection error:", err);
 });
 
-export const set = (key, value, expireInSeconds, callback) => {
-  // Sử dụng SETEX để thiết lập giá trị và thời gian hết hạn
-  client2.setex(key, expireInSeconds, value, (err, reply) => {
-    if (err) {
-      console.error(err);
-      callback(err, null);
-    } else {
-      console.log(`Set ${key}:`, reply);
-      callback(null, reply);
-    }
-  });
+export const set = async (key, value, expireInSeconds) => {
+  try {
+    const reply = await client2.setex(key, expireInSeconds, value);
+    console.log(`Set ${key}:`, reply);
+    return reply;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
-export const get = (key, callback) => {
-  client2.get(key, (err, reply) => {
-    if (err) {
-      console.error("Redis GET error:", err);
-      callback(err, null);
-    } else {
-      console.log("Redis GET result:", reply);
-      callback(null, reply);
-    }
-  });
+export const get = async (key) => {
+  try {
+    const reply = await client2.get(key);
+    console.log(`Get ${key}:`, reply);
+    return reply;
+  } catch (err) {
+    console.error("Redis GET error:", err);
+    throw err;
+  }
+};
+
+export const del = async (key) => {
+  try {
+    const reply = await client2.del(key);
+    console.log(`Delete ${key}:`, reply);
+    return reply;
+  } catch (err) {
+    console.error("Redis DELETE error:", err);
+    throw err;
+  }
 };
 
 // const client = redis.createClient({
