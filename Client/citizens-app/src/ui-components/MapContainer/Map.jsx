@@ -107,6 +107,7 @@ const LocationMarker = ({
   });
 
   useEffect(() => {
+    console.log("Search Location: ", searchLocation);
     if (Object.keys(searchLocation).length !== 0) {
       setType("SEARCH");
       map.locate();
@@ -114,6 +115,7 @@ const LocationMarker = ({
   }, [searchLocation]);
 
   useEffect(() => {
+    console.log("Current Location: ", currentLocation);
     if (Object.keys(currentLocation).length !== 0) {
       setType("CURRENT");
       map.locate();
