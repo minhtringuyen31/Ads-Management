@@ -12,10 +12,10 @@ router.get('/adboardsByLocation/:id', AdsBoardController.getAllAdBoardByLocation
 router.get('/adsboard/:id', AdsBoardController.getDetail);
 
 // // Tạo mới một Location
-router.post('/adsboard', AdsBoardController.create);
+router.post('/adsboard', uploadCloud.array('image'), AdsBoardController.create);
 
 // // Cập nhật một Location bằng ID
-router.put('/adsboard/:id', AdsBoardController.update);
+router.put('/adsboard/:id', uploadCloud.array('image'), AdsBoardController.update);
 
 // // Xóa một Location bằng ID
 router.delete('/adsboard/:id', AdsBoardController.delete);
