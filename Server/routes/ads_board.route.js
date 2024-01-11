@@ -1,6 +1,6 @@
 import express from 'express';
 import AdsBoardController from '../controllers/adsboard.controller.js';
-
+import uploadCloud from '../middlewares/uploader.js';
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
