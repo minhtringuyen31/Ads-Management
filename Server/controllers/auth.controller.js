@@ -146,6 +146,27 @@ const AuthController = {
       return res.status(500).json({message: "Internal Server Error"});
     }
   },
+  changePassword: async(req, res, next) => {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      //const user = await UserService.getById(req.user.userId);
+      const user = await User.findOne({
+        _id: req.user.userId,
+        password: oldPassword,
+      });
+      console.log(user)
+      if(!user){
+        return res.status(404).json({message: "Old password is incorrect"});
+      }
+
+      const data = await UserService.update(user._id, {password: newPassword})
+      return res.status(200).json({ message: "Password changed successfully"});
+    }
+    catch(error){
+      console.log(error)
+      return res.status(500).json({message: "Internal Server Error"});
+    }
+  },
 }
 
 export default AuthController;
