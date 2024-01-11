@@ -156,7 +156,7 @@ const AuthController = {
       });
       console.log(user)
       if(!user){
-        return res.status(404).json({message: "Old password is incorrect"});
+        return res.status(400).json({message: "Old password is incorrect"});
       }
 
       const data = await UserService.update(user._id, {password: newPassword})
