@@ -1,6 +1,8 @@
 import createError from "http-errors";
 import AdsBoardService from "../services/ads_board.service.js";
 import { extractPublicId } from 'cloudinary-build-url'
+import { v2 as cloudinary } from 'cloudinary';
+
 const AdsBoardController = {
     getAll: async (req, res, next) => {
         try {
