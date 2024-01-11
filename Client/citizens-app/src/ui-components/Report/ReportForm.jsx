@@ -39,7 +39,7 @@ const initialValues = {
   phoneNumber: "093773333",
   reportType: "",
   content: "",
-  img: [],
+  image: [],
 };
 
 const ReportForm = ({ agent, type, handleCloseModal }) => {
@@ -76,7 +76,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
       report_form: values.reportType,
       report_content: values.content,
       type: type,
-      img: values.img,
+      image: values.image,
     };
     switch (type) {
       case "location":
