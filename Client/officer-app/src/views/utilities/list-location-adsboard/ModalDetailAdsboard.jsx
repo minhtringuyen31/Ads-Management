@@ -57,7 +57,9 @@ const ModalDetail = ({ open, handleClose, adDetail }) => {
                   </Box>
                   <Box marginY="5px">
                     <Typography fontSize="16px" color="#70757a">
-                      {adDetail.location.address}
+                      {adDetail.location === null
+                        ? "Không xác định điểm đặt"
+                        : adDetail.location.address}
                     </Typography>
                   </Box>
                   <Box
@@ -78,7 +80,9 @@ const ModalDetail = ({ open, handleClose, adDetail }) => {
                         Hình thức:{" "}
                       </Typography>
                       <Typography fontWeight="bold">
-                        {adDetail.location.ads_type.label}
+                        {adDetail.location === null
+                          ? "Không xác định"
+                          : adDetail.location.ads_type.label}
                       </Typography>
                     </Box>
                     <Box display="flex" flexDirection="row" flexWrap="wrap">
@@ -86,7 +90,9 @@ const ModalDetail = ({ open, handleClose, adDetail }) => {
                         Phân loại:
                       </Typography>
                       <Typography fontWeight="bold" display="inline">
-                        {adDetail.location.location_type.label}
+                        {adDetail.location === null
+                          ? "Không xác định"
+                          : adDetail.location.location_type.label}
                       </Typography>
                     </Box>
 

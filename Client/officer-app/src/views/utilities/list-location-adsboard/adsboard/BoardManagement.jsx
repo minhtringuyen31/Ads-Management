@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { GetUser } from "store/auth/auth-config";
 import MainCard from "ui-component/cards/MainCard";
 import TablePagination from "@mui/material/TablePagination";
 import {
@@ -14,13 +15,15 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useTheme } from "@mui/material/styles";
-import Scrollbar from "ui-component/scrollbar/Scrollbar";
 import "../styles.scss";
 
 import Modal from "../ModalDetailAdsboard";
+import ModalAccept from "views/utilities/list-licen-adsboard/ModalAccept";
 
 const BoardManagement = () => {
+  const userRole = GetUser().userRole;
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -33,6 +36,10 @@ const BoardManagement = () => {
 
   const handleNewLicense = () => {
     navigate("/utils/authorize_request/create_form");
+  };
+
+  const handleNewAdsboard = () => {
+    navigate("/utils/adsboard/new_adsboard");
   };
 
   const handleReqEditAdsboard = (event, adsboardID) => {
@@ -86,8 +93,26 @@ const BoardManagement = () => {
 
   return (
     <MainCard title="Quản lý bảng quảng cáo">
-      <Scrollbar>
-        <Box className="data-grid-container">
+      <Box className="data-grid-container">
+        {userRole === "province_officer" ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "0.75rem",
+            }}
+          >
+            <span></span> {/* Phần trống bên trái */}
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<AddIcon />}
+              onClick={handleNewAdsboard}
+            >
+              Bảng quảng cáo mới
+            </Button>
+          </Box>
+        ) : (
           <Box
             sx={{
               display: "flex",
@@ -105,52 +130,138 @@ const BoardManagement = () => {
               Cấp phép mới
             </Button>
           </Box>
-          <Table>
-            <TableHead
-              sx={{
-                backgroundColor: theme.palette.primary.light,
-              }}
-            >
-              <TableRow>
-                <TableCell sx={{ fontWeight: "bold", width: "5%" }}>
-                  STT
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "30%" }}>
-                  Địa chỉ
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
-                  Loại bảng quảng cáo
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "10%" }}>
-                  Kích thước
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "11.9%" }}>
-                  Bắt đầu hợp đồng
-                </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "11.9%" }}>
-                  Kết thúc hợp đồng
-                </TableCell>
+        )}
+
+        <Table>
+          <TableHead
+            sx={{
+              backgroundColor: theme.palette.primary.light,
+            }}
+          >
+            <TableRow>
+              <TableCell sx={{ fontWeight: "bold", width: "5%" }}>
+                STT
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "30%" }}>
+                Địa chỉ
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
+                Loại bảng quảng cáo
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "10%" }}>
+                Kích thước
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "11.9%" }}>
+                Bắt đầu hợp đồng
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bold", width: "11.9%" }}>
+                Kết thúc hợp đồng
+              </TableCell>
+              {userRole === "province_officer" ? (
+                <>
+                  <TableCell sx={{ width: "7.5%" }}></TableCell>
+                  <TableCell sx={{ width: "7.5%" }}></TableCell>
+                </>
+              ) : (
                 <TableCell sx={{ width: "17.25%" }}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredData
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <TableRow
-                    key={row.id}
-                    onClick={() => handleRowClick(row)}
-                    hover
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell>{row.id}</TableCell>
-                    <TableCell>{row.location.address}</TableCell>
-                    <TableCell>{row.adsboard_type.label}</TableCell>
-                    <TableCell>
-                      {row.height}m x {row.width}m
-                    </TableCell>
-                    <TableCell>{row.contract_start_date}</TableCell>
-                    <TableCell>{row.contract_end_date}</TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredData
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => (
+                <TableRow
+                  key={row.id}
+                  onClick={() => handleRowClick(row)}
+                  hover
+                  sx={{ cursor: "pointer" }}
+                >
+                  <TableCell>{row.id}</TableCell>
+
+                  <TableCell>
+                    {row.location === null
+                      ? "Không xác định điểm đặt"
+                      : row.location.address}
+                  </TableCell>
+
+                  <TableCell>{row.adsboard_type.label}</TableCell>
+                  <TableCell>
+                    {row.height}m x {row.width}m
+                  </TableCell>
+                  <TableCell>{row.contract_start_date}</TableCell>
+                  <TableCell>{row.contract_end_date}</TableCell>
+                  {userRole === "province_officer" ? (
+                    <>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="success"
+                          // startIcon={<EditIcon />}
+                          sx={{
+                            fontWeight: "bold",
+                          }}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            // handleOpenModelConfirmAgree(row._id);
+                          }}
+                          // disabled={
+                          //   row.status === "completed" ||
+                          //   row.status === "canceled" ||
+                          //   row.status === "rejected"
+                          // }
+                        >
+                          <EditIcon />
+                        </Button>
+                        {/* <ModalAccept
+                            open={openModalConfirmAgree}
+                            handleDisagree={(event) => {
+                              event.stopPropagation();
+                              setOpenModalConfirmAgree(false);
+                            }}
+                            handleAgree={(event) => {
+                              event.stopPropagation();
+                              handleAgree("completed");
+                            }}
+                            title={"Xác nhận"}
+                            content={
+                              "Bạn chắc chắn muốn duyệt yêu cầu cấp phép này?"
+                            }
+                          /> */}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          // startIcon={<DeleteForeverIcon />}
+                          sx={{
+                            fontWeight: "bold",
+                          }}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            // handleOpenModalConfirmDelete(row._id);
+                            // event.stopPropagation();
+                          }}
+                          // disabled={isLoading}
+                        >
+                          <DeleteForeverIcon />
+                        </Button>
+                        <ModalAccept
+                          // open={openModalConfirmDelete}
+                          // handleDisagree={(event) => {
+                          //   event.stopPropagation();
+                          //   handleCloseModalConfirmDelete();
+                          // }}
+                          // handleAgree={(event) => {
+                          //   event.stopPropagation();
+                          //   handleDelete();
+                          // }}
+                          title={"Xác nhận"}
+                          content={"Bạn chắc chắn muốn xóa điểm đặt này?"}
+                        />
+                      </TableCell>
+                    </>
+                  ) : (
                     <TableCell>
                       <Button
                         endIcon={<EditIcon />}
@@ -160,21 +271,12 @@ const BoardManagement = () => {
                         Yêu cầu chỉnh sửa
                       </Button>
                     </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </Box>
-      </Scrollbar>
-
-      {selectedRow && (
-        <Modal
-          open={openModal}
-          handleClose={() => setOpenModal(false)}
-          adDetail={selectedRow}
-        />
-      )}
-
+                  )}
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -197,6 +299,14 @@ const BoardManagement = () => {
           }}
         />
       </Box>
+
+      {selectedRow && (
+        <Modal
+          open={openModal}
+          handleClose={() => setOpenModal(false)}
+          adDetail={selectedRow}
+        />
+      )}
     </MainCard>
   );
 };

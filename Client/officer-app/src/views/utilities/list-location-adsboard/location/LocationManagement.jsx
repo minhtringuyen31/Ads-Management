@@ -172,7 +172,7 @@ const LocationManagement = () => {
                 endIcon={<AddIcon />}
                 // onClick={handleNewLicense}
               >
-                Thêm điểm đặt mới
+                Điểm đặt mới
               </Button>
             </Box>
           )}

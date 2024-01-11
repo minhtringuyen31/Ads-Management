@@ -330,10 +330,7 @@ const FormRequestEditAdsboard = () => {
                         format="DD/MM/YYYY"
                         onChange={(newValue) => {
                           setEndDate(newValue);
-                          formik.setFieldValue(
-                            "end_date",
-                            newValue.toISOString()
-                          );
+                          formik.setFieldValue("end_date", newValue);
                         }}
                         value={endDate}
                       />
@@ -358,7 +355,6 @@ const FormRequestEditAdsboard = () => {
                       padding: "1rem",
                       fontSize: "14px",
                     }}
-                    
                   />
                 </Box>
               </Box>

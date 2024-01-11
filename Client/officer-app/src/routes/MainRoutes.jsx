@@ -32,13 +32,20 @@ const BoardManagement = Loadable(
     import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
   )
 );
+const AddAdsboardProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/adsboard/AddAdsboardProvince"
+    )
+  )
+);
 const RequestEditAdsboard = Loadable(
-  lazy(() => 
+  lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/adsboard/FormRequestEditAdsboard"
     )
   )
-)
+);
 
 const LicenAdsboardList = Loadable(
   lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
@@ -103,6 +110,10 @@ const MainRoutes = {
         {
           path: "adsboard/request_edit_form",
           element: <RequestEditAdsboard />,
+        },
+        {
+          path: "adsboard/new_adsboard",
+          element: <AddAdsboardProvince />,
         },
         {
           path: "edit_requests",

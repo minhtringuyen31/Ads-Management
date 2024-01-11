@@ -180,9 +180,9 @@ const RequestEditList = () => {
                     <TableCell>
                       {row.type === "location"
                         ? row.newInformation.address
-                        : row.type === "board"
+                        : row.type === "board" && row.newInformation.location
                         ? row.newInformation.location.address
-                        : ""}
+                        : "Không xác định điểm đặt"}
                     </TableCell>
                     <TableCell>
                       <Chip
