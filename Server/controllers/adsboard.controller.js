@@ -1,6 +1,9 @@
 import createError from "http-errors";
 import AdsBoardService from "../services/ads_board.service.js";
+import CompanyService from "../services/company.service.js";
 import { extractPublicId } from 'cloudinary-build-url'
+import { v2 as cloudinary } from 'cloudinary';
+
 const AdsBoardController = {
     getAll: async (req, res, next) => {
         try {
@@ -45,7 +48,10 @@ const AdsBoardController = {
             if (files) {
                 data.image = files.map(file => file.path);
             }
+            const companySave = await CompanyService.create(data.company);
+            data.company = companySave._id;
             const location = await AdsBoardService.create(data);
+
             if (!location) {
                 if (req.files) {
                     req.files.forEach(file => {
