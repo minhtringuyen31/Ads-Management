@@ -71,6 +71,49 @@ const LocationController = {
             next(createError.InternalServerError(error.message));
         }
     },
+    getAll_citizen: async (req, res, next) => {
+        try {
+            const { filters, sort } = req.query;
+
+            // Initialize default values if filters or sort are null or undefined
+            const filtersValue = filters ? createMongooseQuery(fromJson(filters)) : {};
+            const sortValue = sort ? createMongooseSortObject(fromJson(sort)) : {};
+
+            console.log(filtersValue, sortValue);
+
+            let locations = await LocationService.getAll(filtersValue, sortValue);
+            if (!locations) {
+                return next(createError.BadRequest("Location list not found"));
+            }
+            // for(const location of locations){
+            //     const boards = await AdsBoardService.getAllAdBoardbyLocation(location._id.toString());
+            //     console.log(boards.length)
+            //     location.adsBoardsize = boards.length;
+            // }
+            let filteredLists = locations;
+            // 
+
+            const list = filteredLists.map(async (location) => {
+                const boards = await AdsBoardService.getAllAdBoardbyLocation(location._id.toString());
+                console.log(boards)
+                return {
+                    ...location.toObject(),
+                    adsBoardSize: boards.length
+                }
+            })
+            const fresult = await Promise.all(list);
+            res.json({
+                message: "Get location list successfully",
+                status: 200,
+                size_all: locations.length,
+                size: fresult.length,
+                data: fresult
+            });
+        } catch (error) {
+            console.log(console.log(error))
+            next(createError.InternalServerError(error.message));
+        }
+    },
     revereGeocode: async (req, res, next) => {
         const lat = req.query.lat; // Lấy giá trị của tham số 'lat' từ URL
         const lng = req.query.lng; // Lấy giá trị của tham số 'lng' từ URL
