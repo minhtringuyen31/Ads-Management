@@ -17,6 +17,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import axiosClient from "../../axiosConfig/axiosClient";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 /**
  * Validate Report Form Schema
@@ -93,11 +94,46 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
         return <div>Not found area</div>;
     }
     console.log("Post: ", postBody);
+
     try {
-      const response = await axiosClient.post(
-        "report",
-        JSON.stringify(postBody),
+      const formData = new FormData();
+      formData.append("username", values.fullname);
+      formData.append("email", values.email);
+      formData.append("phone_number", values.phoneNumber);
+      formData.append("report_form", values.reportType);
+      formData.append("report_content", values.content);
+      formData.append("type", type);
+      console.log("Image: ", values.image);
+      values.image.forEach((file) => {
+        console.log("File: ", file);
+        formData.append("image", file);
+      });
+      switch (type) {
+        case "location":
+          formData.append("location", agent);
+          break;
+        case "board":
+          formData.append("board", agent);
+          break;
+        case "random":
+          formData.random("random", agent);
+          break;
+        default:
+          console.log("Not found area");
+          return <div>Not found area</div>;
+      }
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+
+        if (pair[0] === "image") {
+          console.log("Image information: ", pair[1]);
+        }
+      }
+      const response = await axios.post(
+        "http://14.225.192.121/report",
+        formData,
       );
+      console.log("Reponse", response);
       if (response.status == 201) {
         console.log("New Report: ", response);
         const savedReports = JSON.parse(localStorage.getItem("reports")) || [];
@@ -132,7 +168,8 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
       preview: URL.createObjectURL(file),
     }));
     console.log("mapped file: ", formikRef);
-    formikRef.current.setFieldValue("img", mappedFiles);
+    const imageValues = mappedFiles.map((image) => image.file);
+    formikRef.current.setFieldValue("image", imageValues);
   };
 
   function onChangeReCaptcha(value) {
@@ -182,6 +219,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
           <form
             noValidate
             onSubmit={handleSubmit}
+            encType="multipart/form-data"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -343,7 +381,7 @@ const ReportForm = ({ agent, type, handleCloseModal }) => {
                 id="file-input"
                 ref={fileInputRef}
                 type="file"
-                accept="image/pn, image/jpg"
+                accept="image/png, image/jpg"
                 hidden
                 onChange={handleBrowseImageChange}
                 multiple

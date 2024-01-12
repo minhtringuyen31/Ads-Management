@@ -30,25 +30,7 @@ const imageList = [
   },
 ];
 
-const NoticeDetailModal = ({ reportId, isModalOpen, handleCloseModal }) => {
-  const [report, setReport] = useState({});
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        console.log("ReportId: ", reportId);
-        const response = await axiosClient.get(`report${reportId}`);
-        if (response.status == 200) {
-          console.log("Report Detail: ", response.data);
-          setReport(response.data.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchData();
-  });
-
+const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
   return (
     <Modal
       open={isModalOpen}
@@ -116,13 +98,15 @@ const NoticeDetailModal = ({ reportId, isModalOpen, handleCloseModal }) => {
               A
             </Avatar>
             <Box flex="flex" flexDirection="column" marginLeft="10px">
-              <Typography>Nguyễn Văn A</Typography>
+              <Typography>{report.username}</Typography>
             </Box>
           </Box>
           <Box marginTop={1} marginX={2}>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Email:{" "}
-            </Typography>
+            <Box display="flex" flexDirection="row">
+              <Typography fontSize={14} color="#70757a" marginRight={1}>
+                Email:{" "}
+              </Typography>
+            </Box>
             <Typography fontSize={14} color="#70757a" marginRight={1}>
               Số điện thoại:
             </Typography>
@@ -198,7 +182,7 @@ const NoticeDetailModal = ({ reportId, isModalOpen, handleCloseModal }) => {
 export default NoticeDetailModal;
 
 NoticeDetailModal.propTypes = {
-  reportId: PropTypes.string.isRequired,
+  report: PropTypes.object.isRequired,
   isModalOpen: PropTypes.bool.isRequired,
   handleCloseModal: PropTypes.func.isRequired,
 };

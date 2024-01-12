@@ -161,7 +161,7 @@ const ReportItem = ({ item }) => {
         </Box>
       </Box>
       <NoticeDetailModal
-        reportId={item._id}
+        reportId={item}
         isModalOpen={isReportDetailModal}
         handleCloseModal={handleCloseModal}
       />
