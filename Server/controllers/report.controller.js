@@ -249,19 +249,22 @@ const ReportController = {
         console.log(data);
         // Gửi báo cáo đến cán bộ phường/quận
         if (newReport.ward) {
-          console.log("Vô đây không ward");
-
+          console.log("Sending notification to ward:", newReport.ward.toString());
           global.io
             .to(newReport.ward.toString())
             .emit("new_notification", data);
+        } else {
+          console.log("Ward is undefined or falsy.");
         }
+
         if (newReport.district) {
-          console.log("Vô đây không distrit");
+          console.log("Sending notification to district:", newReport.district.toString());
           global.io
             .to(newReport.district.toString())
             .emit("new_notification", data);
+        } else {
+          console.log("District is undefined or falsy.");
         }
-
         res.status(201).json({
           message: ModelName + " created successfully",
           status: 201,
