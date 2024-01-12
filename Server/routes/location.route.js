@@ -2,7 +2,7 @@ import express from 'express';
 import LocationController from '../controllers/location.controller.js';
 import uploadCloud from '../middlewares/uploader.js';
 import authenticate from '../middlewares/authenticate.js';
-
+import { createLocationValidation, updateLocationValidation } from '../validators/location.validator.js';
 const router = express.Router();
 
 
@@ -17,10 +17,10 @@ router.get('/location/reverse-geocoding', LocationController.revereGeocode);
 router.get('/location/:id', LocationController.getDetail);
 
 // Tạo mới một Location
-router.post('/location', uploadCloud.array('image'), LocationController.create);
+router.post('/location', createLocationValidation, uploadCloud.array('image'), LocationController.create);
 
 // Cập nhật một Location bằng ID
-router.put('/location/:id', uploadCloud.array('image'), LocationController.update);
+router.put('/location/:id', updateLocationValidation, uploadCloud.array('image'), LocationController.update);
 
 // Xóa một Location bằng ID
 router.delete('/location/:id', LocationController.delete);
