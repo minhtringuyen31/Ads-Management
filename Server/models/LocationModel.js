@@ -11,23 +11,33 @@ const LocationSchema = new Schema({
             type: Number,
             required: true,
         },
-        address: {
-            type: String,
-            required: true,
-        }
     },
-    ward_id: {
+    display_name: {
+        type: String,
+    },
+    address: {
+        type: String,
+        required: true,
+    },
+    ward: {
         type: Schema.Types.ObjectId,
-        required: false,
+        required: true,
         ref: 'Ward',
     },
-    location_type: {
-        type: String,
+    district: {
+        type: Schema.Types.ObjectId,
         required: true,
+        ref: 'District',
+    },
+    location_type: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Type',
     },
     ads_type: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
+        ref: 'Type',
     },
     image: {
         type: [String],

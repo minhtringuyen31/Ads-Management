@@ -19,9 +19,11 @@ const AdsTypeSchema = new Schema(TypeSchema);
 
 // LocationTypeSchema: enum: ['public_land', 'park', 'safe_traffic_corridor', 'private_land', 'family_home', 'mall', 'market', 'gas_station', 'bus_stop'],
 const LocationTypeSchema = new Schema(TypeSchema);
+const ReportTypeSchema = new Schema(TypeSchema);
 
 
 export const Type = mongoose.model('Type', TypeSchema);
 export const AdsBoardType = Type.discriminator('AdsBoardType', AdsBoardTypeSchema);
 export const AdsType = Type.discriminator('AdsType', AdsTypeSchema);
 export const LocationType = Type.discriminator('LocationType', LocationTypeSchema);
+export const ReportType = Type.discriminator('ReportType', ReportTypeSchema);

@@ -1,12 +1,21 @@
 import express from 'express';
 import ReportController from '../controllers/report.controller.js';
+import authenticate from '../middlewares/authenticate.js';
+
+import { createReportValidation, updateReportValidation } from '../validators/report.validator.js';
+
+import uploadCloud from '../middlewares/uploader.js';
+
+
 
 const router = express.Router();
 
-router.get('/reports', ReportController.getAll);
+router.get('/reports', authenticate, ReportController.getAll);
+router.get('/reportGroup', authenticate, ReportController.groupReport);
+router.get('/reports/citizent', ReportController.getAllTesting);
 router.get('/report/:id', ReportController.getById);
-router.post('/report', ReportController.create);
-router.put('/report/:id', ReportController.update);
+router.post('/report', uploadCloud.array('image'), ReportController.create);
+router.put('/report/:id', updateReportValidation, uploadCloud.array('image'), ReportController.update);
 router.delete('/report/:id', ReportController.delete);
 
 export default router;

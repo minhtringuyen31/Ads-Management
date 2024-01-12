@@ -7,15 +7,15 @@ const router = express.Router();
 router.get('/locationtypes', LocationTypeController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
-// router.get('/location/:id', LocationTypeController.getLocationById);
+router.get('/locationtype/:id', LocationTypeController.getDetail);
 
 // // Tạo mới một Location
 router.post('/locationtype', LocationTypeController.create);
 
 // // Cập nhật một Location bằng ID
-// router.put('/location/:id', LocationTypeController.updateLocation);
+router.put('/locationtype/:id', LocationTypeController.update);
 
 // // Xóa một Location bằng ID
-// router.delete('/location/:id', LocationTypeController.deleteLocation);
+router.delete('/locationtype/:id', LocationTypeController.delete);
 
 export default router;

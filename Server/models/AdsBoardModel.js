@@ -2,14 +2,15 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 const AdsBoardSchema = new Schema({
-    location_id: {
+    location: {
         type: Schema.Types.ObjectId,
         required: false,
         ref: 'Location',
     },
     adsboard_type: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
+        ref: 'Type',
     },
     width: {
         type: Number,
@@ -22,17 +23,19 @@ const AdsBoardSchema = new Schema({
     contract_end_date: {
         type: Date,
         required: true,
-
     },
     contract_start_date: {
         type: Date,
         required: true,
-
     },
-    company_id: {
-        type: mongoose.Schema.Types.ObjectId,
+    image: {
+        type: [String],
+    },
+    company: {
+        type: Schema.Types.ObjectId,
         ref: 'Company', // Assuming you have a Company model
-    }
+    },
+
 },
 
     {

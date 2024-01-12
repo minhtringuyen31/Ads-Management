@@ -3,64 +3,37 @@ import mongoose from "mongoose";
 const AdsBoardService = {
     async getAll(filter) {
         try {
-            const adsBoard = await AdsBoard.aggregate([
-                {
-                    $lookup: {
-                        from: "locations",
-                        localField: "location_id",
-                        foreignField: "_id",
-                        as: "location"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "adsboard_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "adsboardTypeInfor" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $unwind: "$location"
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "location.ads_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "adsTypeInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "location.location_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "locationInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $project: {
-                        location: {
-                            lat: "$location.coordinate.lat",
-                            lng: "$location.coordinate.lng",
-                            is_planned: "$location.is_planned",
-                            image: "$location.image",
-
-                            ads_type: { $arrayElemAt: ["$adsTypeInfo.label", 0] },
-                            location_type: { $arrayElemAt: ["$locationInfo.label", 0] },
-
-                        },
-                        adsboard_type: { $arrayElemAt: ["$adsboardTypeInfor.label", 0] },
-                        width: 1,
-                        height: 1,
-                        contract_end_date: 1,
-                        contract_start_date: 1,
-                        company_id: 1
-
-                    }
-                }
-            ])
+            const adsBoard = await AdsBoard.find({})
+                .populate({
+                    path: "adsboard_type",
+                    model: "Type", // Replace with the actual name of the Location model
+                    select: "label -__t"
+                })
+                .populate({
+                    path: "location",
+                    model: "Location", // Replace with the actual name of the Location model
+                    populate: [{
+                        path: "location_type",
+                        model: "Type", // Replace with the actual name of the Location model
+                        select: "label -__t"
+                    }, {
+                        path: "ward",
+                        model: "Ward", // Replace with the actual name of the Location model
+                        select: "label"
+                    }, {
+                        path: "ads_type",
+                        model: "Type", // Replace with the actual name of the Location model
+                        select: "label"
+                    }, {
+                        path: "district",
+                        model: "District", // Replace with the actual name of the Location model
+                        select: "label"
+                    }],
+                }).populate({
+                    path: "company",
+                    model: "Company", // Replace with the actual name of the Location model
+                })
+                .exec();
             return adsBoard;
         } catch (error) {
             throw error;
@@ -68,69 +41,7 @@ const AdsBoardService = {
     },
     async getAllAdBoardbyLocation(id) {
         try {
-            const adsBoard = await AdsBoard.aggregate([
-                {
-                    $match: {
-                        location_id: new mongoose.Types.ObjectId(id)
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "locations",
-                        localField: "location_id",
-                        foreignField: "_id",
-                        as: "location"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "adsboard_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "adsboardTypeInfor" // Tên trường kết quả sau khi join
-                    }
-                },
-
-                {
-                    $unwind: "$location"
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "location.ads_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "adsTypeInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "types", // Tên collection của AdsType trong MongoDB
-                        localField: "location.location_type", // Trường trong Location để join
-                        foreignField: "key", // Trường trong AdsType để join
-                        as: "locationInfo" // Tên trường kết quả sau khi join
-                    }
-                },
-                {
-                    $project: {
-                        location: {
-                            lat: "$location.coordinate.lat",
-                            lng: "$location.coordinate.lng",
-                            is_planned: "$location.is_planned",
-                            image: "$location.image",
-
-                            ads_type: { $arrayElemAt: ["$adsTypeInfo.label", 0] },
-                            location_type: { $arrayElemAt: ["$locationInfo.label", 0] },
-
-                        },
-                        adsboard_type: { $arrayElemAt: ["$adsboardTypeInfor.label", 0] },
-                        width: 1,
-                        height: 1,
-                        contract_end_date: 1,
-                        contract_start_date: 1
-
-                    }
-                }
-            ])
+            const adsBoard = await AdsBoard.find({location: id})
             return adsBoard;
         } catch (error) {
             throw error;
@@ -148,7 +59,34 @@ const AdsBoardService = {
     },
     async getById(id) {
         try {
-            const adsBoard = await AdsBoard.findById(id);
+            const adsBoard = await AdsBoard.findById(id).populate({
+                path: "adsboard_type",
+                model: "Type", // Replace with the actual name of the Location model
+                select: "label -__t"
+            }).populate({
+                path: "location",
+                model: "Location", // Replace with the actual name of the Location model
+                populate: [{
+                    path: "location_type",
+                    model: "Type", // Replace with the actual name of the Location model
+                    select: "label -__t"
+                }, {
+                    path: "ward",
+                    model: "Ward", // Replace with the actual name of the Location model
+                    select: "label"
+                }, {
+                    path: "ads_type",
+                    model: "Type", // Replace with the actual name of the Location model
+                    select: "label"
+                }, {
+                    path: "district",
+                    model: "District", // Replace with the actual name of the Location model
+                    select: "label"
+                }],
+            }).populate({
+                path: "company",
+                model: "Company", // Replace with the actual name of the Location model
+            });
             return adsBoard;
         } catch (error) {
             throw error;

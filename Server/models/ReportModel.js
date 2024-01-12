@@ -4,9 +4,19 @@ const Schema = mongoose.Schema;
 const ReportSchema = new Schema(
   {
     report_form: {
-      type: String,
-      enum: ["denounce", "register", "feedback", "question"],
+      type: Schema.Types.ObjectId,
       required: true,
+      ref: 'Type',
+    },
+    coordinate: {
+      lat: { // x
+        type: Number,
+        required: false,
+      },
+      lng: { // y
+        type: Number,
+        required: false,
+      },
     },
     username: {
       type: String,
@@ -24,20 +34,59 @@ const ReportSchema = new Schema(
       type: String,
       required: true,
     },
-    related_to: {
-      type: Number,
+    type: {
+      type: String,
+      enum: ["location", "board", 'random'],
       required: true,
+    },
+    location: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: "Location",
+    },
+    board: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: "AdsBoard",
     },
     status: {
       type: String,
-      enum: ["pending", "complete"],
+      enum: ["pending", "completed"],
       default: "pending",
       required: true,
     },
-    operation: {
-      type: String,
-      require: false,
+    image: {
+      type: [String],
     },
+    operation: {
+      user: {
+        type: Schema.Types.ObjectId,
+        required: false,
+        ref: "User",
+      },
+      content: {
+        type: String,
+        required: false,
+      },
+    },
+    // Add by Quang Thanh to support socket IO
+    clientId: {
+      type: String,
+    },
+    ward: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'Ward',
+    },
+    district: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: 'District',
+    },
+    random: {
+      type: Object,
+      default: false,
+    }
   },
 
   {

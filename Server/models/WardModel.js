@@ -6,11 +6,15 @@ const WardSchema = new Schema({
         type: String,
         required: true,
     },
-    district_id: {
+    district: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: 'District',
     },
+    coordinates: {
+        type: [[Number]], // An array of arrays of numbers
+        required: false
+    }
 });
 
 export const Ward = mongoose.model('Ward', WardSchema);

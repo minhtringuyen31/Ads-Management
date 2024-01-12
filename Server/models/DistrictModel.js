@@ -11,5 +11,9 @@ const DistrictSchema = new Schema({
         required: false,
         ref: 'Ward',
     },
+    coordinates: {
+        type: [[Number]], // An array of arrays of numbers
+        required: false
+    }
 });
 export const District = mongoose.model('District', DistrictSchema);

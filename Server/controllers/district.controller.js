@@ -18,6 +18,23 @@ const DistrictController = {
         }
 
     },
+    getWardsOfDistrict: async (req, res, next) => {
+        try {
+            const id = req.params.id
+            const users = await DistrictService.getWardsOfDistrict(id);
+            if (!users) {
+                return next(createError.BadRequest("District list not found"))
+            }
+            res.json({
+                message: "Get district list successfully",
+                status: 200,
+                data: users
+            })
+        } catch (error) {
+            next(createError.InternalServerError(error.message))
+        }
+
+    },
     create: async (req, res, next) => {
         try {
 

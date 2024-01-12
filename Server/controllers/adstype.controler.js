@@ -46,7 +46,7 @@ const AdsTypeController = {
                 return next(createError.BadRequest("AdsType not found"))
             }
             res.json({
-                message: "Create AdsType successfully",
+                message: "Update AdsType successfully",
                 status: 200,
                 data: location
             })

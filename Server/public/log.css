@@ -1,0 +1,36 @@
+.logger-ui {
+	font-family: Arial, sans-serif;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th,
+td {
+	border: 1px solid black;
+	padding: 8px;
+	text-align: left;
+}
+
+th {
+	background-color: #f2f2f2;
+}
+.filter-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px; /* Adjust as needed */
+}
+
+.date-picker-container {
+	display: flex;
+	gap: 10px; /* Adjust as needed */
+}
+
+/* Optional: Add additional styling for the filters, e.g., margin, padding, etc. */
+#levelFilter,
+#statusFilter {
+	margin-left: 10px; /* Adjust as needed */
+}

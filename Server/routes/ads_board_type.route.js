@@ -7,15 +7,15 @@ const router = express.Router();
 router.get('/adsboardtypes', AdsBoardTypeController.getAll);
 
 // // Đọc một Location cụ thể bằng ID
-// router.get('/location/:id', AdsTypeController.getLocationById);
+router.get('/adsboardtype/:id', AdsBoardTypeController.getDetail);
 
 // // Tạo mới một Location
 router.post('/adsboardtype', AdsBoardTypeController.create);
 
 // // Cập nhật một Location bằng ID
-// router.put('/location/:id', AdsTypeController.updateLocation);
+router.put('/adsboardtype/:id', AdsBoardTypeController.update);
 
 // // Xóa một Location bằng ID
-// router.delete('/location/:id', AdsTypeController.deleteLocation);
+router.delete('/adsboardtype/:id', AdsBoardTypeController.delete);
 
 export default router;
