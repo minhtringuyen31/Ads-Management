@@ -24,6 +24,7 @@ import {
 import BarChart from "./BarChart";
 import axios from "axios";
 import instance from "axiosConfig/axios-config";
+import { useNavigate } from "react-router";
 
 const ReportStatistic = () => {
   const theme = useTheme();
@@ -33,6 +34,38 @@ const ReportStatistic = () => {
   const [totalApprovedReport, setTotalApprovedrReport] = useState(0);
   const [approvedCountArray, setApprovedCountArray] = useState([]);
   const [pendingCountArray, setPendingCountArray] = useState([]);
+  const navigate = useNavigate();
+
+  const renderReportAgent = (type) => {
+    switch (type) {
+      case "board":
+        return "Bảng quảng cáo";
+      case "random":
+        return "Địa điểm";
+      default:
+        return "";
+    }
+  };
+
+  const renderDistrict = (report) => {
+    if (report.type === "board") {
+      return report.board.location.district.label;
+    } else {
+      return report.location.district.label;
+    }
+  };
+
+  const renderWard = (report) => {
+    if (report.type === "board") {
+      return report.board.location.ward.label;
+    } else {
+      return report.location.ward.label;
+    }
+  };
+
+  const handleRowReportClicked = (report) => {
+    navigate("/utils/report_resolution", { state: report });
+  };
 
   useEffect(() => {
     setLoading(false);
@@ -155,7 +188,7 @@ const ReportStatistic = () => {
                   <TableCell
                     sx={{
                       fontWeight: "bold",
-                      width: "20%",
+                      // width: "20%",
                     }}
                   >
                     Người báo cáo
@@ -235,14 +268,21 @@ const ReportStatistic = () => {
                 {reports.map((item, index) => (
                   <TableRow
                     key={item._id}
-                    // onClick={() => handleRowReportClicked(item)}
+                    onClick={() => handleRowReportClicked(item)}
                     hover
                     sx={{ cursor: "pointer" }}
                   >
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.fullname}</TableCell>
+                    <TableCell>{item.username}</TableCell>
                     <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.phone}</TableCell>
+                    <TableCell>{item.phone_number}</TableCell>
+                    <TableCell>{renderReportAgent(item.type)}</TableCell>
+                    <TableCell>{item.report_form.label}</TableCell>
+                    <TableCell>{renderDistrict(item)}</TableCell>
+                    <TableCell>{renderWard(item)}</TableCell>
+                    <TableCell>
+                      {item.status === "pending" ? "Chưa xử lý" : "Đã xử lý"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

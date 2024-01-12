@@ -85,6 +85,10 @@ const StatisticReport = Loadable(
   lazy(() => import("../views/utilities/Statistic/ReportStatistic")),
 );
 
+const ReportResolution = Loadable(
+  lazy(() => import("../views/utilities/Statistic/ReportResolution")),
+);
+
 const MainRoutes = {
   path: "/",
   element: <MainLayout />,
@@ -194,6 +198,10 @@ const MainRoutes = {
         {
           path: "statistic",
           element: <StatisticReport />,
+        },
+        {
+          path: "report_resolution",
+          element: <ReportResolution />,
         },
       ],
     },
