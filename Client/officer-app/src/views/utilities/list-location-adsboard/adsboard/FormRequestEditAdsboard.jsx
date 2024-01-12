@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Field, useFormik, FormikProvider } from "formik";
 import {
@@ -12,7 +12,11 @@ import {
   IconButton,
   Box,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ImageUpload from "../../ImageUpload";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -65,6 +69,7 @@ const FormFooterStyle = {
 };
 
 const FormRequestEditAdsboard = () => {
+  const navigate = useNavigate();
   const adsboard = useLocation();
   const adsboardID = adsboard.state?.adsboardID;
   const [adsboardData, setAdsboardData] = useState({});
@@ -75,6 +80,23 @@ const FormRequestEditAdsboard = () => {
   //Lấy danh sách adsboard_type
   const [adsboardTypes, setAdsBoardTypes] = useState([]);
   const [selectedAdsboardType, setSelectedAdsboardType] = useState(null);
+
+  // In ParentComponent
+  const imageUploadRef = useRef();
+  // Ảnh
+  const [existingImages, setExistingImages] = useState([]); // State for managing existing images from locationData
+  // const [newImages, setNewImages] = useState([]); // State for managing new images uploaded via ImageUpload component
+
+  //Showw Alert
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showFailAlert, setShowFailAlert] = useState(false);
+  const handleCloseSuccessAlert = () => {
+    setShowSuccessAlert(false);
+    navigate("/utils/edit_requests");
+  };
+  const handleCloseFailAlert = () => {
+    setShowFailAlert(false);
+  };
 
   //Width, height
   const [width, setWidth] = useState(0);
@@ -104,6 +126,74 @@ const FormRequestEditAdsboard = () => {
     fetchAdsboardTypes();
   }, []);
 
+  const formik = useFormik({
+    initialValues: {
+      id: adsboardData._id ?? "",
+      adsboard_type: adsboardData.adsboard_type ?? "",
+      height: adsboardData.height ?? 0,
+      width: adsboardData.width ?? 0,
+      start_date:
+        adsboardData.contract_start_date || dayjs("01/01/2021").toISOString(),
+      end_date:
+        adsboardData.contract_end_date || dayjs("01/01/2021").toISOString(),
+      reason: "",
+      type: "board",
+      image: [],
+    },
+    onSubmit: async (values, { resetForm }) => {
+      // values.id = adsboardData._id || "";
+      // if (values.adsboard_type === "") {
+      //   values.adsboard_type = adsboardData.adsboard_type._id || "";
+      // }
+      // if (values.height === 0) {
+      //   values.height = adsboardData.height || "";
+      // }
+      // if (values.width === 0) {
+      //   values.width = adsboardData.width || "";
+      // }
+      // if (values.start_date) {
+      //   // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
+      //   if (dayjs.isDayjs(values.start_date)) {
+      //     values.start_date = values.start_date.toISOString();
+      //   } else if (values.start_date === dayjs("01/01/2021").toISOString()) {
+      //     // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
+      //     values.start_date = adsboardData.contract_start_date;
+      //   }
+      // }
+
+      // if (values.end_date) {
+      //   // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
+      //   if (dayjs.isDayjs(values.end_date)) {
+      //     values.end_date = values.end_date.toISOString();
+      //   } else if (values.end_date === dayjs("01/01/2021").toISOString()) {
+      //     // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
+      //     values.end_date = adsboardData.contract_end_date;
+      //   }
+      // }
+      // if (values.image.length === 0) {
+      //   values.image = adsboardData.image || [];
+      // }
+      console.log("Values: ", values);
+      const formData = createFormData(values);
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+      try {
+        const response = await axios.post(
+          "http://14.225.192.121/editRequest",
+          formData
+        );
+        if (response.status < 300) {
+          resetForm({});
+          setShowSuccessAlert(true);
+        }
+      } catch (error) {
+        console.error("Error submitting form", error);
+        setShowFailAlert(true);
+      }
+    },
+  });
+
   // Fetch adsboard data
   useEffect(() => {
     const fetchAdsboardData = async () => {
@@ -114,7 +204,27 @@ const FormRequestEditAdsboard = () => {
 
         if (response.status < 300) {
           const fetchedAdsboardData = response.data.data;
+
           setAdsboardData(fetchedAdsboardData);
+          formik.setFieldValue("id", fetchedAdsboardData._id ?? "");
+          formik.setFieldValue(
+            "adsboard_type",
+            fetchedAdsboardData.adsboard_type._id
+          );
+          formik.setFieldValue("height", fetchedAdsboardData.height ?? "");
+          formik.setFieldValue("width", fetchedAdsboardData.width ?? "");
+          formik.setFieldValue(
+            "start_date",
+            fetchedAdsboardData.contract_start_date ??
+              dayjs("01/01/2021").toISOString()
+          );
+          formik.setFieldValue(
+            "end_date",
+            fetchedAdsboardData.contract_end_date ??
+              dayjs("01/01/2021").toISOString()
+          );
+          formik.setFieldValue("image", fetchedAdsboardData.image ?? []);
+
           setIsLoading(false);
 
           if (fetchedAdsboardData.adsboard_type) {
@@ -136,6 +246,12 @@ const FormRequestEditAdsboard = () => {
           setEndDate(
             dayjs(fetchedAdsboardData.contract_end_date) || dayjs("01/01/2021")
           );
+
+          if (fetchedAdsboardData.image) {
+            // setNewImages(fetchedAdsboardData.image);
+            setExistingImages(fetchedAdsboardData.image);
+            console.log(fetchedAdsboardData.image);
+          }
         }
       } catch (error) {
         console.error("Error fetching adsboard data", error);
@@ -146,53 +262,51 @@ const FormRequestEditAdsboard = () => {
     }
   }, [adsboardID, adsboardTypes]);
 
-  const formik = useFormik({
-    initialValues: {
-      id: adsboardData._id ?? "",
-      adsboard_type: adsboardData.adsboard_type ?? "",
-      height: adsboardData.height ?? 0,
-      width: adsboardData.width ?? 0,
-      start_date:
-        adsboardData.contract_start_date ?? dayjs("01/01/2021").toISOString(),
-      end_date:
-        adsboardData.contract_end_date ?? dayjs("01/01/2021").toISOString(),
-      reason: "",
-      type: "board",
-    },
-    onSubmit: async (values, { resetForm }) => {
-      values.id = adsboardData._id || "";
-      if (values.adsboard_type === "") {
-        values.adsboard_type = adsboardData.adsboard_type;
-      }
-      if (values.height === 0) {
-        values.height = adsboardData.height;
-      }
-      if (values.width === 0) {
-        values.width = adsboardData.width;
-      }
-      if (values.start_date) {
-        // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
-        if (dayjs.isDayjs(values.start_date)) {
-          values.start_date = values.start_date.toISOString();
-        } else if (values.start_date === dayjs("01/01/2021").toISOString()) {
-          // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
-          values.start_date = adsboardData.contract_start_date;
-        }
-      }
+  // Images
+  // Xử lý khi có hình ảnh mới được tải lên từ ImageUpload
+  const handleImageUpload = (uploadedImages) => {
+    console.log("Ảnh nè: ", uploadedImages);
+    const ImageUpload = [];
+    uploadedImages.map((image) => {
+      // setExistingImages((prevImages) => [...prevImages, image.preview]);
+      ImageUpload.push(image.preview);
+    });
 
-      if (values.end_date) {
-        // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
-        if (dayjs.isDayjs(values.end_date)) {
-          values.end_date = values.end_date.toISOString();
-        } else if (values.end_date === dayjs("01/01/2021").toISOString()) {
-          // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
-          values.end_date = adsboardData.contract_end_date;
-        }
-      }
+    // // Kết hợp hình ảnh mới với hình ảnh hiện tại
+    setExistingImages(Array.from(new Set([...existingImages, ...ImageUpload])));
 
-      console.log("Data submit: ", values);
-    },
-  });
+    const imageValues = uploadedImages.map((image) => image.file);
+    formik.setFieldValue("image", imageValues);
+    // setNewImages(uploadedImages);
+  };
+
+  // Xử lý xóa hình ảnh từ newImages
+  const handleRemoveImage = (imageToRemove) => {
+    console.log(imageToRemove);
+    const newexistingImages = existingImages.filter(
+      (image) => image !== imageToRemove
+    );
+    setExistingImages(Array.from(new Set(newexistingImages)));
+    imageUploadRef.current.handleRemoveImageByUrl(imageToRemove);
+  };
+
+  //New data
+  const createFormData = (values) => {
+    const formData = new FormData();
+    formData.append("type", values.type);
+    formData.append("newInformation[id]", values.id);
+    formData.append("newInformation[adsboard_type]", values.adsboard_type);
+    formData.append("newInformation[width]", values.width);
+    formData.append("newInformation[height]", values.height);
+    formData.append("newInformation[contract_start_date]", values.start_date);
+    formData.append("newInformation[contract_end_date]", values.end_date);
+    formData.append("reason", values.reason);
+    values.image.forEach((file) =>
+      formData.append("newInformation[image]", file)
+    );
+
+    return formData;
+  };
 
   return (
     <>
@@ -218,6 +332,7 @@ const FormRequestEditAdsboard = () => {
       ) : (
         <FormikProvider value={formik}>
           <form
+            enableReinitialize={true}
             style={ContainerStyle}
             onSubmit={formik.handleSubmit}
             encType="multipart/form-data"
@@ -356,6 +471,50 @@ const FormRequestEditAdsboard = () => {
                       fontSize: "14px",
                     }}
                   />
+                  <Typography>
+                    <h4>Hình ảnh điểm đặt</h4>
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    {existingImages.map((image, index) => (
+                      <Box
+                        key={index}
+                        position="relative"
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          border: "1px dashed gray",
+                          borderRadius: "0.25rem",
+                          width: "6.5rem",
+                          height: "6.5rem",
+                        }}
+                      >
+                        <img
+                          src={image}
+                          alt={`Image ${index}`}
+                          style={{
+                            width: "6rem",
+                            height: "6rem",
+                            borderRadius: "0.25rem",
+                          }}
+                        />
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => handleRemoveImage(image)}
+                          sx={{ position: "absolute", top: 0, right: 0 }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    ))}
+                  </Box>
+                  <ImageUpload
+                    ref={imageUploadRef}
+                    onUpload={handleImageUpload}
+                    showImages={false}
+                    name="image"
+                  />
                 </Box>
               </Box>
             </Box>
@@ -371,6 +530,42 @@ const FormRequestEditAdsboard = () => {
           </form>
         </FormikProvider>
       )}
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={1000}
+        onClose={handleCloseSuccessAlert}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={handleCloseSuccessAlert}
+          severity="success"
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          Tạo yêu cầu cấp phép thành công
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={showFailAlert}
+        autoHideDuration={1000}
+        onClose={handleCloseFailAlert}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={handleCloseFailAlert}
+          severity="error"
+          sx={{ width: "100%" }}
+          variant="filled"
+        >
+          Tạo yêu cầu cấp phép lỗi!
+        </Alert>
+      </Snackbar>
     </>
   );
 };

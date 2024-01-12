@@ -197,10 +197,10 @@ const BoardManagement = () => {
               }}
             >
               <TableRow>
-                <TableCell sx={{ fontWeight: "bold", width: "5%" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "2.5%" }}>
                   STT
                 </TableCell>
-                <TableCell sx={{ fontWeight: "bold", width: "30%" }}>
+                <TableCell sx={{ fontWeight: "bold", width: "27.5%" }}>
                   Địa chỉ
                 </TableCell>
                 <TableCell sx={{ fontWeight: "bold", width: "15%" }}>

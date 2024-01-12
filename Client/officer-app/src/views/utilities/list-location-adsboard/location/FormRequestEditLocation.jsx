@@ -239,7 +239,7 @@ const FormRequestEditLocation = () => {
     values.image.forEach((file) =>
       formData.append("newInformation[image]", file)
     );
-    formData.append("reason", "Yêu cầu");
+    formData.append("reason", values.reason);
 
     return formData;
   };
