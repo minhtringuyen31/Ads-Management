@@ -2,11 +2,12 @@ import createError from "http-errors";
 import LocationService from "../services/location.service.js";
 import axios from 'axios';
 import dotenv from 'dotenv';
-import AdsBoardService from "../services/ads_board.service.js";
 import { fromJson } from "../helper/dto.js";
 import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
 import { v2 as cloudinary } from 'cloudinary';
 import UserService from "../services/user.service.js";
+import DistrictService from "../services/district.service.js";
+import AdsBoardService from "../services/ads_board.service.js";
 import { extractPublicId } from 'cloudinary-build-url'
 dotenv.config();
 
@@ -33,20 +34,20 @@ const LocationController = {
             let filteredLists = locations;
             const user = await UserService.getById(req.user.userId);
             console.log(user)
-            if(!user.assigned_areaid && user.__t !== "ProvinceOfficer"){
-                res.status(400).json({message: "bạn éo có quyền"})
+            if (!user.assigned_areaid && user.__t !== "ProvinceOfficer") {
+                res.status(400).json({ message: "bạn éo có quyền" })
             }
 
             if (user.__t === "WardOfficer") {
                 const assigned_areaid = user.assigned_areaid._id.toString();
                 filteredLists = locations.filter(
-                (location) => location.ward._id.toString() === assigned_areaid
+                    (location) => location.ward._id.toString() === assigned_areaid
                 );
             } else if (user.__t === "DistrictOfficer") {
                 //console.log("assigned_areaid")
                 const assigned_areaid = user.assigned_areaid._id.toString();
                 filteredLists = locations.filter(
-                (location) => location.district._id.toString() === assigned_areaid
+                    (location) => location.district._id.toString() === assigned_areaid
                 );
             }
 
@@ -141,6 +142,43 @@ const LocationController = {
             if (files) {
                 data.image = files.map(file => file.path);
             }
+            const districtLabelRadomData = req.district
+            const wardLabelRadomData = req.ward;
+            // Handle by Quang Thanh resolve format from reverse-geocoding
+            let district_id = "";
+            let ward_id = "";
+            // Process get district id and ward id
+            const districtList = await DistrictService.getAll();
+            districtList.forEach((district) => {
+                if (
+                    normalizeString(district.label) ===
+                    normalizeString(districtLabelRadomData)
+                ) {
+                    district_id = district._id;
+                }
+            });
+            if (district_id && district_id != "") {
+                const wardList = await WardService.getAllByDistrictId(district_id);
+                wardList.forEach((ward) => {
+                    if (
+                        normalizeString(ward.label) ===
+                        normalizeString(wardLabelRadomData)
+                    ) {
+                        ward_id = ward._id;
+                    }
+                });
+            }
+            if (district_id && district_id != "") {
+                data.district = district_id;
+            }
+            if (ward_id && ward_id != "") {
+                data.ward = ward_id;
+            }
+
+            // End by Quang Thanh
+
+
+
             const location = await LocationService.create(data);
             if (!location) {
                 if (req.files) {
