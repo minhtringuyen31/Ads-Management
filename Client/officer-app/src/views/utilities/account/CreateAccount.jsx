@@ -30,7 +30,6 @@ const validateSchema = Yup.object().shape({
       "Vui lòng chọn phân cấp hợp lệ",
     )
     .required("Yêu cầu chọn vai trò"),
-  assignArea: Yup.string().max(255).required("Yêu cầu chọn khu vực phân công"),
 });
 
 const initialValues = {
@@ -39,18 +38,10 @@ const initialValues = {
   phoneNumber: "",
   password: "",
   role: "",
-  assignArea: "",
 };
 
 const CreateAccount = () => {
-  const [selectedRole, setSelectedRole] = useState("");
-  const [districtList, setDistrictList] = useState([]);
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [wardList, setWardList] = useState([]);
-  const [selectedWard, setSelectedWard] = useState("");
-  console.log("selected role: ", selectedRole);
-
-  const handleSelectedDistrict = () => {};
+  console.log("selected role: ");
 
   const handleSubmitForm = async (values) => {
     const postBody = {
@@ -59,7 +50,6 @@ const CreateAccount = () => {
       phone: values.phoneNumber,
       password: values.password,
       userRole: values.role,
-      assign_areaid: values.assignArea,
     };
     console.log("Post Body: ", postBody);
     console.log("Post Body: ", JSON.stringify(postBody));
@@ -79,41 +69,6 @@ const CreateAccount = () => {
       console.log(error);
     }
   };
-
-  /**
-   * useeEffect
-   */
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get("http://14.225.192.121/districts");
-        if (response.status === 200) {
-          console.log("District List: ", response.data);
-          setDistrictList(response.data.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchData();
-  }, [selectedRole]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          `http://14.225.192.121/getWardsOfDistrict/${selectedDistrict}`,
-        );
-        if (response.status === 200) {
-          console.log("Ward List: ", response.data);
-          setWardList(response.data.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchData();
-  }, [selectedDistrict]);
 
   return (
     <>
@@ -271,10 +226,7 @@ const CreateAccount = () => {
                     value={values.role}
                     name="role"
                     label="Phân cấp"
-                    onChange={(e) => {
-                      handleChange(e);
-                      setSelectedRole(e.target.value); // Update selectedRole
-                    }}
+                    onChange={handleChange}
                   >
                     <MenuItem value={"district_officer"}>
                       Cán bộ cấp Quận
@@ -290,7 +242,7 @@ const CreateAccount = () => {
                   )}
                 </FormControl>
 
-                {selectedRole === "district_officer" && (
+                {/* {selectedRole === "district_officer" && (
                   <FormControl fullWidth sx={{ marginTop: "25px" }}>
                     <InputLabel htmlFor="outlined-adornment-district">
                       Quận
@@ -317,9 +269,9 @@ const CreateAccount = () => {
                       </FormHelperText>
                     )}
                   </FormControl>
-                )}
+                )} */}
 
-                {selectedRole === "ward_officer" && (
+                {/* {selectedRole === "ward_officer" && (
                   <>
                     <FormControl fullWidth sx={{ marginTop: "25px" }}>
                       <InputLabel htmlFor="outlined-adornment-district">
@@ -378,7 +330,7 @@ const CreateAccount = () => {
                       )}
                     </FormControl>
                   </>
-                )}
+                )} */}
                 <Box width="10%" margin={2}>
                   <Button
                     disableElevation

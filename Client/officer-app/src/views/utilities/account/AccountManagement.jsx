@@ -44,6 +44,10 @@ const AccountManagement = () => {
     navigate("/utils/create_account");
   };
 
+  const handleRowAccountClicked = () => {
+    navigate("/utils/account_detail");
+  };
+
   const renderOfficerRole = (userRole) => {
     return userRole === "" ? "Chưa phân cấp" : role[userRole];
   };
@@ -140,8 +144,8 @@ const AccountManagement = () => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((account, index) => (
                   <TableRow
-                    key={account.id}
-                    onClick={() => {}}
+                    key={account._id}
+                    onClick={() => handleRowAccountClicked(account)}
                     hover
                     sx={{ cursor: "pointer" }}
                   >

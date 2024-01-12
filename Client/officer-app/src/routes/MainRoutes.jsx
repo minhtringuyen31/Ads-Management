@@ -77,6 +77,10 @@ const AssignRole = Loadable(
   lazy(() => import("../views/utilities/account/AssignRole")),
 );
 
+const DetailAccount = Loadable(
+  lazy(() => import("../views/utilities/account/DetailAccount")),
+);
+
 const MainRoutes = {
   path: "/",
   element: <MainLayout />,
@@ -173,6 +177,10 @@ const MainRoutes = {
         {
           path: "assign_role",
           element: <AssignRole />,
+        },
+        {
+          path: "account_detail",
+          element: <DetailAccount />,
         },
       ],
     },
