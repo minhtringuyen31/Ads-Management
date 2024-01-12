@@ -27,7 +27,10 @@ const ReportController = {
 
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
-      //console.log("user", user)
+      if(!user.assigned_areaid && user.__t !== "ProvinceOfficer"){
+        res.status(400).json({message: "bạn éo có quyền"})
+      }
+      console.log("user", user)
 
       if (user.__t === "WardOfficer") {
         const assigned_areaid = user.assigned_areaid._id.toString();
@@ -45,8 +48,8 @@ const ReportController = {
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
-        //size: filteredLists.length,
-        // size_all: reports.length,
+        size: filteredLists.length,
+        size_all: reports.length,
         data: filteredLists,
       });
     } catch (error) {
@@ -61,14 +64,17 @@ const ReportController = {
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
       //console.log("user", user)
-
+      if(!user.assigned_areaid && user.__t !== "ProvinceOfficer"){
+        res.status(400).json({message: "bạn éo có quyền"})
+      }
+      console.log("user", user)
       if (user.__t === "WardOfficer") {
         const assigned_areaid = user.assigned_areaid._id.toString();
         filteredLists = reports.filter(
           (report) => report.ward._id.toString() === assigned_areaid
         );
       } else if (user.__t === "DistrictOfficer") {
-        //console.log("assigned_areaid")
+        console.log("ok")
         const assigned_areaid = user.assigned_areaid._id.toString();
         filteredLists = reports.filter(
           (report) => report.district._id.toString() === assigned_areaid
@@ -95,11 +101,12 @@ const ReportController = {
             lng: report.board.location.coordinate.lng,
           };
         } else if (report.type === "random" && report.random) {
+          console.log(report.coordinate)
           // If the report type is board and there is a board and a location_id, add the coordinate property
           return {
             ...report,
-            lat: report.lat,
-            lng: report.lng,
+            lat: report.coordinate.lat,
+            lng: report.coordinate.lng,
           };
         }
         console.log("test", report);
@@ -124,7 +131,7 @@ const ReportController = {
       res.json({
         message: "Get " + modelname + " list successfully",
         status: 200,
-        //size: filteredLists.length,
+        size: locations.length,
         // size_all: reports.length,
         data: locations,
       });

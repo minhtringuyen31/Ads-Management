@@ -3,16 +3,31 @@ import { ProvinceOfficer, User, WardOfficer, DistrictOfficer } from "../models/U
 const UserService = {
     async getAll(filter, projection) {
         try {
-            const user = await User.find(filter).populate({
+            const wardOfficers = await WardOfficer.find({ __t: 'WardOfficer' }).populate({
                 path: "assigned_areaid",
-                model: "Ward", // Replace with the actual name of the Location model
+                model: "Ward",
                 select: "-coordinates",
-            }).populate({
+                populate: {
+                    path: "district",
+                    model: "District",
+                    select: "-coordinates",
+                }
+              }).lean().exec();
+              console.log(wardOfficers)
+              // Tìm các user có __t là 'DistrictOfficer'
+              const districtOfficers = await DistrictOfficer.find({ __t: 'DistrictOfficer' }).populate({
                 path: "assigned_areaid",
-                model: "District", // Replace with the actual name of the Location model
+                model: "District",
                 select: "-coordinates",
-            }).lean().exec();
-            return user;
+              }).lean().exec();
+              console.log(districtOfficers)
+              // Tìm các user có __t là 'ProvinceOfficer'
+              const provinceOfficers = await ProvinceOfficer.find({ __t: 'ProvinceOfficer' })
+              // Gộp các kết quả lại thành một mảng
+              console.log(provinceOfficers)
+              const allOfficers = [...wardOfficers, ...districtOfficers, ...provinceOfficers];
+          
+              return allOfficers;
         } catch (error) {
             throw error;
         }
@@ -81,13 +96,13 @@ const UserService = {
             const user = await User.findById(id);
             let updatedUser;
             if (user.__t === "DistrictOfficer") {
-                updatedUser = await DistrictOfficer.findByIdAndUpdate(id, data);
+                updatedUser = await DistrictOfficer.findOneAndUpdate({id: id}, {$set:data}, {new: true});
             }
             else if (user.__t === "WardOfficer") {
-                updatedUser = await WardOfficer.findByIdAndUpdate(id, data);
+                updatedUser = await WardOfficer.findOneAndUpdate({id: id}, {$set:data}, {new: true});
             }
             else {
-                updatedUser = await User.findByIdAndUpdate(id, data);
+                updatedUser = await User.findOneAndUpdate({id: id}, {$set:data}, {new: true});
             }
 
             return updatedUser;

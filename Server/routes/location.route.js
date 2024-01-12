@@ -1,6 +1,7 @@
 import express from 'express';
 import LocationController from '../controllers/location.controller.js';
 import uploadCloud from '../middlewares/uploader.js';
+import authenticate from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const router = express.Router();
 router.get('/location/healthCheck', LocationController.healthCheck);
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/locations', LocationController.getAll);
+router.get('/locations', authenticate, LocationController.getAll);
 
 router.get('/location/reverse-geocoding', LocationController.revereGeocode);
 

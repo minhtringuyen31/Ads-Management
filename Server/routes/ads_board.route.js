@@ -1,10 +1,11 @@
 import express from 'express';
 import AdsBoardController from '../controllers/adsboard.controller.js';
 import uploadCloud from '../middlewares/uploader.js';
+import authenticate from '../middlewares/authenticate.js';
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/adsboards', AdsBoardController.getAll);
+router.get('/adsboards', authenticate, AdsBoardController.getAll);
 
 router.get('/adboardsByLocation/:id', AdsBoardController.getAllAdBoardByLocation);
 
