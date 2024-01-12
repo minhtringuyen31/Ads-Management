@@ -9,6 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 function handleMessage(messageContent) {
+    console.log("MAIL", messageContent)
+
     console.log('Processing message:', messageContent);
     let from;
     if(!messageContent.operation.user){
@@ -24,12 +26,13 @@ function handleMessage(messageContent) {
 
     const subject = `Report Processing - ID ${messageContent._id.toString()}`;
     let address;
-    if(messageContent.type === "location"){
+    if(messageContent.type === "location" && messageContent.location?.address){
         address = messageContent.location.address;
     }
-    else{
+    else if(messageContent.type === "board" && messageContent.board.location.address){
         address = messageContent.board.location.address;
     }
+    else address = "null"
     const fullName = messageContent.operation.user.fullname.toString();
     const content = messageContent.operation.content.toString();
     const text = `Phản hồi về báo cáo: ${messageContent._id.toString()}
