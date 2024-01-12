@@ -5,15 +5,22 @@ import { useEffect, useState } from "react";
 import axiosClient from "../../axiosConfig/axiosClient";
 
 const AdsList = ({ content }) => {
+  /**
+   * useState
+   */
   const [adsList, setAdsList] = useState([]);
   // const [locationInfo, setLocationInfo] = useState({});
 
+  /**
+   * useEffect
+   * Load Ads Board List at Location
+   */
   useEffect(() => {
     async function fetchData() {
       try {
         console.log("Location: ", content.locationId);
         const response = await axiosClient.get(
-          `location/${content.locationId}`
+          `location/${content.locationId}`,
         );
         if (response.status == 200) {
           console.log("LocationDetail: ", response.data);

@@ -24,9 +24,15 @@ const style = {
 };
 
 const AdsItem = ({ item }) => {
-  // const [currentItemId, setCurrentItemId] = useState();
+  /**
+   * useState
+   */
   const [adsDetailModalOpen, setAdsDetailModalOpen] = useState(false);
   const [reportModelOpen, setReportModalOpen] = useState(false);
+
+  /**
+   * @returns {void}
+   */
   const handleOpenDetailModal = () => {
     setReportModalOpen(false);
     setAdsDetailModalOpen(true);
@@ -39,13 +45,23 @@ const AdsItem = ({ item }) => {
     setAdsDetailModalOpen(false);
     setReportModalOpen(true);
   };
-
   const handleAdsItemOnClick = () => {
     handleOpenDetailModal();
   };
-
   const handleReportBtnOnclick = () => {
     handleOpenReportModal();
+  };
+
+  const formatDateRange = (startDateISO, endDateISO) => {
+    const startDate = new Date(startDateISO);
+    const endDate = new Date(endDateISO);
+
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+
+    const formattedStartDate = startDate.toLocaleDateString("en-GB", options);
+    const formattedEndDate = endDate.toLocaleDateString("en-GB", options);
+
+    return `${formattedStartDate} - ${formattedEndDate}`;
   };
 
   return (
@@ -58,8 +74,7 @@ const AdsItem = ({ item }) => {
         </Box>
         <Box marginY="5px">
           <Typography fontSize="16px" color="#70757a">
-            {item.location.address}, {item.location.ward.label},{" "}
-            {item.location.district.label}
+            {item.location.address}
           </Typography>
         </Box>
         <Box marginY="5px">
@@ -100,7 +115,7 @@ const AdsItem = ({ item }) => {
             sx={{
               fontWeight: "bold",
             }}
-            onClick={handleAdsItemOnClick}
+            onClick={() => handleAdsItemOnClick()}
           >
             Chi tiết
           </Button>
@@ -112,7 +127,7 @@ const AdsItem = ({ item }) => {
             sx={{
               fontWeight: "bold",
             }}
-            onClick={handleReportBtnOnclick}
+            onClick={() => handleReportBtnOnclick(item.id)}
           >
             Báo cáo vi phạm
           </Button>
@@ -162,8 +177,7 @@ const AdsItem = ({ item }) => {
             </Box>
             <Box marginY="5px">
               <Typography fontSize="16px" color="#70757a">
-                {item.location.address}, {item.location.ward.label},{" "}
-                {item.location.district.label}
+                {item.location.address}
               </Typography>
             </Box>
             <Box marginY="5px">
@@ -199,7 +213,10 @@ const AdsItem = ({ item }) => {
                   Thời hạn hợp đồng:
                 </Typography>
                 <Typography fontWeight="bold" display="inline">
-                  {item.contract_start_date} - {item.contract_end_date}
+                  {formatDateRange(
+                    item.contract_start_date,
+                    item.contract_end_date,
+                  )}
                 </Typography>
               </Box>
 
@@ -247,12 +264,15 @@ const AdsItem = ({ item }) => {
               {item.adsboard_type.label}
             </Typography>
             <Typography fontSize={12} color="#70757a">
-              {item.location.address}, {item.location.ward.label},{" "}
-              {item.location.district.label}
+              {item.location.address}
             </Typography>
           </Box>
           <Box>
-            <ReportForm />
+            <ReportForm
+              agent={item._id}
+              type={"board"}
+              handleCloseModal={handleCloseModal}
+            />
           </Box>
         </Box>
       </Modal>

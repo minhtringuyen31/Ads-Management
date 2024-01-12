@@ -8,14 +8,20 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import ReCAPTCHA from "react-google-recaptcha";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import axiosClient from "../../axiosConfig/axiosClient";
+import PropTypes from "prop-types";
+import axios from "axios";
 
+/**
+ * Validate Report Form Schema
+ */
 const validateSchema = Yup.object().shape({
   fullname: Yup.string(),
   email: Yup.string()
@@ -25,70 +31,168 @@ const validateSchema = Yup.object().shape({
   phoneNumber: Yup.string().max(255).required("Yêu cầu nhập số điện thoại"),
 });
 
+/**
+ * Default Input Value
+ */
 const initialValues = {
   fullname: "Nguyễn Văn A",
   email: "nva@gmail.com",
   phoneNumber: "093773333",
   reportType: "",
   content: "",
+  image: [],
 };
 
-const ReportForm = () => {
+const ReportForm = ({ agent, type, handleCloseModal }) => {
+  /**
+   * useState
+   */
   const [previews, setPreviews] = useState([]);
-  const fileInputRef = useRef(null);
+  const [reportTypes, setReportTypes] = useState([]);
 
+  /**
+   * useRef
+   */
+  const fileInputRef = useRef(null);
+  const formikRef = useRef(null);
+
+  /**
+   * @return {void}
+   */
   const handleBrowseImgBtnClick = () => {
     fileInputRef.current.click();
   };
 
-  const handleSubmitReportForm = (values, type, agent) => {
-    const postBody =
-      type === "location"
-        ? {
-            username: values.fullname,
-            email: values.email,
-            phone_number: values.phoneNumber,
-            report_form: values.reportType,
-            report_content: values.content,
-            type: type,
-            location: agent,
-          }
-        : {
-            username: values.fullname,
-            email: values.email,
-            phone_number: values.phoneNumber,
-            report_form: values.reportType,
-            report_content: values.content,
-            type: type,
-            board: agent,
-          };
+  /**
+   * @param {*} values
+   * @param {*} type
+   * @param {*} agent
+   * @return {void}
+   */
+  const handleSubmitReportForm = async (values) => {
+    const postBody = {
+      username: values.fullname,
+      email: values.email,
+      phone_number: values.phoneNumber,
+      report_form: values.reportType,
+      report_content: values.content,
+      type: type,
+      image: values.image,
+    };
+    switch (type) {
+      case "location":
+        postBody.location = agent;
+        break;
+      case "board":
+        postBody.board = agent;
+        break;
+      case "random":
+        postBody.random = agent;
+        break;
+      default:
+        console.log("Not found area");
+        return <div>Not found area</div>;
+    }
+    console.log("Post: ", postBody);
 
-    console.log("Report Form: ", postBody);
+    try {
+      const formData = new FormData();
+      formData.append("username", values.fullname);
+      formData.append("email", values.email);
+      formData.append("phone_number", values.phoneNumber);
+      formData.append("report_form", values.reportType);
+      formData.append("report_content", values.content);
+      formData.append("type", type);
+      console.log("Image: ", values.image);
+      values.image.forEach((file) => {
+        console.log("File: ", file);
+        formData.append("image", file);
+      });
+      switch (type) {
+        case "location":
+          formData.append("location", agent);
+          break;
+        case "board":
+          formData.append("board", agent);
+          break;
+        case "random":
+          formData.random("random", agent);
+          break;
+        default:
+          console.log("Not found area");
+          return <div>Not found area</div>;
+      }
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+
+        if (pair[0] === "image") {
+          console.log("Image information: ", pair[1]);
+        }
+      }
+      const response = await axios.post(
+        "http://14.225.192.121/report",
+        formData,
+      );
+      console.log("Reponse", response);
+      if (response.status == 201) {
+        console.log("New Report: ", response);
+        const savedReports = JSON.parse(localStorage.getItem("reports")) || [];
+        savedReports.push(response.data.data._id);
+        localStorage.setItem("reports", JSON.stringify(savedReports));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  /**
+   * @param {*} event
+   * @return {void}
+   */
   const handleBrowseImageChange = (event) => {
     console.log("Browse Files");
     const selectedFiles = event.target.files;
-
-    // Xử lý từng tệp đã được chọn
     for (let i = 0; i < selectedFiles.length; i++) {
       const selectedFile = selectedFiles[i];
       console.log(`Selected file ${i + 1}:`, selectedFile);
-
-      // Thực hiện xử lý với từng tệp ở đây
-      // Ví dụ: Đọc dữ liệu URL của tệp
       const fileReader = new FileReader();
       fileReader.onload = () => {
-        // Thêm URL của tệp vào danh sách preview
         setPreviews((prevPreviews) => [...prevPreviews, fileReader.result]);
       };
       fileReader.readAsDataURL(selectedFile);
     }
+
+    const files = Array.from(event.target.files);
+    const mappedFiles = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    console.log("mapped file: ", formikRef);
+    const imageValues = mappedFiles.map((image) => image.file);
+    formikRef.current.setFieldValue("image", imageValues);
   };
 
   function onChangeReCaptcha(value) {
     console.log("Captcha value:", value);
   }
+
+  /**
+   * useeEffect
+   */
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axiosClient.get("reporttypes");
+        if (response.status == 200) {
+          console.log("Report Type: ", response.data);
+          setReportTypes(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <Box
@@ -101,6 +205,7 @@ const ReportForm = () => {
         initialValues={initialValues}
         validationSchema={validateSchema}
         onSubmit={handleSubmitReportForm}
+        innerRef={formikRef}
       >
         {({
           errors,
@@ -109,10 +214,12 @@ const ReportForm = () => {
           handleSubmit,
           touched,
           values,
+          setFieldValue,
         }) => (
           <form
             noValidate
             onSubmit={handleSubmit}
+            encType="multipart/form-data"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -210,12 +317,16 @@ const ReportForm = () => {
                 label="Hình thức báo cáo"
                 onChange={handleChange}
               >
-                <MenuItem value={"Tố cáo sai phạm"}>Tố cáo sai phạm</MenuItem>
-                <MenuItem value={"Đăng ký nội dung"}>Đăng ký nội dung</MenuItem>
-                <MenuItem value={"Đóng góp ý kiến"}>Đóng góp ý kiến</MenuItem>
-                <MenuItem value={"Giái đáp thắc mắc"}>
-                  Giải đáp thắc mắc
-                </MenuItem>
+                {reportTypes.map((item) => (
+                  <MenuItem key={item._id} value={item._id}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+
+                {/* <MenuItem value={"denounce"}>Tố cáo sai phạm</MenuItem>
+                <MenuItem value={"register"}>Đăng ký nội dung</MenuItem>
+                <MenuItem value={"feedback"}>Đóng góp ý kiến</MenuItem>
+                <MenuItem value={"question"}>Giải đáp thắc mắc</MenuItem> */}
               </Select>
             </FormControl>
 
@@ -270,7 +381,7 @@ const ReportForm = () => {
                 id="file-input"
                 ref={fileInputRef}
                 type="file"
-                accept="image/pn, image/jpg"
+                accept="image/png, image/jpg"
                 hidden
                 onChange={handleBrowseImageChange}
                 multiple
@@ -323,6 +434,7 @@ const ReportForm = () => {
                   textTransform: "none",
                   fontWeight: "bold",
                 }}
+                onClick={() => handleCloseModal()}
               >
                 Hủy
               </Button>
@@ -350,3 +462,9 @@ const ReportForm = () => {
 };
 
 export default ReportForm;
+
+ReportForm.propTypes = {
+  agent: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  handleCloseModal: PropTypes.func.isRequired,
+};
