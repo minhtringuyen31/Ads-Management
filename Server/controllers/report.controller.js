@@ -230,6 +230,7 @@ const ReportController = {
       if (files) {
         reportData.image = files.map((file) => file.path);
       }
+      console.log(req.files);
       const newReport = await ReportService.create(reportData);
       if (newReport) {
         const newNotification = {

@@ -49,10 +49,6 @@ const ReportSchema = new Schema(
       required: false,
       ref: "AdsBoard",
     },
-    images: {
-      type: [String],
-      required: false,
-    },
     status: {
       type: String,
       enum: ["pending", "completed"],
