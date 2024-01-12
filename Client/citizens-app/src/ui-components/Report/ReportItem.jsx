@@ -146,13 +146,13 @@ const ReportItem = ({ item }) => {
           </Box>
         </Box>
         <Box marginTop={1}>
-          <ImageList sx={{ width: 200, height: 90 }} cols={2}>
-            {imageList.map((item) => (
-              <ImageListItem key={item.img}>
+          <ImageList sx={{ width: 200, height: 100 }} cols={2}>
+            {item.image.map((item, index) => (
+              <ImageListItem key={index}>
                 <img
-                  srcSet={`${item.img}?w=90&h=90&fit=crop&auto=format&dpr=2 2x`}
-                  src={`${item.img}?w=90&h=90&fit=crop&auto=format`}
-                  alt={item.title}
+                  srcSet={`${item}?w=100&h=100&fit=crop&auto=format&dpr=2 2x`}
+                  src={`${item}?w=100&h=100&fit=crop&auto=format`}
+                  alt={item}
                   loading="lazy"
                 />
               </ImageListItem>

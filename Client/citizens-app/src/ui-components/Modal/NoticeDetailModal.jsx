@@ -32,6 +32,17 @@ const imageList = [
 
 const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
   console.log("Report: ", report);
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    const formattedDate = `${day < 10 ? "0" : ""}${day}/${
+      month < 10 ? "0" : ""
+    }${month}/${year}`;
+
+    return formattedDate;
+  };
   return (
     <Modal
       open={isModalOpen}
@@ -107,27 +118,46 @@ const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
               <Typography fontSize={14} color="#70757a" marginRight={1}>
                 Email:{" "}
               </Typography>
+              <Typography>{report.email}</Typography>
             </Box>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Số điện thoại:
-            </Typography>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Thời điểm báo cáo:
-            </Typography>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Hình thức đánh giá:
-            </Typography>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Nội dung:
-            </Typography>
+            <Box display="flex" flexDirection="row">
+              <Typography fontSize={14} color="#70757a" marginRight={1}>
+                Số điện thoại:
+              </Typography>
+              <Typography>{report.phone_number}</Typography>
+            </Box>
+            <Box display="flex" flexDirection="row">
+              <Typography fontSize={14} color="#70757a" marginRight={1}>
+                Thời điểm báo cáo:
+              </Typography>
+              <Typography>{formatDate(report.createdAt)}</Typography>
+            </Box>
+            <Box display="flex" flexDirection="row">
+              <Typography fontSize={14} color="#70757a" marginRight={1}>
+                Hình thức đánh giá:
+              </Typography>
+              <Typography>{report.report_form.label}</Typography>
+            </Box>
+            <Box display="flex" flexDirection="column">
+              <Typography fontSize={14} color="#70757a" marginRight={1}>
+                Nội dung:
+              </Typography>
+              <Typography
+                fontSize={16}
+                component="div"
+                dangerouslySetInnerHTML={{
+                  __html: report.report_content,
+                }}
+              />
+            </Box>
           </Box>
           <Box>
             <ImageList sx={{ width: "100%", height: "auto" }} cols={2}>
-              {imageList.map((item) => (
-                <ImageListItem key={item.img}>
+              {report.image.map((item, index) => (
+                <ImageListItem key={index}>
                   <img
-                    src={item.img}
-                    alt={item.title}
+                    src={item}
+                    alt={item}
                     loading="lazy"
                     style={{
                       maxWidth: "100%",
@@ -149,31 +179,56 @@ const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
             Thông tin phản hồi
           </Typography>
           <Divider />
-          <Box
-            display="flex"
-            flexDirection=" row"
-            alignItems="center"
-            marginTop={2}
-            marginX={2}
-          >
-            <Avatar width sx={{ bgcolor: "#bfdbfe" }}>
-              A
-            </Avatar>
-            <Box flex="flex" flexDirection="column" marginLeft="10px">
-              <Typography>Nguyễn Văn A</Typography>
-            </Box>
-          </Box>
-          <Box marginTop={1} marginX={2}>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Chức vụ:{" "}
-            </Typography>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Thời điểm phản hồi:{" "}
-            </Typography>
-            <Typography fontSize={14} color="#70757a" marginRight={1}>
-              Nội dung:{" "}
-            </Typography>
-          </Box>
+          {report.status === "completed" ? (
+            <>
+              <Box
+                display="flex"
+                flexDirection=" row"
+                alignItems="center"
+                marginTop={2}
+                marginX={2}
+              >
+                <Avatar width sx={{ bgcolor: "#bfdbfe" }}>
+                  A
+                </Avatar>
+                <Box flex="flex" flexDirection="column" marginLeft="10px">
+                  <Typography>{report.operation.user.fullname}</Typography>
+                </Box>
+              </Box>
+              <Box marginTop={1} marginX={2}>
+                <Box display="flex" flexDirection="row">
+                  <Typography fontSize={14} color="#70757a" marginRight={1}>
+                    Chức vụ:{" "}
+                  </Typography>
+                  <Typography>
+                    {report.operation.user.userRole === "ward_officer"
+                      ? "Cán bộ Phường"
+                      : "Cán bộ Quận"}
+                  </Typography>
+                </Box>
+                <Box display="flex" flexDirection="row">
+                  <Typography fontSize={14} color="#70757a" marginRight={1}>
+                    Thời điểm phản hồi:{" "}
+                  </Typography>
+                  <Typography>{formatDate(report.updatedAt)}</Typography>
+                </Box>
+                <Box display="flex" flexDirection="column">
+                  <Typography fontSize={14} color="#70757a" marginRight={1}>
+                    Nội dung:{" "}
+                  </Typography>
+                  <Typography
+                    fontSize={16}
+                    component="div"
+                    dangerouslySetInnerHTML={{
+                      __html: report.operation.content,
+                    }}
+                  />
+                </Box>
+              </Box>
+            </>
+          ) : (
+            <>Báo cáo chưa được xử lý</>
+          )}
         </Box>
       </Box>
     </Modal>

@@ -209,7 +209,7 @@ const Map = ({
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axiosClient.get("locations");
+        const response = await axiosClient.get("locations/citizen");
         console.log("Location List: ", response.data.data);
         setLocationList(response.data.data);
       } catch (error) {

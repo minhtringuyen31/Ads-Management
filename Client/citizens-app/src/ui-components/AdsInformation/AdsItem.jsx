@@ -52,6 +52,18 @@ const AdsItem = ({ item }) => {
     handleOpenReportModal();
   };
 
+  const formatDateRange = (startDateISO, endDateISO) => {
+    const startDate = new Date(startDateISO);
+    const endDate = new Date(endDateISO);
+
+    const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+
+    const formattedStartDate = startDate.toLocaleDateString("en-GB", options);
+    const formattedEndDate = endDate.toLocaleDateString("en-GB", options);
+
+    return `${formattedStartDate} - ${formattedEndDate}`;
+  };
+
   return (
     <div>
       <Box margin="10px" padding="25px" borderRadius="20px" style={boxStyle}>
@@ -201,7 +213,10 @@ const AdsItem = ({ item }) => {
                   Thời hạn hợp đồng:
                 </Typography>
                 <Typography fontWeight="bold" display="inline">
-                  {item.contract_start_date} - {item.contract_end_date}
+                  {formatDateRange(
+                    item.contract_start_date,
+                    item.contract_end_date,
+                  )}
                 </Typography>
               </Box>
 
