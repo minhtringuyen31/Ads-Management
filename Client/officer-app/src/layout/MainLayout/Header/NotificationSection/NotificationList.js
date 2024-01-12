@@ -34,7 +34,7 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
 }));
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
-const NotificationList = () => {
+const NotificationList = ({ handleToggle }) => {
   const reportCtx = useContext(ReportContext);
   const theme = useTheme();
   const [notificationList, setNotificationList] = useState([]);
@@ -79,6 +79,7 @@ const NotificationList = () => {
 
   const handleItemClicked = (id) => {
     reportCtx.setReportDetail(id);
+    handleToggle();
     navigate('/utils/report/detail');
   };
 
@@ -129,26 +130,27 @@ const NotificationList = () => {
                   <Grid item>
                     <Typography variant='h3'>{notification.title}</Typography>
                   </Grid>
-                  <Box sx={{ height: '10px' }} />
+                  <Box sx={{ height: '5px' }} />
                   <Grid item>
                     <Typography variant='h5'>
                       {notification.content.report_form.label}
                     </Typography>
                   </Grid>
-                  <Box sx={{ height: '10px' }} />
-                  <Grid item container direction='row'>
-                    <Grid item xs={12} lg={6}>
+                  <Box sx={{ height: '5px' }} />
+                  <Grid item container direction='column'>
+                    <Grid item xs={12} lg={12}>
                       <Typography variant='h6' color='GrayText'>
                         Người gửi: {notification.content.username}
                       </Typography>
                     </Grid>
+                    <Box sx={{ height: '5px' }} />
                     <Grid
                       item
                       display='flex'
                       justifyContent='flex-end'
                       alignItems='end'
                       xs={12}
-                      lg={6}
+                      lg={12}
                     >
                       <Typography variant='h6' color='GrayText'>
                         {moment.utc(notification.createdAt).fromNow()}

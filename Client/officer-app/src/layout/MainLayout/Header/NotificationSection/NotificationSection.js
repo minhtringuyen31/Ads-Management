@@ -245,7 +245,7 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
-                        <NotificationList />
+                        <NotificationList handleToggle={handleToggle} />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
