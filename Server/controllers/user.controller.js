@@ -27,7 +27,7 @@ const UserController = {
 
             const data = req.body
             console.log(data);
-            data.password = hashPassword(data.password);
+            data.password = await hashPassword(data.password);
             const user = await UserService.create(data);
             if (!user) {
                 return next(createError.BadRequest("User wasn't created"))
@@ -49,7 +49,7 @@ const UserController = {
             const data = req.body
             const { id } = req.params;
             if(data.password !== null && data.password !== undefined){
-                data.password = hashPassword(data.password);
+                data.password = await hashPassword(data.password);
             }
             const user = await UserService.update(id, data);
             if (!user) {
