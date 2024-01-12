@@ -197,7 +197,7 @@ const FormRequestEditLocation = () => {
   // Images
   // Xử lý khi có hình ảnh mới được tải lên từ ImageUpload
   const handleImageUpload = (uploadedImages) => {
-    console.log(uploadedImages);
+    console.log("Ảnh nè: ", uploadedImages);
     const ImageUpload = [];
     uploadedImages.map((image) => {
       // setExistingImages((prevImages) => [...prevImages, image.preview]);
@@ -206,8 +206,12 @@ const FormRequestEditLocation = () => {
 
     // // Kết hợp hình ảnh mới với hình ảnh hiện tại
     setExistingImages(Array.from(new Set([...existingImages, ...ImageUpload])));
+
+    const imageValues = uploadedImages.map((image) => image.file);
+    formik.setFieldValue("image", imageValues);
     // setNewImages(uploadedImages);
   };
+
   // Xử lý xóa hình ảnh từ newImages
   const handleRemoveImage = (imageToRemove) => {
     console.log(imageToRemove);
@@ -220,34 +224,22 @@ const FormRequestEditLocation = () => {
 
   // New data
   const createFormData = (values) => {
-    // const formData = new FormData();
-    // formData.append("type", values.type);
-    // formData.append("newInformation[id]", values.id);
-    // formData.append("newInformation[display_name]", values.display_name);
-    // formData.append("newInformation[coordinate]", values.coordinate);
-    // formData.append("newInformation[address]", values.address);
-    // formData.append("newInformation[ward]", values.ward._id);
-    // formData.append("newInformation[district]", values.district._id);
-    // formData.append("newInformation[location_type]", values.location_type);
-    // formData.append("newInformation[ads_type]", values.ads_type);
-    // formData.append("newInformation[is_planned]", values.is_planned);
-    // formData.append("reason", "Yêu cầu");
-
-    const formData = {
-      type: values.type,
-      reason:"Yêu cầu từ Thảo Minh",
-      newInformation: {
-        id: values.id,
-        display_name: values.display_name,
-        coordinate: values.coordinate,
-        address: values.address,
-        ward: values.ward,
-        district: values.district,
-        location_type: values.location_type,
-        ads_type: values.ads_type,
-        is_planned: values.is_planned,
-      },
-    };
+    const formData = new FormData();
+    formData.append("type", values.type);
+    formData.append("newInformation[id]", values.id);
+    formData.append("newInformation[display_name]", values.display_name);
+    formData.append("newInformation[coordinate][lat]", values.coordinate.lat);
+    formData.append("newInformation[coordinate][lng]", values.coordinate.lng);
+    formData.append("newInformation[address]", values.address);
+    formData.append("newInformation[ward]", values.ward._id);
+    formData.append("newInformation[district]", values.district._id);
+    formData.append("newInformation[location_type]", values.location_type);
+    formData.append("newInformation[ads_type]", values.ads_type);
+    formData.append("newInformation[is_planned]", values.is_planned);
+    values.image.forEach((file) =>
+      formData.append("newInformation[image]", file)
+    );
+    formData.append("reason", "Yêu cầu");
 
     return formData;
   };
@@ -262,13 +254,15 @@ const FormRequestEditLocation = () => {
 
       location_type: locationData.location_type ?? "",
       ads_type: locationData.ads_type ?? "",
-      image: locationData.image ?? "",
+      image: [],
       is_planned: locationData.is_planned ?? "",
       display_name: locationData.display_name ?? "",
       reason: "",
       type: "location",
     },
     onSubmit: async (values, { resetForm }) => {
+      console.log("Values:", values);
+      console.log("Location data: ", locationData);
       values.id = locationData._id || "";
       values.coordinate = locationData.coordinate || {};
       values.address = locationData.address || "";
@@ -281,8 +275,8 @@ const FormRequestEditLocation = () => {
       if (values.ads_type === "") {
         values.ads_type = locationData.ads_type._id || "";
       }
-      if (values.image === "") {
-        values.image = locationData.image || "";
+      if (values.image.length === 0) {
+        values.image = locationData.image || [];
       }
       if (values.is_planned === "") {
         values.is_planned = locationData.is_planned || "";
@@ -290,18 +284,22 @@ const FormRequestEditLocation = () => {
       if (values.display_name === "") {
         values.display_name = locationData.display_name || "";
       }
-      console.log(locationData);
+      // console.log(locationData);
       const formData = createFormData(values);
-     
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
       try {
         const response = await axios.post(
           "http://14.225.192.121/editRequest",
           formData
         );
-        if (response.status === 201) {
+        if (response.status < 300) {
+          console.log("Data response success: ", response.data.data);
           resetForm({});
           setShowSuccessAlert(true);
         } else {
+          console.log("Data response fail: ", response.data.data);
           setShowFailAlert(true);
         }
       } catch (error) {
@@ -531,6 +529,7 @@ const FormRequestEditLocation = () => {
                   ref={imageUploadRef}
                   onUpload={handleImageUpload}
                   showImages={false}
+                  name="image"
                 />
               </Box>
             </Box>

@@ -112,7 +112,7 @@ const FormAddLicenAdsboard = () => {
 
   const handleCloseFailAlert = () => {
     setShowFailAlert(false);
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -177,6 +177,7 @@ const FormAddLicenAdsboard = () => {
       "new_ads_board[contract_start_date]",
       values.adsboardInfo.start_date
     );
+    console.log("Image: ", values.adsboardInfo.img);
     values.adsboardInfo.img.forEach((file) =>
       formData.append("new_ads_board[image]", file)
     );
@@ -226,15 +227,23 @@ const FormAddLicenAdsboard = () => {
           adsboard_type: selectedAdsBoar.id,
         },
       };
+      console.log("data submit: ", data);
       const formData = createFormData(data);
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+        if (pair[0] === "image") {
+          console.log("Image information: ", pair[1]);
+        }
+      }
       try {
         const response = await axios.post(
           "http://14.225.192.121/authorizeRequest",
           formData
         );
-        if (response.status === 201) {
+        if (response.status < 300) {
           resetForm({});
           setShowSuccessAlert(true);
+          console.log("response data: ", response.data.data);
         } else {
           setShowFailAlert(true);
         }
@@ -626,7 +635,7 @@ const FormAddLicenAdsboard = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép thành công
+          Tạo yêu cầu chỉnh sửa thành công
         </Alert>
       </Snackbar>
       <Snackbar
@@ -644,7 +653,7 @@ const FormAddLicenAdsboard = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép lỗi!
+          Tạo yêu cầu chỉnh sửa lỗi!
         </Alert>
       </Snackbar>
     </>

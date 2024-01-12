@@ -176,10 +176,7 @@ const AddAdsboardProvince = () => {
       values.adsboardInfo.contract_start_date
     );
     values.adsboardInfo.image.forEach((file) => formData.append("image", file));
-    formData.append(
-      "company[name]",
-      values.companyInfo.name
-    );
+    formData.append("company[name]", values.companyInfo.name);
     formData.append("company[address]", values.companyInfo.address);
     formData.append(
       "company[contact_name_person]",
@@ -270,7 +267,7 @@ const AddAdsboardProvince = () => {
         >
           {/* Begin: HEADER */}
           <Typography>
-            <h2>Cấp phép bảng quảng cáo</h2>
+            <h2>Thêm bảng quảng cáo mới</h2>
           </Typography>
           {/* End: HEADER */}
 
@@ -606,7 +603,7 @@ const AddAdsboardProvince = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép thành công
+          Thêm bảng quảng cáo thành công
         </Alert>
       </Snackbar>
       <Snackbar
@@ -624,7 +621,7 @@ const AddAdsboardProvince = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép lỗi!
+          Thêm bảng quảng cáo lỗi!
         </Alert>
       </Snackbar>
     </>

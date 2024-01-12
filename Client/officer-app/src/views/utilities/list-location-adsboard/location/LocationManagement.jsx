@@ -55,13 +55,20 @@ const LocationManagement = () => {
     navigate("/utils/location/request_edit_form", { state: { locationID } });
   };
 
+  const handleNewLocation = () => {
+    navigate("/utils/location/new_location");
+  };
+
   //Fetch all locations
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       try {
         const response = await axios.get("http://14.225.192.121/locations");
-        const dataWithId = response.data.data.map((item, index) => ({
+        let sortedData = response.data.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        const dataWithId = sortedData.map((item, index) => ({
           ...item,
           id: index + 1,
         }));
@@ -170,7 +177,7 @@ const LocationManagement = () => {
                 variant="contained"
                 color="primary"
                 endIcon={<AddIcon />}
-                // onClick={handleNewLicense}
+                onClick={handleNewLocation}
               >
                 Điểm đặt mới
               </Button>

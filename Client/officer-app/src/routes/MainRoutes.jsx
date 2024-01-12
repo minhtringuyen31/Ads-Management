@@ -26,6 +26,13 @@ const RequestEditLocation = Loadable(
     )
   )
 );
+const AddLocationProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/AddLocationProvince"
+    )
+  )
+);
 
 const BoardManagement = Loadable(
   lazy(() =>
@@ -102,6 +109,10 @@ const MainRoutes = {
         {
           path: "location/request_edit_form",
           element: <RequestEditLocation />,
+        },
+        {
+          path: "location/new_location",
+          element: <AddLocationProvince />,
         },
         {
           path: "adsboards",
