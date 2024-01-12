@@ -83,7 +83,7 @@ const AuthController = {
       const { email } = req.body;
       const user = await UserService.getByEmail(email);
       if(!user){
-        return res.status(404).json({message: "Email not found!"});
+        return res.status(400).json({message: "Email not found!"});
       }
       const otp = otpGenerator.generate(6, {digits: true, upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
       await set(email, otp, 60);
@@ -107,7 +107,7 @@ const AuthController = {
       const { email, otp } = req.body;
       const user = await UserService.getByEmail(email);
       if(!user){
-        return res.status(404).json({message: "Email not found!"});
+        return res.status(400).json({message: "Email not found!"});
       }
      
       const storedOtp = await get(email);
@@ -129,7 +129,7 @@ const AuthController = {
       const user = await UserService.getByEmail(email);
       console.log(user)
       if(!user){
-        return res.status(404).json({message: "Email not found!"});
+        return res.status(400).json({message: "Email not found!"});
       }
      
       const isOk = await get(email);
@@ -137,7 +137,9 @@ const AuthController = {
       if (!isOk || isOk !== "OK") {
         return res.status(400).json({ message: "Invalid request!" });
       }
-      const data = await UserService.update(user._id, {password: newPassword})
+      console.log(user._id, newPassword)
+      const data = await UserService.update(user._id.toString(), {password: newPassword})
+      console.log(user._id, newPassword)
       del(email);
       return res.status(200).json({ message: "Recovery password successfully"});
     }
