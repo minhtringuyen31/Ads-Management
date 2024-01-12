@@ -56,6 +56,9 @@ const MapBox = () => {
 
       avgLat = totalLat / loadedLocations.length;
       avgLng = totalLng / loadedLocations.length;
+    } else {
+      avgLat = 0;
+      avgLng = 0;
     }
 
     return (

@@ -15,7 +15,6 @@ import { getReportDetail } from 'lib/api';
 import { useContext, useEffect, useState } from 'react';
 import ReportContext from 'store/report/report-context';
 import MainCard from 'ui-component/cards/MainCard';
-import { reportTestData } from 'views/dashboard/DashboardData/data';
 import ReportForm from './ReportForm';
 
 const ReportDetail = () => {
@@ -65,6 +64,7 @@ const ReportDetail = () => {
   }
 
   if (status === 'completed') {
+    console.log(loadedReportDetail);
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} lg={formOpen.lg1}>
@@ -90,6 +90,20 @@ const ReportDetail = () => {
               }}
               cols={1}
             >
+              {loadedReportDetail.image.length === 0 && (
+                <MainCard
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                  }}
+                >
+                  <Typography>
+                    Không có hình ảnh được gửi kèm báo cáo
+                  </Typography>
+                </MainCard>
+              )}
               {loadedReportDetail.image.map((image, index) => {
                 return (
                   <ImageListItem key={index}>
@@ -156,7 +170,10 @@ const ReportDetail = () => {
                   Loại báo cáo: {loadedReportDetail.report_form.label}
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Địa chỉ: {reportTestData.reports[0].related_to}
+                  Địa chỉ:{' '}
+                  {loadedReportDetail.type === 'location'
+                    ? loadedReportDetail.location.address
+                    : loadedReportDetail.board.location.address}
                 </Typography>
                 <Typography variant='subtitle1'>
                   Hình thức:{' '}
