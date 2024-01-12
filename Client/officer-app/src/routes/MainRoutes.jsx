@@ -25,8 +25,10 @@ const LocationDetail = Loadable(
   )
 );
 const RequestEditLocation = Loadable(
-  lazy(() => 
-    import('../views/utilities/list-location-adsboard/location/FormRequestEditLocation')
+  lazy(() =>
+    import(
+      '../views/utilities/list-location-adsboard/location/FormRequestEditLocation'
+    )
   )
 );
 
@@ -48,10 +50,12 @@ const FormAddLicenAdsboard = Loadable(
   )
 );
 const ReportList = Loadable(
-  lazy(() => import('../views/utilities/report-manage/ReportList'))
+  lazy(() => import('../views/utilities/report-manage/report-list/ReportList'))
 );
 const ReportDetail = Loadable(
-  lazy(() => import('../views/utilities/report-manage/ReportDetail'))
+  lazy(() =>
+    import('../views/utilities/report-manage/report-list/ReportDetail')
+  )
 );
 const AuthorizeRequestList = Loadable(
   lazy(() =>
@@ -62,6 +66,15 @@ const AuthorizeRequestDetail = Loadable(
   lazy(() =>
     import('../views/utilities/authorize_request/AuthorizeRequestDetail')
   )
+);
+const ChangePassword = Loadable(
+  lazy(() =>
+    import('../views/pages/authentication/change-password/ChangePassword')
+  )
+);
+
+const ReportMap = Loadable(
+  lazy(() => import('../views/utilities/report-manage/report-map/ReportMap'))
 );
 
 const MainRoutes = {
@@ -86,7 +99,7 @@ const MainRoutes = {
         {
           path: 'location/request_edit_form',
           element: <RequestEditLocation />,
-        }
+        },
       ],
     },
     {
@@ -95,6 +108,20 @@ const MainRoutes = {
         {
           path: 'adsboards',
           element: <BoardManagement />,
+        },
+      ],
+    },
+    {
+      path: 'utils',
+      children: [
+        {
+          path: 'profile',
+          children: [
+            {
+              path: 'change_password',
+              element: <ChangePassword />,
+            },
+          ],
         },
       ],
     },
@@ -119,6 +146,10 @@ const MainRoutes = {
             {
               path: 'detail',
               element: <ReportDetail />,
+            },
+            {
+              path: 'map',
+              element: <ReportMap />,
             },
           ],
         },

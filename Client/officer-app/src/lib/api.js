@@ -2,7 +2,7 @@ import axios from 'axios';
 import instance from 'axiosConfig/axios-config';
 import { GetRefreshToken } from 'store/auth/auth-config';
 
-const rootApi = 'http://webadvance.software';
+export const rootApi = 'http://webadvance.software';
 
 // Locations API
 export const getAllLocations = async () => {
@@ -134,6 +134,21 @@ export const getAllAdsBoardType = async () => {
 export const getAllReports = async () => {
   try {
     const response = await instance.get(`${rootApi}/reports`);
+    const reportsData = response.data;
+
+    if (response.statusText === 'OK') {
+      return reportsData.data;
+    } else {
+      throw new Error('Could not fetch data.');
+    }
+  } catch (error) {
+    throw new Error('Request failed: ' + error.message);
+  }
+};
+
+export const getAllReportByLocation = async () => {
+  try {
+    const response = await instance.get(`${rootApi}/reportGroup`);
     const reportsData = response.data;
 
     if (response.statusText === 'OK') {

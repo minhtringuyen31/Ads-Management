@@ -1,13 +1,13 @@
 import { Grid, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
-import MapContext from 'store/dashboard/map-context';
+import ReportMapContext from 'store/report-map/report-map-context';
 import MainCard from 'ui-component/cards/MainCard';
-import LocationDetailBox from './location-view/LocationDetailBox';
 import MapBox from './map-view/MapBox';
+import ReportListBox from './report-list-view/ReportListBox';
 
 const DashboardContent = () => {
-  const mapCtx = useContext(MapContext);
+  const reportMapCtx = useContext(ReportMapContext);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,8 +23,8 @@ const DashboardContent = () => {
         <Grid container spacing={gridSpacing}>
           <Grid item lg={12} md={6} sm={6} xs={12}>
             <MainCard>
-              {mapCtx.locationDetail ? (
-                <LocationDetailBox />
+              {reportMapCtx.reportsDetail ? (
+                <ReportListBox />
               ) : (
                 <Grid
                   item
@@ -38,7 +38,7 @@ const DashboardContent = () => {
                   }}
                 >
                   <Typography variant='h4'>
-                    Chọn một địa điểm để xem thông tin
+                    Chọn một địa điểm để xem thông tin danh sách báo cáo
                   </Typography>
                 </Grid>
               )}

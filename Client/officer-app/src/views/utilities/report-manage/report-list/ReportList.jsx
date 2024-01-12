@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
+  Chip,
   FormControlLabel,
   IconButton,
   Paper,
@@ -328,7 +329,6 @@ const EnhancedTable = (props) => {
                 return (
                   <TableRow
                     hover
-                    role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.id}
@@ -350,9 +350,15 @@ const EnhancedTable = (props) => {
                       {getReportType(row.report_type)}
                     </TableCell>
                     <TableCell align='left'>
-                      {row.status === 'solved'
-                        ? 'Đã giải quyết'
-                        : 'Chưa giải quyết'}
+                      <Chip
+                        label={
+                          row.status === 'completed'
+                            ? 'Đã giải quyết'
+                            : 'Chưa giải quyết'
+                        }
+                        color={row.status === 'completed' ? 'success' : 'error'}
+                        variant='outlined'
+                      />
                     </TableCell>
                     <TableCell align='right'>
                       <Link to='/utils/report/detail'>

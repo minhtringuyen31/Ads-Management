@@ -34,10 +34,12 @@ import User1 from 'assets/images/user.png';
 import { IconLogout, IconSettings } from '@tabler/icons';
 import { AuthenticationActions } from 'redux/auth/authentication-slice';
 import { AuthorizationActions } from 'redux/auth/authorization-slice';
+import { GetUser } from 'store/auth/auth-config';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+  const user = GetUser();
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
@@ -52,6 +54,15 @@ const ProfileSection = () => {
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
+
+  let roleText;
+  if (user.userRole === 'province_officer') {
+    roleText = 'Sở Văn hóa và Thông tin';
+  } else if (user.userRole === 'district_officer') {
+    roleText = 'Cán bộ Quận';
+  } else {
+    roleText = 'Cán bộ Phường';
+  }
   const handleLogout = async () => {
     dispatch(AuthenticationActions.logout());
     dispatch(AuthorizationActions.removeAuthorization());
@@ -110,7 +121,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={user.avatar || User1}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',
@@ -168,16 +179,16 @@ const ProfileSection = () => {
                   <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction='row' spacing={0.5} alignItems='center'>
-                        <Typography variant='h4'>Good Morning,</Typography>
+                        <Typography variant='h4'>Chào buổi sáng,</Typography>
                         <Typography
                           component='span'
                           variant='h4'
                           sx={{ fontWeight: 400 }}
                         >
-                          Admin
+                          {user.fullname}
                         </Typography>
                       </Stack>
-                      <Typography variant='subtitle2'>Project Admin</Typography>
+                      <Typography variant='subtitle2'>{roleText}</Typography>
                     </Stack>
                     {/* <OutlinedInput
                       sx={{ width: "100%", pr: 1, pl: 2, my: 2 }}
@@ -234,7 +245,11 @@ const ProfileSection = () => {
                           }}
                           selected={selectedIndex === 0}
                           onClick={(event) =>
-                            handleListItemClick(event, 0, '#')
+                            handleListItemClick(
+                              event,
+                              0,
+                              '/utils/profile/change_password'
+                            )
                           }
                         >
                           <ListItemIcon>
@@ -243,7 +258,7 @@ const ProfileSection = () => {
                           <ListItemText
                             primary={
                               <Typography variant='body2'>
-                                Account Settings
+                                Đổi mật khẩu
                               </Typography>
                             }
                           />
@@ -298,7 +313,7 @@ const ProfileSection = () => {
                           </ListItemIcon>
                           <ListItemText
                             primary={
-                              <Typography variant='body2'>Logout</Typography>
+                              <Typography variant='body2'>Đăng xuất</Typography>
                             }
                           />
                         </ListItemButton>

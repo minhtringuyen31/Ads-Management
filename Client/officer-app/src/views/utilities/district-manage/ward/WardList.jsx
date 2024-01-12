@@ -1,9 +1,13 @@
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
+
 import {
   Box,
+  Button,
   FormControlLabel,
+  Grid,
   IconButton,
   Paper,
   Switch,
@@ -25,7 +29,6 @@ import useHttp from 'hooks/use-http';
 import { getWardsByDistrictId } from 'lib/api';
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import DistrictContext from 'store/district/district-context';
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -82,7 +85,7 @@ const headCells = [
     id: 'detail',
     numeric: true,
     disablePadding: false,
-    label: 'Chi tiết',
+    label: '',
   },
 ];
 
@@ -161,7 +164,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Phường
+          Danh sách phường của {props.districtName}
         </Typography>
       )}
 
@@ -255,7 +258,10 @@ const EnhancedTable = (props) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          districtName={props.districtName}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 150 }}
@@ -278,7 +284,6 @@ const EnhancedTable = (props) => {
                 return (
                   <TableRow
                     hover
-                    role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.id}
@@ -295,11 +300,23 @@ const EnhancedTable = (props) => {
                       {row.ward}
                     </TableCell>
                     <TableCell align='right'>
-                      <Link to='/utils/report/detail'>
-                        <IconButton>
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
+                      <IconButton
+                        onClick={() =>
+                          props.openEditModel(
+                            row.id,
+                            row.ward,
+                            'ward',
+                            props.districtId
+                          )
+                        }
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => props.openDeleteModel(row.id, 'ward')}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 );
@@ -334,7 +351,12 @@ const EnhancedTable = (props) => {
   );
 };
 
-const WardList = () => {
+const WardList = ({
+  openAddModel,
+  openEditModel,
+  triggleList,
+  openDeleteModel,
+}) => {
   const districtCtx = useContext(DistrictContext);
 
   const {
@@ -346,7 +368,7 @@ const WardList = () => {
 
   useEffect(() => {
     sendRequest(districtCtx.districtId);
-  }, [sendRequest, districtCtx.districtId]);
+  }, [sendRequest, districtCtx.districtId, triggleList]);
 
   const rows = useMemo(() => {
     if (loadedWardsByDistrict) {
@@ -366,9 +388,27 @@ const WardList = () => {
 
   if (status === 'completed' && rows !== null) {
     return (
-      <MainCard>
-        <EnhancedTable rows={rows} />
-      </MainCard>
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={12} display='flex' justifyContent='flex-end'>
+          <Button
+            onClick={() => openAddModel('ward', districtCtx.districtId)}
+            variant='outlined'
+          >
+            <AddCircleOutlineIcon />
+            Thêm
+          </Button>
+        </Grid>
+        <Grid item xs={12} lg={12}>
+          <MainCard>
+            <EnhancedTable
+              rows={rows}
+              districtName={districtCtx.districtName}
+              openEditModel={openEditModel}
+              openDeleteModel={openDeleteModel}
+            />
+          </MainCard>
+        </Grid>
+      </Grid>
     );
   }
 };
@@ -384,10 +424,19 @@ EnhancedTableHead.propTypes = {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  districtName: PropTypes.string.isRequired,
 };
 
 EnhancedTable.propTypes = {
   rows: PropTypes.array.isRequired,
+  districtName: PropTypes.string.isRequired,
+  openEditModel: PropTypes.func.isRequired,
+  districtId: PropTypes.string.isRequired,
+};
+
+WardList.propTypes = {
+  openAddModel: PropTypes.func.isRequired,
+  openEditModel: PropTypes.func.isRequired,
 };
 
 export default WardList;

@@ -1,9 +1,12 @@
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
+  Button,
   FormControlLabel,
+  Grid,
   IconButton,
   Paper,
   Switch,
@@ -25,7 +28,6 @@ import useHttp from 'hooks/use-http';
 import { getAllDistricts } from 'lib/api';
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import DistrictContext from 'store/district/district-context';
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -82,7 +84,7 @@ const headCells = [
     id: 'detail',
     numeric: true,
     disablePadding: false,
-    label: 'Chi tiết',
+    label: '',
   },
 ];
 
@@ -225,9 +227,8 @@ const EnhancedTable = (props) => {
     setSelected(newSelected);
   };
 
-  const handleClickDetail = (id) => {
-    console.log(id);
-    districtCtx.setDistrictId(id);
+  const handleClickDetail = (id, name) => {
+    districtCtx.setDistrictId({ id: id, name: name });
   };
 
   const handleChangePage = (event, newPage) => {
@@ -289,7 +290,7 @@ const EnhancedTable = (props) => {
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
-                    onClick={() => handleClickDetail(row.id)}
+                    onClick={() => handleClickDetail(row.id, row.district)}
                   >
                     <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
@@ -301,11 +302,27 @@ const EnhancedTable = (props) => {
                       {row.district}
                     </TableCell>
                     <TableCell align='right'>
-                      <Link to='/utils/report/detail'>
-                        <IconButton>
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.openEditModel(
+                            row.id,
+                            row.district,
+                            'district',
+                            ''
+                          );
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.openDeleteModel(row.id, 'district');
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 );
@@ -340,7 +357,12 @@ const EnhancedTable = (props) => {
   );
 };
 
-const DistrictList = () => {
+const DistrictList = ({
+  openAddModel,
+  openEditModel,
+  triggleList,
+  openDeleteModel,
+}) => {
   const districtCtx = useContext(DistrictContext);
   const {
     sendRequest,
@@ -351,7 +373,7 @@ const DistrictList = () => {
 
   useEffect(() => {
     sendRequest();
-  }, [sendRequest]);
+  }, [sendRequest, triggleList]);
 
   const rows = useMemo(() => {
     if (loadedDistricts) {
@@ -363,7 +385,7 @@ const DistrictList = () => {
 
   useEffect(() => {
     if (status === 'completed' && rows !== null) {
-      districtCtx.setDistrictId(rows[0].id);
+      districtCtx.setDistrictId({ id: rows[0].id, name: rows[0].district });
     }
   }, [rows]);
 
@@ -377,9 +399,28 @@ const DistrictList = () => {
 
   if (status === 'completed' && rows !== null) {
     return (
-      <MainCard>
-        <EnhancedTable rows={rows} />
-      </MainCard>
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={12} display='flex' justifyContent='flex-end'>
+          <Button
+            onClick={() => openAddModel('district', '')}
+            variant='outlined'
+          >
+            <AddCircleOutlineIcon />
+            Thêm
+          </Button>
+        </Grid>
+        <Grid item xs={12} lg={12}>
+          <MainCard>
+            <Grid container spacing={3}>
+              <EnhancedTable
+                rows={rows}
+                openEditModel={openEditModel}
+                openDeleteModel={openDeleteModel}
+              />
+            </Grid>
+          </MainCard>
+        </Grid>
+      </Grid>
     );
   }
 };
@@ -399,6 +440,12 @@ EnhancedTableToolbar.propTypes = {
 
 EnhancedTable.propTypes = {
   rows: PropTypes.array.isRequired,
+  openEditModel: PropTypes.func.isRequired,
+};
+
+DistrictList.propTypes = {
+  openAddModel: PropTypes.func.isRequired,
+  openEditModel: PropTypes.func.isRequired,
 };
 
 export default DistrictList;

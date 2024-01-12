@@ -56,11 +56,22 @@ const Login = ({ ...others }) => {
     event.preventDefault();
   };
 
-  const handleSubmit = (value) => {
-    sendRequest({ loginCredential: value.email, password: value.password });
+  const handleSubmit = async (value, { setStatus, setErrors }) => {
+    try {
+      await sendRequest({
+        loginCredential: value.email,
+        password: value.password,
+      });
+
+      setStatus({ success: true });
+    } catch (error) {
+      setStatus({ success: false });
+      setErrors({ submit: 'Wrong Credentials' });
+    }
   };
 
   if (error) {
+    console.log(error);
     return;
   }
 
@@ -131,7 +142,10 @@ const Login = ({ ...others }) => {
         //     }
         //   }
         // }}
-        onSubmit={handleSubmit}
+        onSubmit={(values, { setStatus, setErrors }) => {
+          handleSubmit(values, { setStatus, setErrors });
+          return false;
+        }}
       >
         {({
           errors,
@@ -228,13 +242,21 @@ const Login = ({ ...others }) => {
                 }
                 label='Remember me'
               />
-              <Typography
-                variant='subtitle1'
-                color='secondary'
-                sx={{ textDecoration: 'none', cursor: 'pointer' }}
+
+              <Button
+                variant='text'
+                onClick={() => navigate('/forgot-password')}
+                sx={{
+                  '&:hover': {
+                    textDecoration: 'underline',
+                    color: theme.palette.secondary.main,
+                  },
+                }}
               >
-                Forgot Password?
-              </Typography>
+                <Typography variant='subtitle1' color='secondary'>
+                  Forgot Password?
+                </Typography>
+              </Button>
             </Stack>
             {errors.submit && (
               <Box sx={{ mt: 3 }}>

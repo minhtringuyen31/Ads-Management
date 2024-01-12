@@ -1,12 +1,14 @@
 // assets
 import {
+  IconClipboardText,
   IconList,
+  IconLocation,
+  IconMap2,
   IconMapPins,
   IconPalette,
   IconShadow,
   IconTypography,
   IconWindmill,
-  IconLocation,
 } from '@tabler/icons';
 
 // constant
@@ -18,6 +20,8 @@ const icons = {
   IconShadow,
   IconWindmill,
   IconLocation,
+  IconMap2,
+  IconClipboardText,
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -44,6 +48,7 @@ const utilities = {
         icon: icons.IconList,
         breadcrumbs: false,
       },
+
       {
         id: 'location',
         title: 'Danh sách điểm đặt',
@@ -116,11 +121,19 @@ const utilities = {
         breadcrumbs: false,
       },
       {
+        id: 'report-map',
+        title: 'Bản đồ báo cáo',
+        type: 'item',
+        url: '/utils/report/map',
+        icon: icons.IconMap2,
+        breadcrumbs: false,
+      },
+      {
         id: 'report',
         title: 'Danh sách báo cáo',
         type: 'item',
-        url: '/utils/reports',
-        icon: icons.IconPalette,
+        url: '/utils/report/list',
+        icon: icons.IconClipboardText,
         breadcrumbs: false,
       },
       {
@@ -155,10 +168,18 @@ const utilities = {
         breadcrumbs: false,
       },
       {
+        id: 'report-map',
+        title: 'Bản đồ báo cáo',
+        type: 'item',
+        url: '/utils/report/map',
+        icon: icons.IconMap2,
+        breadcrumbs: false,
+      },
+      {
         id: 'report',
         title: 'Danh sách báo cáo',
         type: 'item',
-        url: '/utils/reports',
+        url: '/utils/report/list',
         icon: icons.IconPalette,
         breadcrumbs: false,
       },

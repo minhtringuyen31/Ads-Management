@@ -44,6 +44,7 @@ instance.interceptors.response.use(
       } catch (error) {
         RemoveToken();
         window.location.href = '/admin_dashboard/login';
+        throw new Error('Có lỗi xảy ra, vui lòng thử lại sau');
       }
     }
   }
