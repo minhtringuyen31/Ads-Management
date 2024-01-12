@@ -16,6 +16,7 @@ import moment from 'moment';
 import 'moment/locale/vi';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { GetUser } from 'store/auth/auth-config';
 import ReportContext from 'store/report/report-context';
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -36,6 +37,7 @@ const ListItemWrapper = styled('div')(({ theme }) => ({
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
 const NotificationList = ({ handleToggle }) => {
   const reportCtx = useContext(ReportContext);
+  const user = GetUser();
   const theme = useTheme();
   const [notificationList, setNotificationList] = useState([]);
   const navigate = useNavigate();
@@ -67,7 +69,18 @@ const NotificationList = ({ handleToggle }) => {
   const fetchDatas = async () => {
     try {
       const response = await instance.get('/notifications');
-      setNotificationList(response.data.data);
+
+      if (user.userRole === 'province_officer') {
+        const filterData = response.data.data.filter(
+          (item) => item.type !== 'report'
+        );
+        setNotificationList(filterData);
+      } else {
+        const filterData = response.data.data.filter(
+          (item) => item.type === 'report'
+        );
+        setNotificationList(filterData);
+      }
     } catch (error) {
       console.log(error);
     }

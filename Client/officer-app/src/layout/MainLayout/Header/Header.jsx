@@ -59,7 +59,7 @@ const Header = () => {
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ flexGrow: 1 }} />
 
-      {user.userRole !== 'province_officer' && <NotificationSection />}
+      <NotificationSection />
       <ProfileSection />
     </SocketProvider>
   );

@@ -31,8 +31,9 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import axios from 'axios';
 import useHttp from 'hooks/use-http';
-import { login } from 'lib/api';
+import { login, rootApi } from 'lib/api';
 import { AuthenticationActions } from 'redux/auth/authentication-slice';
 import { StoreUser } from 'store/auth/auth-config';
 
@@ -58,15 +59,27 @@ const Login = ({ ...others }) => {
 
   const handleSubmit = async (value, { setStatus, setErrors }) => {
     try {
-      await sendRequest({
+      const response = await axios.post(`${rootApi}/auth/login`, {
         loginCredential: value.email,
         password: value.password,
       });
+      const data = response.data;
+
+      dispatch(
+        AuthenticationActions.login({
+          accessToken: data.accessToken,
+          refreshToken: data.refreshToken,
+        })
+      );
+
+      StoreUser(data.user);
+
+      navigate('/dashboard');
 
       setStatus({ success: true });
     } catch (error) {
       setStatus({ success: false });
-      setErrors({ submit: 'Wrong Credentials' });
+      setErrors({ submit: 'Thông tin đâng nhập không đúng' });
     }
   };
 
@@ -76,16 +89,6 @@ const Login = ({ ...others }) => {
   }
 
   if (status === 'completed') {
-    dispatch(
-      AuthenticationActions.login({
-        accessToken: loadedAuth.accessToken,
-        refreshToken: loadedAuth.refreshToken,
-      })
-    );
-
-    StoreUser(loadedAuth.user);
-
-    navigate('/dashboard');
   }
 
   return (
@@ -125,7 +128,10 @@ const Login = ({ ...others }) => {
             .email('Must be a valid email')
             .max(255)
             .required('Email is required'),
-          password: Yup.string().max(255).required('Password is required'),
+          password: Yup.string()
+            .max(255)
+            .min(6, 'Mât khẩu phải có ít nhất 6 ký tự')
+            .required('Password is required'),
         })}
         // onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         //   try {
@@ -224,6 +230,11 @@ const Login = ({ ...others }) => {
                   {errors.password}
                 </FormHelperText>
               )}
+              {errors.submit && (
+                <Box>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
+                </Box>
+              )}
             </FormControl>
             <Stack
               direction='row'
@@ -258,11 +269,6 @@ const Login = ({ ...others }) => {
                 </Typography>
               </Button>
             </Stack>
-            {errors.submit && (
-              <Box sx={{ mt: 3 }}>
-                <FormHelperText error>{errors.submit}</FormHelperText>
-              </Box>
-            )}
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>

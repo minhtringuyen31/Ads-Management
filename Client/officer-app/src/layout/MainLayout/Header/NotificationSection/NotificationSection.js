@@ -93,11 +93,13 @@ const NotificationSection = () => {
 
   useEffect(() => {
     if (user.userRole === 'province_officer') {
+      console.log(socket);
       socket.on('new_edit_request', (data) => {
         console.log(data);
         setNotifications((prev) => [...prev, data]);
       });
     } else {
+      console.log(socket);
       socket.on('new_notification', (data) => {
         console.log(data);
         setNotifications((prev) => [...prev, data]);
