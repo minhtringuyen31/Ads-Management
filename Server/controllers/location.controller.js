@@ -149,6 +149,7 @@ const LocationController = {
             // Handle by Quang Thanh resolve format from reverse-geocoding
             let district_id = "";
             let ward_id = "";
+            console.log(data)
             // Process get district id and ward id
             const districtList = await DistrictService.getAll();
             districtList.forEach((district) => {
@@ -159,6 +160,7 @@ const LocationController = {
                     district_id = district._id;
                 }
             });
+            console.log(district_id);
             if (district_id && district_id != "") {
                 const wardList = await WardService.getAllByDistrictId(district_id);
                 wardList.forEach((ward) => {
@@ -176,6 +178,8 @@ const LocationController = {
             if (ward_id && ward_id != "") {
                 data.ward = ward_id;
             }
+            console.log(ward_id);
+            console.log(data);
 
             // End by Quang Thanh
 
