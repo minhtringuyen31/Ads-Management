@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 // material-ui
 import { styled, useTheme } from "@mui/material/styles";
@@ -55,12 +54,12 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   },
 }));
 
-const PriceCard = (props) => {
-  const data = props.data;
-  const isLoading = props.isLoading;
+// ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
+
+const TotalRevenue = ({ isLoading, value }) => {
   const theme = useTheme();
+
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -70,18 +69,13 @@ const PriceCard = (props) => {
     setAnchorEl(null);
   };
 
-  const handleEditClicked = () => {
-    console.log("Edit Button Clicked", data);
-    navigate("/bussiness/unit_price/edit", { state: { data } });
-  };
-
   return (
     <>
       {isLoading ? (
         <SkeletonEarningCard />
       ) : (
         <CardWrapper border={false} content={false}>
-          <Box sx={{ p: 2.25 }} onClick={handleEditClicked}>
+          <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
@@ -102,63 +96,31 @@ const PriceCard = (props) => {
               </Grid>
               <Grid item>
                 <Grid container alignItems="center">
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                  <Grid item>
                     <Typography
                       sx={{
-                        fontSize: "1rem",
+                        fontSize: "2.125rem",
                         fontWeight: 500,
-                        color: theme.palette.secondary[200],
                         mr: 1,
                         mt: 1.75,
                         mb: 0.75,
                       }}
                     >
-                      {data.vehicleType} Unit Price
+                      {value}
                     </Typography>
-                  </Grid>
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Typography
-                      sx={{
-                        fontSize: "1.5rem",
-                        fontWeight: 500,
-                        mr: 1,
-                        mt: 0.5,
-                        mb: 0.5,
-                      }}
-                    >
-                      Base Fare: {data.baseFare} VND
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography
-                      sx={{
-                        fontSize: "1.5rem",
-                        fontWeight: 500,
-                        mr: 1,
-                        mt: 0.5,
-                        mb: 0.5,
-                      }}
-                    >
-                      Distan Fare: {data.distanceFare} VND
-                    </Typography>
-                  </Grid>
-
-                  <Grid item>
-                    <Avatar
-                      sx={{
-                        cursor: "pointer",
-                        ...theme.typography.smallAvatar,
-                        backgroundColor: theme.palette.secondary[200],
-                        color: theme.palette.secondary.dark,
-                      }}
-                    >
-                      <ArrowUpwardIcon
-                        fontSize="inherit"
-                        sx={{ transform: "rotate3d(1, 1, 1, 45deg)" }}
-                      />
-                    </Avatar>
                   </Grid>
                 </Grid>
+              </Grid>
+              <Grid item sx={{ mb: 1.25 }}>
+                <Typography
+                  sx={{
+                    fontSize: "1rem",
+                    fontWeight: 500,
+                    color: theme.palette.secondary[200],
+                  }}
+                >
+                  Tổng số lượng báo cáo
+                </Typography>
               </Grid>
             </Grid>
           </Box>
@@ -168,8 +130,8 @@ const PriceCard = (props) => {
   );
 };
 
-PriceCard.propTypes = {
+TotalRevenue.propTypes = {
   isLoading: PropTypes.bool,
 };
 
-export default PriceCard;
+export default TotalRevenue;

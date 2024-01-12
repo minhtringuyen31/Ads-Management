@@ -18,33 +18,52 @@ import { useEffect } from "react";
 import axios from "axios";
 import CreateIcon from "@mui/icons-material/Create";
 import { useNavigate } from "react-router";
+import { useLocation } from "react-router-dom";
 
 const AssignRole = () => {
-  const account = {
-    role: "ward_officer",
-    assign_areaid: "",
-  };
+  const [account, setAccount] = useState({});
+
+  const location = useLocation();
+  const { state: id } = location;
+  const accountId = id;
+  console.log("Account Id: ", accountId);
+
   const navigate = useNavigate();
   const handleAssignBtnClicked = () => {
-    navigate("/utils/assign_role");
+    navigate("/utils/assign_role", { state: accountId });
+  };
+
+  const renderUserRole = (role) => {
+    switch (role) {
+      case "ward_officer":
+        return "Cán bộ cấp Phường";
+      case "district_officer":
+        return "Cán bộ cấp Quận";
+      case "province_officer":
+        return "Cán bộ cấp Tỉnh";
+      default:
+        return "";
+    }
   };
   /**
    * useeEffect
    */
-  //   useEffect(() => {
-  //     async function fetchData() {
-  //       try {
-  //         const response = await axios.get("http://14.225.192.121/districts");
-  //         if (response.status === 200) {
-  //           console.log("District List: ", response.data);
-  //           setDistrictList(response.data.data);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //     fetchData();
-  //   }, []);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `http://14.225.192.121/user/${accountId}`,
+        );
+        if (response.status === 200) {
+          console.log("Account Detail: ", response.data);
+          setAccount(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -60,8 +79,7 @@ const AssignRole = () => {
                 Họ và tên:
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                Nguyễn Văn A
+                {account.fullname}
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" marginBottom={2}>
@@ -69,8 +87,7 @@ const AssignRole = () => {
                 Địa chỉ email:
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                nva@gmail.com
+                {account.email}
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" marginBottom={2}>
@@ -78,8 +95,7 @@ const AssignRole = () => {
                 Số điện thoại
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                0131993131
+                {account.phone}
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" marginBottom={2}>
@@ -87,8 +103,7 @@ const AssignRole = () => {
                 Phân cấp:
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                Cán bộ Quận
+                {renderUserRole(account.userRole)}
               </Typography>
             </Box>
             <Box
@@ -100,10 +115,10 @@ const AssignRole = () => {
               <Typography fontSize={16} color="#374151" marginRight={2}>
                 Khu vực quản lý:
               </Typography>
-              {account.assign_areaid !== "" ? (
+              {account.assigned_areaid !== "" &&
+              account.assigned_areaid !== undefined ? (
                 <Typography fontSize={16} color="#374151" fontWeight="bold">
-                  {" "}
-                  hadhcankjcha
+                  {account.assigned_areaid.label}
                 </Typography>
               ) : (
                 <>
@@ -155,7 +170,7 @@ const AssignRole = () => {
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
                 {" "}
-                11/01/2024
+                {account.createdAt}
               </Typography>
             </Box>
           </Box>

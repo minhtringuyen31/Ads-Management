@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Divider,
@@ -17,6 +18,7 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import CreateIcon from "@mui/icons-material/Create";
 
@@ -35,37 +37,76 @@ const initialValues = {
 };
 
 const AssignRole = () => {
-  const account = {
-    role: "ward_officer",
-    assign_areaid: "",
-  };
+  const [account, setAccount] = useState({});
   const [districtList, setDistrictList] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [wardList, setWardList] = useState([]);
+  const [successAlert, setSuccessAlert] = useState(false);
+
+  const location = useLocation();
+  const { state: id } = location;
+  const accountId = id;
+  console.log("Account Id: ", accountId);
+
+  const renderUserRole = (role) => {
+    switch (role) {
+      case "ward_officer":
+        return "Cán bộ cấp Phường";
+      case "district_officer":
+        return "Cán bộ cấp Quận";
+      case "province_officer":
+        return "Cán bộ cấp Tỉnh";
+      default:
+        return "";
+    }
+  };
 
   const handleSubmitForm = async (values) => {
     const postBody = {
-      accountId: 12,
-      assign_areaid: values.assignArea,
+      assigned_areaid: values.assignArea,
     };
     console.log("Assign Role: ", postBody);
 
-    // try {
-    //   const response = await axios.post("http://14.225.192.121/user",
-    //     JSON.stringify(postBody),
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     },")
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const response = await axios.put(
+        `http://14.225.192.121/user/${accountId}`,
+        JSON.stringify(postBody),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (response.status < 300) {
+        console.log("Response: ", response);
+        setSuccessAlert(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /**
    * useeEffect
    */
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `http://14.225.192.121/user/${accountId}`,
+        );
+        if (response.status === 200) {
+          console.log("Account Detail: ", response.data);
+          setAccount(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -112,8 +153,7 @@ const AssignRole = () => {
                 Họ và tên:
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                Nguyễn Văn A
+                {account.fullname}
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" marginBottom={2}>
@@ -121,8 +161,7 @@ const AssignRole = () => {
                 Địa chỉ email:
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                nva@gmail.com
+                {account.email}
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" marginBottom={2}>
@@ -130,8 +169,7 @@ const AssignRole = () => {
                 Số điện thoại
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                0131993131
+                {account.phone}
               </Typography>
             </Box>
             <Box display="flex" flexDirection="row" marginBottom={2}>
@@ -139,8 +177,7 @@ const AssignRole = () => {
                 Phân cấp:
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
-                {" "}
-                Cán bộ Quận
+                {renderUserRole(account.userRole)}
               </Typography>
             </Box>
             <Box
@@ -152,10 +189,10 @@ const AssignRole = () => {
               <Typography fontSize={16} color="#374151" marginRight={2}>
                 Khu vực quản lý:
               </Typography>
-              {account.assign_areaid !== "" ? (
+              {account.assigned_areaid !== "" &&
+              account.assigned_areaid !== undefined ? (
                 <Typography fontSize={16} color="#374151" fontWeight="bold">
-                  {" "}
-                  hadhcankjcha
+                  {account.assign_areaid.label}
                 </Typography>
               ) : (
                 <>
@@ -168,10 +205,11 @@ const AssignRole = () => {
                     {" "}
                     Chưa có khu vực quản lý
                   </Typography>
-                  <IconButton
+                  {/* <IconButton
                     color="primary"
                     aria-label="add to shopping cart"
                     marginLeft={1}
+                    onClick={() => handleAssignBtnClicked()}
                     sx={{
                       transition: "outline 0.3s",
                       "&:hover": {
@@ -182,10 +220,11 @@ const AssignRole = () => {
                     }}
                   >
                     <CreateIcon />
-                  </IconButton>
+                  </IconButton> */}
                 </>
               )}
             </Box>
+
             <Box display="flex" flexDirection="row" marginBottom={2}>
               <Typography fontSize={16} color="#374151" marginRight={2}>
                 Mật khẩu
@@ -205,7 +244,7 @@ const AssignRole = () => {
               </Typography>
               <Typography fontSize={16} color="#374151" fontWeight="bold">
                 {" "}
-                11/01/2024
+                {account.createdAt}
               </Typography>
             </Box>
           </Box>
@@ -242,7 +281,7 @@ const AssignRole = () => {
                     alignItems: "center",
                   }}
                 >
-                  {account.role === "district_officer" && (
+                  {account.userRole === "district_officer" && (
                     <FormControl fullWidth sx={{ marginTop: "25px" }}>
                       <InputLabel htmlFor="outlined-adornment-district">
                         Quận
@@ -271,7 +310,7 @@ const AssignRole = () => {
                     </FormControl>
                   )}
 
-                  {account.role === "ward_officer" && (
+                  {account.userRole === "ward_officer" && (
                     <>
                       <FormControl fullWidth sx={{ marginTop: "25px" }}>
                         <InputLabel htmlFor="outlined-adornment-district">
@@ -353,6 +392,11 @@ const AssignRole = () => {
             </Formik>
           </Box>
         </Box>
+        {successAlert && (
+          <Alert severity="success" onClose={() => setSuccessAlert(false)}>
+            This is a success Alert.
+          </Alert>
+        )}
       </MainCard>
     </>
   );

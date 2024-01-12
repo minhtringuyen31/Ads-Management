@@ -44,12 +44,18 @@ const AccountManagement = () => {
     navigate("/utils/create_account");
   };
 
-  const handleRowAccountClicked = () => {
-    navigate("/utils/account_detail");
+  const handleRowAccountClicked = (account) => {
+    navigate("/utils/account_detail", { state: account._id });
   };
 
   const renderOfficerRole = (userRole) => {
     return userRole === "" ? "Chưa phân cấp" : role[userRole];
+  };
+
+  const renderAssignedArea = (area) => {
+    return area.assigned_areaid && area.assigned_areaid !== undefined
+      ? area.assigned_areaid.label
+      : "Chưa phân khu vực";
   };
 
   useEffect(() => {
@@ -155,7 +161,7 @@ const AccountManagement = () => {
                     <TableCell>{account.phone}</TableCell>
                     <TableCell>{}</TableCell>
                     <TableCell>{renderOfficerRole(account.userRole)}</TableCell>
-                    <TableCell>Phường 3</TableCell>
+                    <TableCell>{renderAssignedArea(account)}</TableCell>
                   </TableRow>
                 ))}
             </TableBody>

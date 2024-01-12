@@ -81,6 +81,10 @@ const DetailAccount = Loadable(
   lazy(() => import("../views/utilities/account/DetailAccount")),
 );
 
+const StatisticReport = Loadable(
+  lazy(() => import("../views/utilities/Statistic/ReportStatistic")),
+);
+
 const MainRoutes = {
   path: "/",
   element: <MainLayout />,
@@ -181,6 +185,15 @@ const MainRoutes = {
         {
           path: "account_detail",
           element: <DetailAccount />,
+        },
+      ],
+    },
+    {
+      path: "utils",
+      children: [
+        {
+          path: "statistic",
+          element: <StatisticReport />,
         },
       ],
     },

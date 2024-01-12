@@ -96,6 +96,14 @@ const utilities = {
         icon: icons.IconPalette,
         breadcrumbs: false,
       },
+      {
+        id: "statistic",
+        title: "Thống kê báo cáo",
+        type: "item",
+        url: "/utils/statistic",
+        icon: icons.IconPalette,
+        breadcrumbs: false,
+      },
     ],
   },
   district_officer: {
