@@ -32,6 +32,7 @@ const LocationController = {
             // }
             let filteredLists = locations;
             const user = await UserService.getById(req.user.userId);
+            console.log(user)
             if(!user.assigned_areaid && user.__t !== "ProvinceOfficer"){
                 res.status(400).json({message: "bạn éo có quyền"})
             }

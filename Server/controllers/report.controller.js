@@ -27,7 +27,8 @@ const ReportController = {
 
       let filteredLists = reports;
       const user = await UserService.getById(req.user.userId);
-      if(!user.assigned_areaid && user.__t !== "ProvinceOfficer"){
+      console.log("user", user)
+      if(user.__t !== "ProvinceOfficer" && user.assigned_areaid == null ){
         res.status(400).json({message: "bạn éo có quyền"})
       }
       console.log("user", user)
