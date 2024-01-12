@@ -88,7 +88,7 @@ const EditModal = ({
           <Grid item xs={12}>
             <Formik
               initialValues={{
-                label: '',
+                label: label,
               }}
               validationSchema={Yup.object().shape({
                 label: Yup.string()
@@ -115,8 +115,7 @@ const EditModal = ({
                     <Grid item xs={12}>
                       <FormControl fullWidth>
                         <InputLabel htmlFor='outlined-adornment-label'>
-                          {label ||
-                            (type === 'district' ? 'Quận/Huyện' : 'Phường/Xã')}
+                          {type === 'district' ? 'Quận/Huyện' : 'Phường/Xã'}
                         </InputLabel>
                         <OutlinedInput
                           id='outlined-adornment-password'
@@ -127,12 +126,10 @@ const EditModal = ({
                           onBlur={handleBlur}
                           error={touched.label && Boolean(errors.label)}
                           label={
-                            label ||
-                            (type === 'district' ? 'Quận/Huyện' : 'Phường/Xã')
+                            type === 'district' ? 'Quận/Huyện' : 'Phường/Xã'
                           }
                           placeholder={
-                            label ||
-                            (type === 'district' ? 'Quận/Huyện' : 'Phường/Xã')
+                            type === 'district' ? 'Quận/Huyện' : 'Phường/Xã'
                           }
                         />
                         {touched.label && Boolean(errors.label) && (

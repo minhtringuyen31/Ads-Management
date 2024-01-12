@@ -10,6 +10,7 @@ import {
   Chip,
   ClickAwayListener,
   Divider,
+  Grid,
   List,
   ListItemButton,
   ListItemIcon,
@@ -31,7 +32,7 @@ import Transitions from 'ui-component/extended/Transitions';
 import User1 from 'assets/images/user.png';
 
 // assets
-import { IconLogout, IconSettings } from '@tabler/icons';
+import { IconLogout, IconSettings, IconUser } from '@tabler/icons';
 import { AuthenticationActions } from 'redux/auth/authentication-slice';
 import { AuthorizationActions } from 'redux/auth/authorization-slice';
 import { GetUser, RemoveToken, RemoveUser } from 'store/auth/auth-config';
@@ -247,9 +248,37 @@ const ProfileSection = () => {
                           }}
                           selected={selectedIndex === 0}
                           onClick={(event) =>
+                            handleListItemClick(event, 0, '/utils/profile')
+                          }
+                        >
+                          <ListItemIcon>
+                            <IconUser stroke={1.5} size='1.3rem' />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Grid
+                                container
+                                spacing={1}
+                                justifyContent='space-between'
+                              >
+                                <Grid item>
+                                  <Typography variant='body2'>
+                                    Social Profile
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            }
+                          />
+                        </ListItemButton>
+                        <ListItemButton
+                          sx={{
+                            borderRadius: `${customization.borderRadius}px`,
+                          }}
+                          selected={selectedIndex === 1}
+                          onClick={(event) =>
                             handleListItemClick(
                               event,
-                              0,
+                              1,
                               '/utils/profile/change_password'
                             )
                           }
@@ -265,49 +294,12 @@ const ProfileSection = () => {
                             }
                           />
                         </ListItemButton>
-                        {/* <ListItemButton
-                          sx={{
-                            borderRadius: `${customization.borderRadius}px`,
-                          }}
-                          selected={selectedIndex === 1}
-                          onClick={(event) =>
-                            handleListItemClick(event, 1, "#")
-                          }
-                        >
-                          <ListItemIcon>
-                            <IconUser stroke={1.5} size="1.3rem" />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Grid
-                                container
-                                spacing={1}
-                                justifyContent="space-between"
-                              >
-                                <Grid item>
-                                  <Typography variant="body2">
-                                    Social Profile
-                                  </Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Chip
-                                    label="02"
-                                    size="small"
-                                    sx={{
-                                      bgcolor: theme.palette.warning.dark,
-                                      color: theme.palette.background.default,
-                                    }}
-                                  />
-                                </Grid>
-                              </Grid>
-                            }
-                          />
-                        </ListItemButton> */}
+
                         <ListItemButton
                           sx={{
                             borderRadius: `${customization.borderRadius}px`,
                           }}
-                          selected={selectedIndex === 4}
+                          selected={selectedIndex === 2}
                           onClick={handleLogout}
                         >
                           <ListItemIcon>

@@ -97,7 +97,7 @@ const EditModal = ({
           <Grid item xs={12}>
             <Formik
               initialValues={{
-                label: '',
+                label: label,
               }}
               validationSchema={Yup.object().shape({
                 label: Yup.string()
@@ -128,12 +128,11 @@ const EditModal = ({
                     <Grid item xs={12}>
                       <FormControl fullWidth>
                         <InputLabel htmlFor='outlined-adornment-label'>
-                          {label ||
-                            (type === 'adsboardtype'
-                              ? 'Loại bảng quảng cáo'
-                              : type === 'adstype'
-                              ? 'Loại quảng cáo'
-                              : 'Loại địa điểm')}
+                          {type === 'adsboardtype'
+                            ? 'Loại bảng quảng cáo'
+                            : type === 'adstype'
+                            ? 'Loại quảng cáo'
+                            : 'Loại địa điểm'}
                         </InputLabel>
                         <OutlinedInput
                           id='outlined-adornment-password'
@@ -144,20 +143,18 @@ const EditModal = ({
                           onBlur={handleBlur}
                           error={touched.label && Boolean(errors.label)}
                           label={
-                            label ||
-                            (type === 'adsboardtype'
+                            type === 'adsboardtype'
                               ? 'Loại bảng quảng cáo'
                               : type === 'adstype'
                               ? 'Loại quảng cáo'
-                              : 'Loại địa điểm')
+                              : 'Loại địa điểm'
                           }
                           placeholder={
-                            label ||
-                            (type === 'adsboardtype'
+                            type === 'adsboardtype'
                               ? 'Loại bảng quảng cáo'
                               : type === 'adstype'
                               ? 'Loại quảng cáo'
-                              : 'Loại địa điểm')
+                              : 'Loại địa điểm'
                           }
                         />
                         {touched.label && Boolean(errors.label) && (

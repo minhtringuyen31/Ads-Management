@@ -102,11 +102,11 @@ const NotificationList = ({ handleToggle }) => {
     <List
       sx={{
         width: '100%',
-        maxWidth: 700,
+        maxWidth: 400,
         py: 0,
         borderRadius: '10px',
         [theme.breakpoints.down('md')]: {
-          maxWidth: 700,
+          maxWidth: 400,
         },
         '& .MuiListItemSecondaryAction-root': {
           top: 22,
@@ -146,14 +146,20 @@ const NotificationList = ({ handleToggle }) => {
                   <Box sx={{ height: '5px' }} />
                   <Grid item>
                     <Typography variant='h5'>
-                      {notification.content.report_form.label}
+                      {notification.type === 'report' &&
+                        notification.content.report_form.label}
+                      {notification.type === 'edit_request' &&
+                        (notification.content.type === 'board'
+                          ? 'Yêu cầu chỉnh sửa bảng quảng cáo'
+                          : 'Yêu cầu chỉnh sửa địa điểm')}
                     </Typography>
                   </Grid>
                   <Box sx={{ height: '5px' }} />
                   <Grid item container direction='column'>
                     <Grid item xs={12} lg={12}>
                       <Typography variant='h6' color='GrayText'>
-                        Người gửi: {notification.content.username}
+                        Người gửi:{' '}
+                        {notification.content.newInformation.user_id.fullname}
                       </Typography>
                     </Grid>
                     <Box sx={{ height: '5px' }} />

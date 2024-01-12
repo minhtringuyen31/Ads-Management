@@ -77,6 +77,10 @@ const ReportMap = Loadable(
   lazy(() => import('../views/utilities/report-manage/report-map/ReportMap'))
 );
 
+const UserProfile = Loadable(
+  lazy(() => import('../views/utilities/profile/UserProfile'))
+);
+
 const MainRoutes = {
   path: '/',
   element: <MainLayout />,
@@ -99,6 +103,10 @@ const MainRoutes = {
         {
           path: 'location/request_edit_form',
           element: <RequestEditLocation />,
+        },
+        {
+          path: 'profile',
+          element: <UserProfile />,
         },
       ],
     },

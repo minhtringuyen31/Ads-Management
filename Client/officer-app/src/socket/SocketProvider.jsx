@@ -26,6 +26,7 @@ const SocketProvider = ({ children }) => {
     transports: ['websocket'],
     query: {
       [area]: assigned_areaid,
+      user_id: user._id,
     },
   });
 
