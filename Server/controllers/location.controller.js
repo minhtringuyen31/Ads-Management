@@ -144,8 +144,8 @@ const LocationController = {
             if (files) {
                 data.image = files.map(file => file.path);
             }
-            const districtLabelRadomData = req.district
-            const wardLabelRadomData = req.ward;
+            const districtLabelRadomData = data.district
+            const wardLabelRadomData = data.ward;
             // Handle by Quang Thanh resolve format from reverse-geocoding
             let district_id = "";
             let ward_id = "";
