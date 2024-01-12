@@ -17,7 +17,7 @@ router.get('/location/reverse-geocoding', LocationController.revereGeocode);
 router.get('/location/:id', LocationController.getDetail);
 
 // Tạo mới một Location
-router.post('/location', createLocationValidation, uploadCloud.array('image'), LocationController.create);
+router.post('/location', uploadCloud.array('image'), LocationController.create);
 
 // Cập nhật một Location bằng ID
 router.put('/location/:id', updateLocationValidation, uploadCloud.array('image'), LocationController.update);
