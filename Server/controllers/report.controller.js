@@ -249,11 +249,14 @@ const ReportController = {
         console.log(data);
         // Gửi báo cáo đến cán bộ phường/quận
         if (newReport.ward) {
+          console.log("Vô đây không ward");
+
           global.io
             .to(newReport.ward.toString())
             .emit("new_notification", data);
         }
         if (newReport.district) {
+          console.log("Vô đây không distrit");
           global.io
             .to(newReport.district.toString())
             .emit("new_notification", data);
