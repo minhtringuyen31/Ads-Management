@@ -6,7 +6,7 @@ import AdsBoardService from "../services/ads_board.service.js";
 import { fromJson } from "../helper/dto.js";
 import { createMongooseQuery, createMongooseSortObject } from "../helper/filter.js";
 import { v2 as cloudinary } from 'cloudinary';
-
+import UserService from "../services/user.service.js";
 import { extractPublicId } from 'cloudinary-build-url'
 dotenv.config();
 
@@ -30,7 +30,27 @@ const LocationController = {
             //     console.log(boards.length)
             //     location.adsBoardsize = boards.length;
             // }
-            const list = locations.map(async (location) => {
+            let filteredLists = locations;
+            const user = await UserService.getById(req.user.userId);
+            console.log(user)
+            if(!user.assigned_areaid && user.__t !== "ProvinceOfficer"){
+                res.status(400).json({message: "bạn éo có quyền"})
+            }
+
+            if (user.__t === "WardOfficer") {
+                const assigned_areaid = user.assigned_areaid._id.toString();
+                filteredLists = locations.filter(
+                (location) => location.ward._id.toString() === assigned_areaid
+                );
+            } else if (user.__t === "DistrictOfficer") {
+                //console.log("assigned_areaid")
+                const assigned_areaid = user.assigned_areaid._id.toString();
+                filteredLists = locations.filter(
+                (location) => location.district._id.toString() === assigned_areaid
+                );
+            }
+
+            const list = filteredLists.map(async (location) => {
                 const boards = await AdsBoardService.getAllAdBoardbyLocation(location._id.toString());
                 console.log(boards)
                 return {
@@ -42,9 +62,55 @@ const LocationController = {
             res.json({
                 message: "Get location list successfully",
                 status: 200,
+                size_all: locations.length,
+                size: fresult.length,
                 data: fresult
             });
         } catch (error) {
+            console.log(console.log(error))
+            next(createError.InternalServerError(error.message));
+        }
+    },
+    getAll_citizen: async (req, res, next) => {
+        try {
+            const { filters, sort } = req.query;
+
+            // Initialize default values if filters or sort are null or undefined
+            const filtersValue = filters ? createMongooseQuery(fromJson(filters)) : {};
+            const sortValue = sort ? createMongooseSortObject(fromJson(sort)) : {};
+
+            console.log(filtersValue, sortValue);
+
+            let locations = await LocationService.getAll(filtersValue, sortValue);
+            if (!locations) {
+                return next(createError.BadRequest("Location list not found"));
+            }
+            // for(const location of locations){
+            //     const boards = await AdsBoardService.getAllAdBoardbyLocation(location._id.toString());
+            //     console.log(boards.length)
+            //     location.adsBoardsize = boards.length;
+            // }
+            let filteredLists = locations;
+            // 
+
+            const list = filteredLists.map(async (location) => {
+                const boards = await AdsBoardService.getAllAdBoardbyLocation(location._id.toString());
+                console.log(boards)
+                return {
+                    ...location.toObject(),
+                    adsBoardSize: boards.length
+                }
+            })
+            const fresult = await Promise.all(list);
+            res.json({
+                message: "Get location list successfully",
+                status: 200,
+                size_all: locations.length,
+                size: fresult.length,
+                data: fresult
+            });
+        } catch (error) {
+            console.log(console.log(error))
             next(createError.InternalServerError(error.message));
         }
     },

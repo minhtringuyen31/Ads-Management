@@ -1,5 +1,6 @@
 import createError from "http-errors";
 import UserService from "../services/user.service.js";
+import { hashPassword, comparePasswords } from "../utils/hash.js";
 const UserController = {
     getAll: async (req, res, next) => {
         try {
@@ -26,15 +27,16 @@ const UserController = {
 
             const data = req.body
             console.log(data);
-            const location = await UserService.create(data);
-            if (!location) {
-                return next(createError.BadRequest("User not found"))
+            data.password = hashPassword(data.password);
+            const user = await UserService.create(data);
+            if (!user) {
+                return next(createError.BadRequest("User wasn't created"))
             }
             
             res.json({
                 message: "Create User successfully",
                 status: 200,
-                data: location
+                data: user
             })
         } catch (error) {
             next(createError.InternalServerError(error.message))
@@ -46,14 +48,17 @@ const UserController = {
 
             const data = req.body
             const { id } = req.params;
-            const location = await UserService.update(id, data);
-            if (!location) {
+            if(data.password !== null && data.password !== undefined){
+                data.password = hashPassword(data.password);
+            }
+            const user = await UserService.update(id, data);
+            if (!user) {
                 return next(createError.BadRequest("User not found"))
             }
             res.json({
                 message: "Update User successfully",
                 status: 200,
-                data: location
+                data: user
             })
         } catch (error) {
             next(createError.InternalServerError(error.message))
