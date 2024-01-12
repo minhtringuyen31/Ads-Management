@@ -11,6 +11,7 @@ function fetchLogs() {
     const dateFromInput = document.getElementById('from');
     const dateToInput = document.getElementById('to');
     fetch('http://localhost:5001/search-logs', {
+
         method: "POST", headers: {
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json'

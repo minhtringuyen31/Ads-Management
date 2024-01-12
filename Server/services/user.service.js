@@ -70,7 +70,7 @@ const UserService = {
     },
     async getByEmail(email) {
         try {
-            const user = await User.findOne({email: email})
+            const user = await User.findOne({ email: email })
             return user;
         } catch (error) {
             throw error;

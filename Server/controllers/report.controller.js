@@ -13,9 +13,10 @@ import {
   createMongooseQuery,
   createMongooseSortObject,
 } from "../helper/filter.js";
-import { v2 as cloudinary } from "cloudinary";
+
 import { normalizeString } from "../utils/utils.js";
 import { extractPublicId } from "cloudinary-build-url";
+import { v2 as cloudinary } from "cloudinary";
 import DistrictService from "../services/district.service.js";
 import AdsBoardService from "../services/ads_board.service.js";
 const ReportController = {
@@ -235,6 +236,7 @@ const ReportController = {
 
       const newReport = await ReportService.create(reportData);
       if (newReport) {
+        console.log('Đang tạo notification');
         const newNotification = {
           title: "Có 1 báo cáo mới !!!",
           subtitle: "",
@@ -243,6 +245,7 @@ const ReportController = {
           clientId: newReport.clientId,
         };
         const data = await NotificationService.create(newNotification);
+
         console.log(data);
         // Gửi báo cáo đến cán bộ phường/quận
         if (newReport.ward) {
