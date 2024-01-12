@@ -18,20 +18,24 @@ function parseLogLine(line) {
     };
 }
 
+function removeSpace(str) {
+    return str.replace(/\s/g, '');
+}
+
 router.post("/search-logs", async (req, res) => {
     try {
         const { statusCode, level, from, to } = req.body;
-        console.log("Từ client", req.body);
+        console.log("From client", req.body);
 
         const fromDate = new Date(from);
         const toDate = new Date(to);
 
         let allLogs = [];
-        const logDirectory = "./logs"; // Đường dẫn tới thư mục chứa tệp log
-        const logFiles = fs.readdirSync(logDirectory); // Lấy danh sách tất cả các tệp trong thư mục
+        const logDirectory = "./logs";
+        const logFiles = fs.readdirSync(logDirectory);
 
         let start = "access";
-        if (level === "sql") start = "sql"; // nếu sql thì duyệt file có dạng sql ..... .log
+        if (level === "sql") start = "sql";
 
         const processLogFile = async (logFileName) => {
             return new Promise((resolve, reject) => {
@@ -43,14 +47,17 @@ router.post("/search-logs", async (req, res) => {
 
                 const logs = [];
 
+
                 rl.on("line", (line) => {
                     const logObject = parseLogLine(line);
                     const logDate = new Date(logObject.timestamp);
+                    // Filter logs based on request body parameters
                     if (
-                        (!statusCode || logObject.status === statusCode) &&
-                        (!level || logObject.level === level) &&
-                        (!from || isNaN(new Date(from).getTime()) || logDate >= fromDate) &&
-                        (!to || isNaN(new Date(to).getTime()) || logDate <= toDate)
+                        (!statusCode || removeSpace(logObject.status) === removeSpace(statusCode)) &&
+                        (level == 'level:' || removeSpace(logObject.level) === removeSpace(level)) &&
+                        ((!from || isNaN(new Date(from).getTime()) || logDate >= fromDate) &&
+                            (!to || isNaN(new Date(to).getTime()) || logDate <= toDate))
+
                     ) {
                         logs.push(logObject);
                     }
