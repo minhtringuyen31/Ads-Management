@@ -9,12 +9,15 @@ export const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
   const user = GetUser();
 
-  const assigned_areaid = user.assigned_areaid;
+  let assigned_areaid = user.assigned_areaid;
   let area;
   if (user.userRole === 'ward_officer') {
     area = 'ward';
   } else if (user.userRole === 'district_officer') {
     area = 'district';
+  } else {
+    area = 'province';
+    assigned_areaid = user._id;
   }
 
   console.log(assigned_areaid);

@@ -34,7 +34,7 @@ import User1 from 'assets/images/user.png';
 import { IconLogout, IconSettings } from '@tabler/icons';
 import { AuthenticationActions } from 'redux/auth/authentication-slice';
 import { AuthorizationActions } from 'redux/auth/authorization-slice';
-import { GetUser } from 'store/auth/auth-config';
+import { GetUser, RemoveToken, RemoveUser } from 'store/auth/auth-config';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -66,6 +66,8 @@ const ProfileSection = () => {
   const handleLogout = async () => {
     dispatch(AuthenticationActions.logout());
     dispatch(AuthorizationActions.removeAuthorization());
+    RemoveToken();
+    RemoveUser();
     window.location.href = '/admin_dashboard/login';
   };
 

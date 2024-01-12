@@ -3,6 +3,7 @@ import { refreshToken } from 'lib/api';
 import {
   GetAccessToken,
   RemoveToken,
+  RemoveUser,
   StoreToken,
 } from 'store/auth/auth-config';
 
@@ -39,10 +40,12 @@ instance.interceptors.response.use(
           return axios(newConfig);
         } else {
           RemoveToken();
+          RemoveUser();
           window.location.href = '/admin_dashboard/login';
         }
       } catch (error) {
         RemoveToken();
+        RemoveUser();
         window.location.href = '/admin_dashboard/login';
         throw new Error('Có lỗi xảy ra, vui lòng thử lại sau');
       }

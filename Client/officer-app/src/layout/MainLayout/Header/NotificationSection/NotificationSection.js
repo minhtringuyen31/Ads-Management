@@ -92,10 +92,18 @@ const NotificationSection = () => {
   }, [open]);
 
   useEffect(() => {
-    socket.on('new_notification', (data) => {
-      setNotifications((prev) => [...prev, data]);
-    });
-  }, [socket]);
+    if (user.userRole === 'province_officer') {
+      socket.on('new_edit_request', (data) => {
+        console.log(data);
+        setNotifications((prev) => [...prev, data]);
+      });
+    } else {
+      socket.on('new_notification', (data) => {
+        console.log(data);
+        setNotifications((prev) => [...prev, data]);
+      });
+    }
+  }, [socket, user.userRole]);
 
   const handleChange = (event) => {
     if (event?.target.value) setValue(event?.target.value);
