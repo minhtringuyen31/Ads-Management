@@ -81,6 +81,15 @@ const NotificationService = {
                     path: "content.district",
                     model: "District", // Replace with the actual name of the Location model
                     select: "label",
+                }).populate({
+                    path: "content.newInformation.location",
+                    model: "Location", // Replace with the actual name of the Location model
+                }).populate({
+                    path: "content.newInformation.adsboard_type",
+                    model: "AdsBoardType", // Replace with the actual name of the Location model
+                }).populate({
+                    path: "content.newInformation.user_id",
+                    model: "User", // Replace with the actual name of the Location model
                 }).lean().exec();
             return locationType;
         } catch (error) {

@@ -1,5 +1,7 @@
 import createError from "http-errors";
 import EditRequestService from "../services/editRequest.service.js";
+import NotificationService from "../services/notification.service.js";
+import UserService from "../services/user.service.js";
 const ModelName = "Edit Request";
 const modelname = "edit Request";
 import { extractPublicId } from "cloudinary-build-url";
@@ -58,24 +60,37 @@ const EditRequestController = {
       if (files) {
         reportData.newInformation.image = files.map((file) => file.path);
       }
-      const newReport = await EditRequestService.create(reportData);
-      global.io
-        .to("659fd42b84937c4e3ee9a888")
-        .emit("new_edit_request", newReport);
-      res.status(201).json({
-        message: ModelName + " created successfully",
-        status: 201,
-        data: newReport,
-      });
+      const newEditRequest = await EditRequestService.create(reportData);
+      if (newEditRequest) {
+        console.log('Đang tạo notification');
+        const newNotification = {
+          title: "Bạn có 1 yêu cầu chỉnh sửa cần xét duyệt",
+          subtitle: "",
+          content: newEditRequest,
+          type: "edit_request",
+        };
+        const data = await NotificationService.create(newNotification);
+
+        console.log(data);
+        global.io
+          .to("659fd42b84937c4e3ee9a888")
+          .emit("new_edit_request", data);
+        res.status(201).json({
+          message: ModelName + " created successfully",
+          status: 201,
+          data: newEditRequest,
+        });
+      }
+
     } catch (error) {
-      files.forEach(async (file) => {
-        await cloudinary.uploader.destroy(
-          extractPublicId(file.path),
-          function (error, result) {
-            console.log(result, error);
-          }
-        );
-      });
+      // req.files.forEach(async (file) => {
+      //   await cloudinary.uploader.destroy(
+      //     extractPublicId(file.path),
+      //     function (error, result) {
+      //       console.log(result, error);
+      //     }
+      //   );
+      // });
       next(createError.InternalServerError(error.message));
     }
   },
