@@ -228,6 +228,7 @@ const ReportController = {
 
       const files = req.files;
       console.log(req.files);
+      console.log(reportData);
       if (files) {
         reportData.image = files.map((file) => file.path);
       }

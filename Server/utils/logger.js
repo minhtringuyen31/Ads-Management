@@ -21,14 +21,12 @@ const logger = winston.createLogger({
         winston.format.errors({ stack: true }),
         winston.format.printf(
             (info) => {
-                console.log(info);
                 // Regular expression to match the status code
                 const statusCodeMatch = info.message.match(/"([A-Z]+) \/.*?" (\d{3})/);
 
                 // Extract the status code if a match is found
                 const statusCode = statusCodeMatch ? statusCodeMatch[2] : null;
 
-                console.log(statusCode); // Output: 304
                 const formattedTimestamp = moment(info.timestamp).tz('Asia/Ho_Chi_Minh').format('ddd, DD MMM YYYY HH:mm:ss');
 
 
