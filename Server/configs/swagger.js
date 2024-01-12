@@ -2,14 +2,20 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 const options = {
-    definition: {
-      openapi: '3.0.0',
+    swaggerDefinition: {
+      openapi: "3.0.0",
       info: {
-        title: 'Hello World',
-        version: '1.0.0',
+        title: "API",
+        version: "1.0.0",
+        description: "API",
       },
+      servers: [
+        {
+          url: "http://localhost:5001/"
+        }
+      ]
     },
-    apis: ['./src/routes*.js'], // files containing annotations as above
+    apis: ["./routes/*.js"]
   };
 
 const specs = swaggerJsDoc(options);
