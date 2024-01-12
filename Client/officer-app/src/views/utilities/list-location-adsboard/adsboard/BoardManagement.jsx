@@ -59,6 +59,9 @@ const BoardManagement = () => {
     navigate("/utils/adsboard/request_edit_form", { state: { adsboardID } });
     event.stopPropagation();
   };
+  const handleEditAdsboard = (adsboardID) => {
+    navigate("/utils/adsboard/edit_adsboard", { state: { adsboardID } });
+  };
 
   const handleRowClick = useCallback((row) => {
     console.log("Vào đây khum");
@@ -262,7 +265,7 @@ const BoardManagement = () => {
                             }}
                             onClick={(event) => {
                               event.stopPropagation();
-                              // handleOpenModelConfirmAgree(row._id);
+                              handleEditAdsboard(row._id);
                             }}
                             // disabled={
                             //   row.status === "completed" ||

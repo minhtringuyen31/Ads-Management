@@ -181,7 +181,7 @@ const LocationManagement = () => {
                 variant="contained"
                 color="primary"
                 endIcon={<AddIcon />}
-                // onClick={handleNewLocation}
+                onClick={handleNewLocation}
               >
                 Điểm đặt mới
               </Button>

@@ -92,7 +92,7 @@ const FormRequestEditAdsboard = () => {
   const [showFailAlert, setShowFailAlert] = useState(false);
   const handleCloseSuccessAlert = () => {
     setShowSuccessAlert(false);
-    navigate("/utils/edit_requests");
+    navigate("/utils/adsboards");
   };
   const handleCloseFailAlert = () => {
     setShowFailAlert(false);
@@ -138,7 +138,7 @@ const FormRequestEditAdsboard = () => {
           const fetchedAdsboardData = response.data.data;
 
           setAdsboardData(fetchedAdsboardData);
-          formik.setFieldValue("boardID", fetchedAdsboardData._id ?? "");
+          formik.setFieldValue("_id", fetchedAdsboardData._id ?? "");
           formik.setFieldValue(
             "adsboard_type",
             fetchedAdsboardData.adsboard_type._id
@@ -197,24 +197,23 @@ const FormRequestEditAdsboard = () => {
   //New data
   const createFormData = (values) => {
     const formData = new FormData();
-    formData.append("type", values.type);
-    formData.append("newInformation[id]", values.id);
-    formData.append("newInformation[adsboard_type]", values.adsboard_type);
-    formData.append("newInformation[width]", values.width);
-    formData.append("newInformation[height]", values.height);
-    formData.append("newInformation[contract_start_date]", values.start_date);
-    formData.append("newInformation[contract_end_date]", values.end_date);
-    formData.append("reason", values.reason);
-    values.image.forEach((file) =>
-      formData.append("newInformation[image]", file)
-    );
+    formData.append("_id", values._id);
+    // formData.append("location[_id]", values.locationID);
+    formData.append("adsboard_type", values.adsboard_type);
+    formData.append("width", values.width);
+    formData.append("height", values.height);
+    formData.append("contract_start_date", values.start_date);
+    formData.append("contract_end_date", values.end_date);
+
+    values.image.forEach((file) => formData.append("image", file));
 
     return formData;
   };
 
   const formik = useFormik({
     initialValues: {
-      id: adsboardData._id ?? "",
+      _id: adsboardData._id ?? "",
+      //   locationID: adsboardData.location._id || "",
       adsboard_type: adsboardData.adsboard_type ?? "",
       height: adsboardData.height ?? 0,
       width: adsboardData.width ?? 0,
@@ -222,8 +221,6 @@ const FormRequestEditAdsboard = () => {
         adsboardData.contract_start_date || dayjs("01/01/2021").toISOString(),
       end_date:
         adsboardData.contract_end_date || dayjs("01/01/2021").toISOString(),
-      reason: "",
-      type: "board",
       image: [],
     },
     onSubmit: async (values, { resetForm }) => {
@@ -265,8 +262,8 @@ const FormRequestEditAdsboard = () => {
         console.log(pair[0] + ", " + pair[1]);
       }
       try {
-        const response = await axios.post(
-          "http://14.225.192.121/editRequest",
+        const response = await axios.put(
+          `http://14.225.192.121/adsboard/${adsboardID}`,
           formData
         );
         if (response.status < 300) {
@@ -452,25 +449,6 @@ const FormRequestEditAdsboard = () => {
                     </LocalizationProvider>
                   </Box>
 
-                  <TextareaAutosize
-                    minRows={5}
-                    aria-label="Lí do"
-                    placeholder="Lí do chỉnh sửa bảng quảng cáo"
-                    onChange={(e) =>
-                      formik.setFieldValue("reason", e.target.value)
-                    }
-                    style={{
-                      maxWidth: "100%",
-                      minWidth: "50%",
-
-                      fontFamily: "'Roboto',sans-serif",
-                      border: "1px solid #ccc",
-                      borderRadius: "0.75rem",
-                      backgroundColor: "#f8fafc",
-                      padding: "1rem",
-                      fontSize: "14px",
-                    }}
-                  />
                   <Typography>
                     <h4>Hình ảnh điểm đặt</h4>
                   </Typography>
@@ -545,7 +523,7 @@ const FormRequestEditAdsboard = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép thành công
+          Chỉnh sửa bảng quảng cáo thành công
         </Alert>
       </Snackbar>
       <Snackbar
@@ -563,7 +541,7 @@ const FormRequestEditAdsboard = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép lỗi!
+          Chỉnh sửa bảng quảng cáo lỗi!
         </Alert>
       </Snackbar>
     </>

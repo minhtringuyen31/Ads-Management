@@ -274,7 +274,6 @@ const EditLocationProvince = () => {
     formData.append("ads_type", values.ads_type);
     formData.append("is_planned", values.is_planned);
     values.image.forEach((file) => formData.append("image", file));
-    formData.append("reason", values.reason);
 
     return formData;
   };
@@ -292,7 +291,6 @@ const EditLocationProvince = () => {
       image: [],
       is_planned: locationData.is_planned ?? "",
       display_name: locationData.display_name ?? "",
-      reason: "",
     },
     onSubmit: async (values, { resetForm }) => {
       console.log("Values:", values);
@@ -462,25 +460,7 @@ const EditLocationProvince = () => {
                     )}
                   />
                 </Box>
-                <TextareaAutosize
-                  minRows={5}
-                  aria-label="Lí do"
-                  placeholder="Lí do chỉnh sửa điểm đặt"
-                  onChange={(e) =>
-                    formik.setFieldValue("reason", e.target.value)
-                  }
-                  style={{
-                    maxWidth: "100%",
-                    minWidth: "50%",
-
-                    fontFamily: "'Roboto',sans-serif",
-                    border: "1px solid #ccc",
-                    borderRadius: "0.75rem",
-                    backgroundColor: "#f8fafc",
-                    padding: "1rem",
-                    fontSize: "14px",
-                  }}
-                />
+                
                 <Typography>
                   <h4>Hình ảnh điểm đặt</h4>
                 </Typography>
