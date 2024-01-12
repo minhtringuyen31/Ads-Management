@@ -2,6 +2,8 @@ import createError from "http-errors";
 import EditRequestService from "../services/editRequest.service.js";
 const ModelName = "Edit Request";
 const modelname = "edit Request";
+import { extractPublicId } from "cloudinary-build-url";
+import { v2 as cloudinary } from "cloudinary";
 const EditRequestController = {
   getAll: async (req, res, next) => {
     try {
@@ -50,6 +52,12 @@ const EditRequestController = {
   create: async (req, res, next) => {
     try {
       const reportData = req.body;
+      const files = req.files;
+      console.log(req.files);
+      console.log(reportData);
+      if (files) {
+        reportData.newInformation.image = files.map((file) => file.path);
+      }
       const newReport = await EditRequestService.create(reportData);
 
       res.status(201).json({
@@ -58,6 +66,14 @@ const EditRequestController = {
         data: newReport,
       });
     } catch (error) {
+      files.forEach(async (file) => {
+        await cloudinary.uploader.destroy(
+          extractPublicId(file.path),
+          function (error, result) {
+            console.log(result, error);
+          }
+        );
+      });
       next(createError.InternalServerError(error.message));
     }
   },
