@@ -27,6 +27,7 @@ import { sendEmail } from "./utils/sendEmail.js";
 import SocketListener from "./socket/socket.js";
 import { Server } from "socket.io";
 import path from 'path';
+import { specs, swaggerUi } from "./configs/swagger.js";
 const __dirname = path.resolve();
 dotenv.config();
 
@@ -96,6 +97,7 @@ app.use(logRoute);
 app.use(authorizeRequestRoute);
 app.use(authRoute);
 /// handle socket
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(notFound);
 app.use(errorHandler);

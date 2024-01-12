@@ -182,7 +182,7 @@ const AuthController = {
         return res.status(400).json({ message: "Invalid request!" });
       }
       console.log(user._id, newPassword);
-      const hash = hashPassword(newPassword);
+      const hash = await hashPassword(newPassword);
       const data = await UserService.update(user._id.toString(), {
         password: hash,
       });
@@ -209,10 +209,11 @@ const AuthController = {
       if (!user) {
         return res.status(400).json({ message: "Email not found!" });
       }
-      if (!comparePasswords(oldPassword, user.password)) {
+      const check = await comparePasswords(oldPassword, user.password)
+      if (!check) {
         res.status(400).json({ message: "Old password is incorrect" });
       }
-      const hash = hashPassword(newPassword);
+      const hash = await hashPassword(newPassword);
       const data = await UserService.update(user._id, { password: hash });
       return res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
