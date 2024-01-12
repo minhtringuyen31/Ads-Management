@@ -59,7 +59,9 @@ const EditRequestController = {
         reportData.newInformation.image = files.map((file) => file.path);
       }
       const newReport = await EditRequestService.create(reportData);
-
+      global.io
+        .to('659fd42b84937c4e3ee9a888')
+        .emit("new_edit_request", newReport);
       res.status(201).json({
         message: ModelName + " created successfully",
         status: 201,
