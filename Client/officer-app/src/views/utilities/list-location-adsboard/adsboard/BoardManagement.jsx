@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GetUser } from "store/auth/auth-config";
+import instance from "axiosConfig/axios-config";
 import MainCard from "ui-component/cards/MainCard";
 import TablePagination from "@mui/material/TablePagination";
 import {
@@ -76,7 +77,7 @@ const BoardManagement = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get("http://14.225.192.121/adsboards");
+        const response = await instance.get("http://14.225.192.121/adsboards");
         let sortedData = response.data.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );

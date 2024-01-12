@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { GetUser } from "store/auth/auth-config";
+import instance from "axiosConfig/axios-config";
 import { useNavigate } from "react-router-dom";
 import TablePagination from "@mui/material/TablePagination";
 import {
@@ -54,7 +55,10 @@ const LocationManagement = () => {
     event.stopPropagation();
     navigate("/utils/location/request_edit_form", { state: { locationID } });
   };
-
+  const handleEditLocation = (locationID) => {
+    // event.stopPropagation();
+    navigate("/utils/location/edit_location", { state: { locationID } });
+  };
   const handleNewLocation = () => {
     navigate("/utils/location/new_location");
   };
@@ -64,7 +68,7 @@ const LocationManagement = () => {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://14.225.192.121/locations");
+        const response = await instance.get("http://14.225.192.121/locations");
         let sortedData = response.data.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -177,7 +181,7 @@ const LocationManagement = () => {
                 variant="contained"
                 color="primary"
                 endIcon={<AddIcon />}
-                onClick={handleNewLocation}
+                // onClick={handleNewLocation}
               >
                 Điểm đặt mới
               </Button>
@@ -265,15 +269,12 @@ const LocationManagement = () => {
                             sx={{
                               fontWeight: "bold",
                             }}
-                            // onClick={(event) => {
-                            //   event.stopPropagation();
-                            //   handleOpenModelConfirmAgree(row._id);
-                            // }}
-                            // disabled={
-                            //   row.status === "completed" ||
-                            //   row.status === "canceled" ||
-                            //   row.status === "rejected"
-                            // }
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              // handleOpenModelConfirmAgree(row._id);
+                              handleEditLocation(row._id);
+                            }}
+                            disabled={isLoading}
                           >
                             <EditIcon />
                           </Button>

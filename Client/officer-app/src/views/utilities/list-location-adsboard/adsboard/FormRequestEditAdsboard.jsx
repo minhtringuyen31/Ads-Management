@@ -126,74 +126,6 @@ const FormRequestEditAdsboard = () => {
     fetchAdsboardTypes();
   }, []);
 
-  const formik = useFormik({
-    initialValues: {
-      id: adsboardData._id ?? "",
-      adsboard_type: adsboardData.adsboard_type ?? "",
-      height: adsboardData.height ?? 0,
-      width: adsboardData.width ?? 0,
-      start_date:
-        adsboardData.contract_start_date || dayjs("01/01/2021").toISOString(),
-      end_date:
-        adsboardData.contract_end_date || dayjs("01/01/2021").toISOString(),
-      reason: "",
-      type: "board",
-      image: [],
-    },
-    onSubmit: async (values, { resetForm }) => {
-      // values.id = adsboardData._id || "";
-      // if (values.adsboard_type === "") {
-      //   values.adsboard_type = adsboardData.adsboard_type._id || "";
-      // }
-      // if (values.height === 0) {
-      //   values.height = adsboardData.height || "";
-      // }
-      // if (values.width === 0) {
-      //   values.width = adsboardData.width || "";
-      // }
-      // if (values.start_date) {
-      //   // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
-      //   if (dayjs.isDayjs(values.start_date)) {
-      //     values.start_date = values.start_date.toISOString();
-      //   } else if (values.start_date === dayjs("01/01/2021").toISOString()) {
-      //     // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
-      //     values.start_date = adsboardData.contract_start_date;
-      //   }
-      // }
-
-      // if (values.end_date) {
-      //   // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
-      //   if (dayjs.isDayjs(values.end_date)) {
-      //     values.end_date = values.end_date.toISOString();
-      //   } else if (values.end_date === dayjs("01/01/2021").toISOString()) {
-      //     // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
-      //     values.end_date = adsboardData.contract_end_date;
-      //   }
-      // }
-      // if (values.image.length === 0) {
-      //   values.image = adsboardData.image || [];
-      // }
-      console.log("Values: ", values);
-      const formData = createFormData(values);
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
-      try {
-        const response = await axios.post(
-          "http://14.225.192.121/editRequest",
-          formData
-        );
-        if (response.status < 300) {
-          resetForm({});
-          setShowSuccessAlert(true);
-        }
-      } catch (error) {
-        console.error("Error submitting form", error);
-        setShowFailAlert(true);
-      }
-    },
-  });
-
   // Fetch adsboard data
   useEffect(() => {
     const fetchAdsboardData = async () => {
@@ -262,6 +194,92 @@ const FormRequestEditAdsboard = () => {
     }
   }, [adsboardID, adsboardTypes]);
 
+  //New data
+  const createFormData = (values) => {
+    const formData = new FormData();
+    formData.append("type", values.type);
+    formData.append("newInformation[id]", values.id);
+    formData.append("newInformation[adsboard_type]", values.adsboard_type);
+    formData.append("newInformation[width]", values.width);
+    formData.append("newInformation[height]", values.height);
+    formData.append("newInformation[contract_start_date]", values.start_date);
+    formData.append("newInformation[contract_end_date]", values.end_date);
+    formData.append("reason", values.reason);
+    values.image.forEach((file) =>
+      formData.append("newInformation[image]", file)
+    );
+
+    return formData;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      id: adsboardData._id ?? "",
+      adsboard_type: adsboardData.adsboard_type ?? "",
+      height: adsboardData.height ?? 0,
+      width: adsboardData.width ?? 0,
+      start_date:
+        adsboardData.contract_start_date || dayjs("01/01/2021").toISOString(),
+      end_date:
+        adsboardData.contract_end_date || dayjs("01/01/2021").toISOString(),
+      reason: "",
+      type: "board",
+      image: [],
+    },
+    onSubmit: async (values, { resetForm }) => {
+      // values.id = adsboardData._id || "";
+      // if (values.adsboard_type === "") {
+      //   values.adsboard_type = adsboardData.adsboard_type._id || "";
+      // }
+      // if (values.height === 0) {
+      //   values.height = adsboardData.height || "";
+      // }
+      // if (values.width === 0) {
+      //   values.width = adsboardData.width || "";
+      // }
+      // if (values.start_date) {
+      //   // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
+      //   if (dayjs.isDayjs(values.start_date)) {
+      //     values.start_date = values.start_date.toISOString();
+      //   } else if (values.start_date === dayjs("01/01/2021").toISOString()) {
+      //     // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
+      //     values.start_date = adsboardData.contract_start_date;
+      //   }
+      // }
+
+      // if (values.end_date) {
+      //   // Nếu start_date là một đối tượng dayjs, chuyển nó sang chuỗi ISO
+      //   if (dayjs.isDayjs(values.end_date)) {
+      //     values.end_date = values.end_date.toISOString();
+      //   } else if (values.end_date === dayjs("01/01/2021").toISOString()) {
+      //     // Nếu start_date là giá trị mặc định, sử dụng giá trị từ dữ liệu đã có
+      //     values.end_date = adsboardData.contract_end_date;
+      //   }
+      // }
+      // if (values.image.length === 0) {
+      //   values.image = adsboardData.image || [];
+      // }
+      console.log("Values: ", values);
+      const formData = createFormData(values);
+      for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+      try {
+        const response = await axios.post(
+          "http://14.225.192.121/editRequest",
+          formData
+        );
+        if (response.status < 300) {
+          resetForm({});
+          setShowSuccessAlert(true);
+        }
+      } catch (error) {
+        console.error("Error submitting form", error);
+        setShowFailAlert(true);
+      }
+    },
+  });
+
   // Images
   // Xử lý khi có hình ảnh mới được tải lên từ ImageUpload
   const handleImageUpload = (uploadedImages) => {
@@ -288,24 +306,6 @@ const FormRequestEditAdsboard = () => {
     );
     setExistingImages(Array.from(new Set(newexistingImages)));
     imageUploadRef.current.handleRemoveImageByUrl(imageToRemove);
-  };
-
-  //New data
-  const createFormData = (values) => {
-    const formData = new FormData();
-    formData.append("type", values.type);
-    formData.append("newInformation[id]", values.id);
-    formData.append("newInformation[adsboard_type]", values.adsboard_type);
-    formData.append("newInformation[width]", values.width);
-    formData.append("newInformation[height]", values.height);
-    formData.append("newInformation[contract_start_date]", values.start_date);
-    formData.append("newInformation[contract_end_date]", values.end_date);
-    formData.append("reason", values.reason);
-    values.image.forEach((file) =>
-      formData.append("newInformation[image]", file)
-    );
-
-    return formData;
   };
 
   return (

@@ -69,7 +69,7 @@ const planningOptions = [
   { label: "Đã quy hoạch", value: true },
   { label: "Chưa quy hoạch", value: false },
 ];
-const FormRequestEditLocation = () => {
+const EditLocationProvince = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const locationID = location.state?.locationID;
@@ -101,7 +101,7 @@ const FormRequestEditLocation = () => {
   const [showFailAlert, setShowFailAlert] = useState(false);
   const handleCloseSuccessAlert = () => {
     setShowSuccessAlert(false);
-    navigate("/utils/edit_requests");
+    navigate("/utils/locations");
   };
   const handleCloseFailAlert = () => {
     setShowFailAlert(false);
@@ -262,20 +262,18 @@ const FormRequestEditLocation = () => {
   // New data
   const createFormData = (values) => {
     const formData = new FormData();
-    formData.append("type", values.type);
-    formData.append("newInformation[id]", values.id);
-    formData.append("newInformation[display_name]", values.display_name);
-    formData.append("newInformation[coordinate][lat]", values.coordinate.lat);
-    formData.append("newInformation[coordinate][lng]", values.coordinate.lng);
-    formData.append("newInformation[address]", values.address);
-    formData.append("newInformation[ward]", values.ward._id);
-    formData.append("newInformation[district]", values.district._id);
-    formData.append("newInformation[location_type]", values.location_type);
-    formData.append("newInformation[ads_type]", values.ads_type);
-    formData.append("newInformation[is_planned]", values.is_planned);
-    values.image.forEach((file) =>
-      formData.append("newInformation[image]", file)
-    );
+
+    formData.append("_id", values.id);
+    formData.append("display_name", values.display_name);
+    formData.append("coordinate[lat]", values.coordinate.lat);
+    formData.append("coordinate[lng]", values.coordinate.lng);
+    formData.append("address", values.address);
+    formData.append("ward", values.ward._id);
+    formData.append("district", values.district._id);
+    formData.append("location_type", values.location_type);
+    formData.append("ads_type", values.ads_type);
+    formData.append("is_planned", values.is_planned);
+    values.image.forEach((file) => formData.append("image", file));
     formData.append("reason", values.reason);
 
     return formData;
@@ -283,7 +281,7 @@ const FormRequestEditLocation = () => {
 
   const formik = useFormik({
     initialValues: {
-      id: locationData._id ?? "",
+      _id: locationData._id ?? "",
       coordinate: locationData.coordinate ?? {},
       address: locationData.address ?? "",
       ward: locationData.ward ?? "",
@@ -295,7 +293,6 @@ const FormRequestEditLocation = () => {
       is_planned: locationData.is_planned ?? "",
       display_name: locationData.display_name ?? "",
       reason: "",
-      type: "location",
     },
     onSubmit: async (values, { resetForm }) => {
       console.log("Values:", values);
@@ -327,8 +324,8 @@ const FormRequestEditLocation = () => {
         console.log(pair[0] + ", " + pair[1]);
       }
       try {
-        const response = await axios.post(
-          "http://14.225.192.121/editRequest",
+        const response = await axios.put(
+          `http://14.225.192.121/location/${locationID}`,
           formData
         );
         if (response.status < 300) {
@@ -356,7 +353,7 @@ const FormRequestEditLocation = () => {
         >
           {/* Begin: HEADER */}
           <Typography>
-            <h2>Yêu cầu chỉnh sửa điểm đặt</h2>
+            <h2>Chỉnh sửa điểm đặt</h2>
           </Typography>
           {/* End: HEADER */}
 
@@ -557,7 +554,7 @@ const FormRequestEditLocation = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép thành công
+          Chỉnh sửa điểm đặt thành công
         </Alert>
       </Snackbar>
       <Snackbar
@@ -575,10 +572,10 @@ const FormRequestEditLocation = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu cấp phép lỗi!
+          Chỉnh sửa điểm đặt lỗi!
         </Alert>
       </Snackbar>
     </>
   );
 };
-export default FormRequestEditLocation;
+export default EditLocationProvince;
