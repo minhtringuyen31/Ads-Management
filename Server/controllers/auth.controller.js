@@ -30,11 +30,11 @@ const AuthController = {
     }
     console.log(user);
     const hash = await hashPassword(password);
-    if (user.password.length <= 10) {
-      user = await UserService.update(user._id.toString(), {
-        password: hash,
-      });
-    }
+    // if (user.password.length <= 10) {
+    //   user = await UserService.update(user._id.toString(), {
+    //     password: hash,
+    //   });
+    // }
     console.log(user);
     console.log(password, user.password);
     const check = await comparePasswords(password, user.password);
