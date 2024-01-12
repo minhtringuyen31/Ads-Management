@@ -8,9 +8,9 @@ const SocketListener = {
             console.log('A user connected with socket id:', socket.id);
 
             // Giả sử cán bộ phường/quận gửi thông tin này khi kết nối
-            const { ward, district, clientId } = socket.handshake.query;
+            const { ward, district, clientId, province } = socket.handshake.query;
             console.log("Đang kết nối với cán bộ phường/quận")
-            console.log(ward, district, clientId);
+            console.log(ward, district, clientId, province);
             global.userList[clientId] = socket.id;
 
             // Tham gia vào room dựa trên phường/quận
@@ -19,6 +19,9 @@ const SocketListener = {
             }
             if (district) {
                 socket.join(district);
+            }
+            if (province) {
+                socket.join(province);
             }
 
 
