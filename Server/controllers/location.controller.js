@@ -10,6 +10,7 @@ import DistrictService from "../services/district.service.js";
 import AdsBoardService from "../services/ads_board.service.js";
 import { extractPublicId } from 'cloudinary-build-url'
 import { normalizeString } from "../utils/utils.js";
+import WardService from "../services/ward.service.js";
 dotenv.config();
 
 const LocationController = {
