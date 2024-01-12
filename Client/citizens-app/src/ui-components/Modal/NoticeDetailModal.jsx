@@ -31,6 +31,7 @@ const imageList = [
 ];
 
 const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
+  console.log("Report: ", report);
   return (
     <Modal
       open={isModalOpen}
