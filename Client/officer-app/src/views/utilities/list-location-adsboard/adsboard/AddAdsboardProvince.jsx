@@ -7,18 +7,18 @@ import {
   Button,
   Box,
   Typography,
+  CircularProgress,
+  Autocomplete,
+  TextareaAutosize,
   Snackbar,
   Alert,
-  CircularProgress,
 } from "@mui/material";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import Autocomplete from "@mui/material/Autocomplete";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 
-import ImageUpload from "../ImageUpload";
-import MapBox from "../list-location-adsboard/map/MapBox";
+import MapBox from "../map/MapBox";
+import ImageUpload from "../../ImageUpload";
 
 // STYLE CONTAINER
 const ContainerStyle = {
@@ -82,70 +82,60 @@ const calculateCenter = (locations) => {
   };
 };
 
-const FormAddLicenAdsboard = () => {
-  const [adsBoardType, setAdsBoardType] = useState([]);
-  const [selectedAdsBoar, setselectedAdsBoar] = useState(null);
+const AddAdsboardProvince = () => {
+  const navigate = useNavigate();
+  //------------- State init -------------
+  //Location
   const [locationInfoList, setlocationInfoList] = useState([]);
-  const [mapCenter, setMapCenter] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [locationInfoClick, setLocationInfoClick] = useState({});
+  const [mapCenter, setMapCenter] = useState(null);
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+
+  //Adsboard
+  const [adsBoardType, setAdsBoardType] = useState([]);
+  const [selectedAdsBoardType, setselectedAdsBoardType] = useState(null);
   const [startDate, setStartDate] = useState(dayjs("01/01/2021"));
   const [endDate, setEndDate] = useState(dayjs("01/01/2021"));
 
+  //Loading, Alert
+  const [isLoading, setIsLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showFailAlert, setShowFailAlert] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
+  //-------------Handle -------------
+  //Alert
   const handleCloseSuccessAlert = () => {
     setShowSuccessAlert(false);
-    navigate("/utils/authorize_requests");
+    navigate("/utils/adsboards");
   };
 
   const handleCloseFailAlert = () => {
     setShowFailAlert(false);
   };
-
+  //Location
+  const openMapModal = () => {
+    setIsMapModalOpen(true);
+  };
+  const closeMapModal = () => {
+    setIsMapModalOpen(false);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://14.225.192.121/adsboardtypes");
-        setAdsBoardType(response.data.data);
-      } catch (error) {
-        console.error("Error fetching adsboard types:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataLocation = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get("http://14.225.192.121/locations");
-        const transformedData = response.data.data.map((location) => ({
-          id: location._id,
-          coordinate: location.coordinate,
-          display_name: location.display_name,
-          address: location.address,
-          location_type: location.location_type,
-          ads_type: location.ads_type,
-        }));
-        setlocationInfoList(transformedData);
+        if (response.status < 300) {
+          setlocationInfoList(response.data.data);
+          setIsLoading(false);
+        }
       } catch (error) {
-        console.error("Error fetching coordinates: ", error);
+        console.error("Error fetching location list", error);
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchData();
+    fetchDataLocation();
   }, []);
-
   useEffect(() => {
     if (locationInfoList.length > 0) {
       const center = calculateCenter(locationInfoList);
@@ -153,60 +143,61 @@ const FormAddLicenAdsboard = () => {
     }
   }, [locationInfoList]);
 
-  //Mảng options cho useAutocomplete từ dữ liệu lấy được từ API
-  const adTypeOptions = adsBoardType.map((type) => ({
-    id: type._id,
-    label: type.label,
-  }));
+  //Adsboard
+  useEffect(() => {
+    const fetchAdsboardType = async () => {
+      try {
+        const response = await axios.get("http://14.225.192.121/adsboardtypes");
+        setAdsBoardType(response.data.data);
+      } catch (error) {
+        console.error("Error fetching adsboard type");
+      }
+    };
+    fetchAdsboardType();
+  }, []);
+  const handleImageUpload = (images) => {
+    const imageValues = images.map((image) => image.file);
+    formik.setFieldValue("adsboardInfo.image", imageValues);
+  };
+
+  console.log("Location list: ", locationInfoList);
+  console.log("Location Info Click: ", locationInfoClick._id);
 
   //New data
   const createFormData = (values) => {
     const formData = new FormData();
-    formData.append("new_ads_board[location]", values.locationId);
+    formData.append("location", values._id);
+    formData.append("adsboard_type", values.adsboardInfo.adsboard_type);
+    formData.append("width", values.adsboardInfo.width);
+    formData.append("height", values.adsboardInfo.height);
+    formData.append("contract_end_date", values.adsboardInfo.contract_end_date);
     formData.append(
-      "new_ads_board[adsboard_type]",
-      values.adsboardInfo.adsboard_type
+      "contract_start_date",
+      values.adsboardInfo.contract_start_date
     );
-    formData.append("new_ads_board[width]", values.adsboardInfo.width);
-    formData.append("new_ads_board[height]", values.adsboardInfo.height);
+    values.adsboardInfo.image.forEach((file) => formData.append("image", file));
+    formData.append("company[name]", values.companyInfo.name);
+    formData.append("company[address]", values.companyInfo.address);
     formData.append(
-      "new_ads_board[contract_end_date]",
-      values.adsboardInfo.end_date
-    );
-    formData.append(
-      "new_ads_board[contract_start_date]",
-      values.adsboardInfo.start_date
-    );
-    console.log("Image: ", values.adsboardInfo.img);
-    values.adsboardInfo.img.forEach((file) =>
-      formData.append("new_ads_board[image]", file)
-    );
-    formData.append("new_ads_board[name]", values.companyInfo.name);
-    formData.append("new_ads_board[address]", values.companyInfo.address);
-    formData.append(
-      "new_ads_board[contact_name_person]",
+      "company[contact_name_person]",
       values.companyInfo.namePeople
     );
-    formData.append("new_ads_board[phone]", values.companyInfo.phoneNumber);
-    formData.append("new_ads_board[email]", values.companyInfo.email);
-    formData.append(
-      "new_ads_board[description]",
-      values.companyInfo.description
-    );
+    formData.append("company[phone]", values.companyInfo.phoneNumber);
+    formData.append("company[email]", values.companyInfo.email);
+    formData.append("company[description]", values.companyInfo.description);
 
     return formData;
   };
-
   const formik = useFormik({
     initialValues: {
-      locationId: "",
+      _id: "",
       adsboardInfo: {
         adsboard_type: "",
-        width: "",
         height: "",
-        start_date: "01/01/2021",
-        end_date: "01/01/2021",
-        img: [],
+        width: "",
+        contract_start_date: dayjs("01/01/2021"),
+        contract_end_date: dayjs("01/01/2021"),
+        image: [],
       },
       companyInfo: {
         name: "",
@@ -218,32 +209,23 @@ const FormAddLicenAdsboard = () => {
       },
     },
     onSubmit: async (values, { resetForm }) => {
-      setIsLoading(true);
-      let data = {
-        ...values,
-        locationId: locationInfoClick.id,
-        adsboardInfo: {
-          ...values.adsboardInfo,
-          adsboard_type: selectedAdsBoar.id,
-        },
-      };
-      console.log("data submit: ", data);
-      const formData = createFormData(data);
+      values._id = locationInfoClick._id || "";
+      values.adsboardInfo.adsboard_type = selectedAdsBoardType._id;
+
+      console.log("data: ", values);
+
+      const formData = createFormData(values);
       for (var pair of formData.entries()) {
         console.log(pair[0] + ", " + pair[1]);
-        if (pair[0] === "image") {
-          console.log("Image information: ", pair[1]);
-        }
       }
       try {
         const response = await axios.post(
-          "http://14.225.192.121/authorizeRequest",
+          "http://14.225.192.121/adsboard",
           formData
         );
         if (response.status < 300) {
           resetForm({});
           setShowSuccessAlert(true);
-          console.log("response data: ", response.data.data);
         } else {
           setShowFailAlert(true);
         }
@@ -255,12 +237,6 @@ const FormAddLicenAdsboard = () => {
       }
     },
   });
-
-  const handleImageUpload = (images) => {
-    const imageValues = images.map((image) => image.file);
-    formik.setFieldValue("adsboardInfo.img", imageValues);
-  };
-
   return (
     <>
       {isLoading && (
@@ -291,7 +267,7 @@ const FormAddLicenAdsboard = () => {
         >
           {/* Begin: HEADER */}
           <Typography>
-            <h2>Cấp phép bảng quảng cáo</h2>
+            <h2>Thêm bảng quảng cáo mới</h2>
           </Typography>
           {/* End: HEADER */}
 
@@ -307,7 +283,7 @@ const FormAddLicenAdsboard = () => {
                 <Field
                   component={TextField}
                   required
-                  id="locationId"
+                  name="address"
                   label="Điểm đặt (click here)"
                   value={locationInfoClick.display_name}
                   defaultValue=""
@@ -321,14 +297,13 @@ const FormAddLicenAdsboard = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  onClick={openModal}
+                  onClick={openMapModal}
                 />
-
                 {mapCenter && (
                   <MapBox
-                    isOpen={isModalOpen}
-                    onOpen={openModal}
-                    onClose={closeModal}
+                    isOpen={isMapModalOpen}
+                    onOpen={openMapModal}
+                    onClose={closeMapModal}
                     center={mapCenter}
                     zoom={15}
                     locations={locationInfoList}
@@ -400,15 +375,16 @@ const FormAddLicenAdsboard = () => {
               <Typography>
                 <h4>Thông tin bảng quảng cáo</h4>
               </Typography>
+
               <Box style={FormBodyItemContentStyle}>
-                {/* BEGIN: Chọn bảng quảng cáo */}
+                {/* BEGIN: Thông tin bảng quảng cáo */}
                 <Box>
                   <Autocomplete
-                    options={adTypeOptions}
+                    options={adsBoardType}
                     getOptionLabel={(option) => option.label}
-                    value={selectedAdsBoar}
+                    value={selectedAdsBoardType}
                     onChange={(_event, newValue) => {
-                      setselectedAdsBoar(newValue);
+                      setselectedAdsBoardType(newValue);
                     }}
                     isOptionEqualToValue={(option, value) =>
                       option.id === value.id
@@ -423,11 +399,9 @@ const FormAddLicenAdsboard = () => {
                         style={{ width: "100%" }}
                       />
                     )}
-                  ></Autocomplete>
+                  />
                 </Box>
-                {/* END: Chọn bảng quảng cáo */}
 
-                {/* BEGIN: Nhập chiều cao chiều rộng */}
                 <Box
                   style={{
                     display: "flex",
@@ -458,9 +432,7 @@ const FormAddLicenAdsboard = () => {
                     style={{ width: "50%" }}
                   />
                 </Box>
-                {/* END: Nhập chiều cao chiều rộng */}
 
-                {/* BEGIN: Contract date: Coi lại style !!! */}
                 <Box
                   style={{
                     display: "flex",
@@ -476,12 +448,11 @@ const FormAddLicenAdsboard = () => {
                         width: 1 / 2,
                       }}
                       format="DD/MM/YYYY"
-                      id="adsboardInfo.start_date"
+                      name="adsboardInfo.contract_start_date"
                       onChange={(newValue) => {
                         setStartDate(newValue);
                         formik.setFieldValue(
-                          "adsboardInfo.start_date",
-
+                          "adsboardInfo.contract_start_date",
                           newValue.toISOString()
                         );
                       }}
@@ -500,26 +471,23 @@ const FormAddLicenAdsboard = () => {
                       onChange={(newValue) => {
                         setEndDate(newValue);
                         formik.setFieldValue(
-                          "adsboardInfo.end_date",
-
+                          "adsboardInfo.contract_end_date",
                           newValue.toISOString()
                         );
                       }}
                       value={endDate}
-                      id="adsboardInfo.end_date"
+                      name="adsboardInfo.contract_end_date"
                     />
                   </LocalizationProvider>
                 </Box>
-                {/* END: Contract date: Coi lại style !!! */}
 
-                {/* BEGIN: Upload images, maximum 2 images */}
                 <Box>
                   <ImageUpload
-                    name="adsboardInfo.img"
+                    name="adsboardInfo.image"
                     onUpload={handleImageUpload}
                   />
                 </Box>
-                {/* END: Upload images, maximum 2 images */}
+                {/* END: Thông tin bảng quảng cáo */}
               </Box>
             </Box>
             {/* ------------------ End: 2. THÔNG TIN ADSBOARD ------------------ */}
@@ -635,7 +603,7 @@ const FormAddLicenAdsboard = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu chỉnh sửa thành công
+          Thêm bảng quảng cáo thành công
         </Alert>
       </Snackbar>
       <Snackbar
@@ -653,11 +621,10 @@ const FormAddLicenAdsboard = () => {
           sx={{ width: "100%" }}
           variant="filled"
         >
-          Tạo yêu cầu chỉnh sửa lỗi!
+          Thêm bảng quảng cáo lỗi!
         </Alert>
       </Snackbar>
     </>
   );
 };
-
-export default FormAddLicenAdsboard;
+export default AddAdsboardProvince;

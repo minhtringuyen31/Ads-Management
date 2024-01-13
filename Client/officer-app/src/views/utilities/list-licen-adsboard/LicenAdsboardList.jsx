@@ -1,7 +1,7 @@
-import AddIcon from '@mui/icons-material/Add';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import DoneIcon from '@mui/icons-material/Done';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import AddIcon from "@mui/icons-material/Add";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import DoneIcon from "@mui/icons-material/Done";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   Box,
   Button,
@@ -12,23 +12,17 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from '@mui/material';
-import TablePagination from '@mui/material/TablePagination';
-import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { GetUser } from 'store/auth/auth-config';
-import MainCard from 'ui-component/cards/MainCard';
-import Scrollbar from 'ui-component/scrollbar/Scrollbar';
-import ModalAccept from './ModalAccept';
-import ModalDetail from './ModalDetailLicen';
-
-const styleBox = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginBottom: '0.75rem',
-};
+} from "@mui/material";
+import TablePagination from "@mui/material/TablePagination";
+import { useTheme } from "@mui/material/styles";
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { GetUser } from "store/auth/auth-config";
+import MainCard from "ui-component/cards/MainCard";
+import Scrollbar from "ui-component/scrollbar/Scrollbar";
+import ModalAccept from "./ModalAccept";
+import ModalDetail from "./ModalDetailLicen";
 
 const LicenAdsboardList = () => {
   const userRole = GetUser().userRole;
@@ -47,12 +41,12 @@ const LicenAdsboardList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleNewLicense = () => {
-    navigate('/utils/authorize_request/create_form');
+    navigate("/utils/authorize_request/create_form");
   };
   const formatDate = useCallback((dateString) => {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }, []);
@@ -61,30 +55,30 @@ const LicenAdsboardList = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          'http://14.225.192.121/authorizeRequests'
+          "http://14.225.192.121/authorizeRequests",
         );
         let sortedData = response.data.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
         );
 
         sortedData = sortedData.map((item, index) => ({
           ...item,
           id: index + 1,
           contract_start_date: formatDate(
-            item.new_ads_board.contract_start_date
+            item.new_ads_board.contract_start_date,
           ),
           contract_end_date: formatDate(item.new_ads_board.contract_end_date),
         }));
 
         setLicenList(sortedData);
       } catch (error) {
-        console.error('Error fetching licen list: ', error);
+        console.error("Error fetching licen list: ", error);
       }
     };
     fetchData();
   }, []);
 
-  console.log('Licen list: ', licenList);
+  console.log("Licen list: ", licenList);
 
   const handleOpenModalConfirm = (id) => {
     setCancelId(id);
@@ -111,19 +105,19 @@ const LicenAdsboardList = () => {
 
   const handleAgree = async (status) => {
     if (cancelId) {
-      console.log('ID nè', cancelId);
+      console.log("ID nè", cancelId);
       try {
         const respone = await axios.put(
           `http://14.225.192.121/authorizeRequest/${cancelId}`,
           {
             status: status,
-          }
+          },
         );
         setLicenList(
           licenList.map((request) => {
-            console.log('req: ', request);
+            console.log("req: ", request);
             if (request._id === cancelId) {
-              console.log('vô đây khum');
+              console.log("vô đây khum");
               return {
                 ...request,
                 status: status,
@@ -131,11 +125,11 @@ const LicenAdsboardList = () => {
             } else {
               return request;
             }
-          })
+          }),
         );
         console.log(respone);
       } catch (error) {
-        console.error('Error cancel request: ', error);
+        console.error("Error cancel request: ", error);
       }
       setOpenModalConfirm(false);
       setOpenModalConfirmAgree(false);
@@ -153,21 +147,21 @@ const LicenAdsboardList = () => {
   };
 
   if (!licenList) {
-    console.log('vào đây hem');
+    console.log("vào đây hem");
     return (
       <Box
         style={{
-          position: 'fixed',
+          position: "fixed",
           top: 0,
           left: 0,
           bottom: 0,
           right: 0,
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
           zIndex: 1500,
         }}
       >
@@ -176,14 +170,14 @@ const LicenAdsboardList = () => {
     );
   }
 
-  console.log('Selected data: ', selectedRow);
+  console.log("Selected data: ", selectedRow);
   const filteredList =
-    userRole === 'province_officer'
-      ? licenList.filter((row) => row.status !== 'canceled')
+    userRole === "province_officer"
+      ? licenList.filter((row) => row.status !== "canceled")
       : licenList;
 
   return (
-    <MainCard title='Quản lý cấp phép quảng cáo'>
+    <MainCard title="Quản lý cấp phép quảng cáo">
       {selectedRow && (
         <ModalDetail
           open={openModalDetail}
@@ -201,12 +195,18 @@ const LicenAdsboardList = () => {
       )}
       <Scrollbar>
         <Box>
-          {userRole !== 'province_officer' && (
-            <Box style={styleBox}>
+          {userRole !== "province_officer" && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "0.75rem",
+              }}
+            >
               <span></span> {/* Phần trống bên trái */}
               <Button
-                variant='contained'
-                color='primary'
+                variant="contained"
+                color="primary"
                 endIcon={<AddIcon />}
                 onClick={handleNewLicense}
               >
@@ -221,34 +221,34 @@ const LicenAdsboardList = () => {
               }}
             >
               <TableRow>
-                <TableCell sx={{ fontWeight: 'bold', width: '2.5%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "2.5%" }}>
                   STT
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '25%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "25%" }}>
                   Điểm đặt
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
                   Công ty
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
                   Người liên hệ
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
                   Bắt đầu hợp đồng
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "15%" }}>
                   Kết thúc hợp đồng
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '12.5%' }}>
+                <TableCell sx={{ fontWeight: "bold", width: "12.5%" }}>
                   Tình trạng
                 </TableCell>
-                {userRole === 'province_officer' ? (
+                {userRole === "province_officer" ? (
                   <>
-                    <TableCell sx={{ width: '7.5%' }}></TableCell>
-                    <TableCell sx={{ width: '7.5%' }}></TableCell>
+                    <TableCell sx={{ width: "7.5%" }}></TableCell>
+                    <TableCell sx={{ width: "7.5%" }}></TableCell>
                   </>
                 ) : (
-                  <TableCell sx={{ width: '7.5%' }}></TableCell>
+                  <TableCell sx={{ width: "7.5%" }}></TableCell>
                 )}
               </TableRow>
             </TableHead>
@@ -260,7 +260,7 @@ const LicenAdsboardList = () => {
                   <TableRow
                     hover
                     key={row.id}
-                    sx={{ cursor: 'pointer' }}
+                    sx={{ cursor: "pointer" }}
                     onClick={(event) => {
                       event.stopPropagation();
                       handleRowClick(row);
@@ -279,36 +279,74 @@ const LicenAdsboardList = () => {
                     <TableCell>
                       <Chip
                         label={
-                          row.status === 'pending'
-                            ? 'Đang xử lý'
-                            : row.status === 'completed'
-                            ? 'Đã được duyệt'
-                            : row.status === 'canceled'
-                            ? 'Đã hủy'
+                          row.status === "pending"
+                            ? "Đang xử lý"
+                            : row.status === "completed"
+                            ? "Đã được duyệt"
+                            : row.status === "canceled"
+                            ? "Đã hủy"
+                            : row.status === "rejected"
+                            ? "Đã bị từ chối"
                             : row.status
                         }
                         color={
-                          row.status === 'pending'
-                            ? 'primary'
-                            : row.status === 'completed'
-                            ? 'success'
-                            : row.status === 'canceled'
-                            ? 'error'
-                            : 'default'
+                          row.status === "pending"
+                            ? "info"
+                            : row.status === "completed"
+                            ? "success"
+                            : row.status === "canceled"
+                            ? "default"
+                            : row.status === "rejected"
+                            ? "error"
+                            : "default"
                         }
-                        variant='outlined'
-                        sx={{ borderRadius: '12px' }}
+                        variant="filled"
+                        // sx={{ borderRadius: "12px" }}
                       />
                     </TableCell>
-                    {userRole === 'province_officer' ? (
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DeleteOutlineOutlinedIcon />}
+                        sx={{
+                          fontWeight: "bold",
+                        }}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleOpenModalConfirm(row._id);
+                          // event.stopPropagation();
+                        }}
+                        disabled={
+                          row.status === "completed" ||
+                          row.status === "canceled" ||
+                          row.status === "rejected"
+                        }
+                      >
+                        Hủy
+                      </Button>
+                      <ModalAccept
+                        open={openModalConfirm}
+                        handleDisagree={(event) => {
+                          event.stopPropagation();
+                          setOpenModalConfirm(false);
+                        }}
+                        handleAgree={(event) => {
+                          event.stopPropagation();
+                          handleAgree();
+                        }}
+                        title={"Xác nhận"}
+                      />
+                    </TableCell>
+                    {userRole === "province_officer" ? (
                       <>
                         <TableCell>
                           <Button
-                            variant='outlined'
-                            color='success'
+                            variant="outlined"
+                            color="success"
                             startIcon={<DoneIcon />}
                             sx={{
-                              fontWeight: 'bold',
+                              fontWeight: "bold",
                             }}
                             onClick={(event) => {
                               event.stopPropagation();
@@ -316,9 +354,9 @@ const LicenAdsboardList = () => {
                               // event.stopPropagation();
                             }}
                             disabled={
-                              row.status === 'completed' ||
-                              row.status === 'canceled' ||
-                              row.status === 'rejected'
+                              row.status === "completed" ||
+                              row.status === "canceled" ||
+                              row.status === "rejected"
                             }
                           >
                             Duyệt
@@ -331,21 +369,21 @@ const LicenAdsboardList = () => {
                             }}
                             handleAgree={(event) => {
                               event.stopPropagation();
-                              handleAgree('completed');
+                              handleAgree("completed");
                             }}
-                            title={'Xác nhận'}
+                            title={"Xác nhận"}
                             content={
-                              'Bạn chắc chắn muốn duyệt yêu cầu cấp phép này?'
+                              "Bạn chắc chắn muốn duyệt yêu cầu cấp phép này?"
                             }
                           />
                         </TableCell>
                         <TableCell>
                           <Button
-                            variant='outlined'
-                            color='error'
+                            variant="outlined"
+                            color="error"
                             startIcon={<HighlightOffIcon />}
                             sx={{
-                              fontWeight: 'bold',
+                              fontWeight: "bold",
                             }}
                             onClick={(event) => {
                               event.stopPropagation();
@@ -353,9 +391,9 @@ const LicenAdsboardList = () => {
                               // event.stopPropagation();
                             }}
                             disabled={
-                              row.status === 'completed' ||
-                              row.status === 'canceled' ||
-                              row.status === 'rejected'
+                              row.status === "completed" ||
+                              row.status === "canceled" ||
+                              row.status === "rejected"
                             }
                           >
                             Loại
@@ -368,11 +406,11 @@ const LicenAdsboardList = () => {
                             }}
                             handleAgree={(event) => {
                               event.stopPropagation();
-                              handleAgree('rejected');
+                              handleAgree("rejected");
                             }}
-                            title={'Xác nhận'}
+                            title={"Xác nhận"}
                             content={
-                              'Bạn chắc chắn muốn loại yêu cầu cấp phép này?'
+                              "Bạn chắc chắn muốn loại yêu cầu cấp phép này?"
                             }
                           />
                         </TableCell>
@@ -380,11 +418,11 @@ const LicenAdsboardList = () => {
                     ) : (
                       <TableCell>
                         <Button
-                          variant='outlined'
-                          color='error'
+                          variant="outlined"
+                          color="error"
                           startIcon={<DeleteOutlineOutlinedIcon />}
                           sx={{
-                            fontWeight: 'bold',
+                            fontWeight: "bold",
                           }}
                           onClick={(event) => {
                             event.stopPropagation();
@@ -392,9 +430,9 @@ const LicenAdsboardList = () => {
                             // event.stopPropagation();
                           }}
                           disabled={
-                            row.status === 'completed' ||
-                            row.status === 'canceled' ||
-                            row.status === 'rejected'
+                            row.status === "completed" ||
+                            row.status === "canceled" ||
+                            row.status === "rejected"
                           }
                         >
                           Hủy
@@ -407,11 +445,11 @@ const LicenAdsboardList = () => {
                           }}
                           handleAgree={(event) => {
                             event.stopPropagation();
-                            handleAgree('canceled');
+                            handleAgree("canceled");
                           }}
-                          title={'Xác nhận'}
+                          title={"Xác nhận"}
                           content={
-                            'Bạn chắc chắn muốn hủy yêu cầu cấp phép này?'
+                            "Bạn chắc chắn muốn hủy yêu cầu cấp phép này?"
                           }
                         />
                       </TableCell>
@@ -423,23 +461,23 @@ const LicenAdsboardList = () => {
         </Box>
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
           <span />
           <TablePagination
             rowsPerPageOptions={[5, 10]}
-            component='div'
+            component="div"
             count={filteredList.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage={'Số hàng mỗi trang'}
+            labelRowsPerPage={"Số hàng mỗi trang"}
             labelDisplayedRows={({ from, to, count }) => {
-              return '' + from + ' - ' + to + ' của ' + count;
+              return "" + from + " - " + to + " của " + count;
             }}
           />
         </Box>
