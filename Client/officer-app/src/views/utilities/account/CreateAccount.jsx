@@ -11,10 +11,13 @@ import {
   Button,
   MenuItem,
   Select,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const validateSchema = Yup.object().shape({
   fullname: Yup.string(),
@@ -42,6 +45,8 @@ const initialValues = {
 
 const CreateAccount = () => {
   console.log("selected role: ");
+  const [snackOpen, setSnackOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmitForm = async (values) => {
     const postBody = {
@@ -52,11 +57,10 @@ const CreateAccount = () => {
       userRole: values.role,
     };
     console.log("Post Body: ", postBody);
-    console.log("Post Body: ", JSON.stringify(postBody));
     try {
       const response = await axios.post(
         "http://14.225.192.121/user",
-        JSON.stringify(postBody),
+        postBody,
         {
           headers: {
             "Content-Type": "application/json",
@@ -64,10 +68,37 @@ const CreateAccount = () => {
         },
       );
 
-      console.log("New Account: ", response);
+      if (response.status < 300) {
+        console.log("New Account: ", response);
+        renderSnackBar();
+        navigate("/utils/account_management");
+      }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const renderSnackBar = () => {
+    console.log("Open snackbar");
+    return (
+      <Snackbar
+        open={true}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+          Tạo mới báo cáo thành công!
+        </Alert>
+      </Snackbar>
+    );
+  };
+
+  const handleClose = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackOpen(false);
   };
 
   return (

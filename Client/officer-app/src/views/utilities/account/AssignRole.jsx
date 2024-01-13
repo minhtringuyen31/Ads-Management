@@ -5,7 +5,6 @@ import {
   Divider,
   FormControl,
   FormHelperText,
-  IconButton,
   Input,
   InputLabel,
   MenuItem,
@@ -14,19 +13,12 @@ import {
 } from "@mui/material";
 import React from "react";
 import MainCard from "ui-component/cards/MainCard";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import CreateIcon from "@mui/icons-material/Create";
-
-const labelStyle = {
-  opacity: 0, // Initially hide the label
-  marginLeft: "8px", // Adjust spacing as needed
-  transition: "opacity 0.3s", // Add a smooth transition effect for opacity
-};
 
 const validateSchema = Yup.object().shape({
   assignArea: Yup.string().max(255).required("Yêu cầu chọn khu vực phân công"),
@@ -37,17 +29,31 @@ const initialValues = {
 };
 
 const AssignRole = () => {
-  const [account, setAccount] = useState({});
+  /**
+   * useState
+   */
   const [districtList, setDistrictList] = useState([]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [wardList, setWardList] = useState([]);
   const [successAlert, setSuccessAlert] = useState(false);
 
-  const location = useLocation();
-  const { state: id } = location;
-  const accountId = id;
-  console.log("Account Id: ", accountId);
+  /**
+   * useNavigate
+   */
+  const navigate = useNavigate();
 
+  /**
+   * useLocation
+   */
+  const location = useLocation();
+  const { state: content } = location;
+  const account = content;
+
+  /**
+   *
+   * @param {*} role
+   * @returns
+   */
   const renderUserRole = (role) => {
     switch (role) {
       case "ward_officer":
@@ -69,7 +75,7 @@ const AssignRole = () => {
 
     try {
       const response = await axios.put(
-        `http://14.225.192.121/user/${accountId}`,
+        `http://14.225.192.121/user/${account._id}`,
         JSON.stringify(postBody),
         {
           headers: {
@@ -80,6 +86,7 @@ const AssignRole = () => {
       if (response.status < 300) {
         console.log("Response: ", response);
         setSuccessAlert(true);
+        navigate("/utils/account_management");
       }
     } catch (error) {
       console.log(error);
@@ -87,26 +94,8 @@ const AssignRole = () => {
   };
 
   /**
-   * useeEffect
+   * useEffect
    */
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          `http://14.225.192.121/user/${accountId}`,
-        );
-        if (response.status === 200) {
-          console.log("Account Detail: ", response.data);
-          setAccount(response.data.data);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchData();
-  }, []);
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -139,6 +128,7 @@ const AssignRole = () => {
     }
     fetchData();
   }, [selectedDistrict]);
+
   return (
     <>
       <MainCard title="Phân công khu vực quản lý">
@@ -192,7 +182,7 @@ const AssignRole = () => {
               {account.assigned_areaid !== "" &&
               account.assigned_areaid !== undefined ? (
                 <Typography fontSize={16} color="#374151" fontWeight="bold">
-                  {account.assign_areaid.label}
+                  {account.assigned_areaid.label}
                 </Typography>
               ) : (
                 <>

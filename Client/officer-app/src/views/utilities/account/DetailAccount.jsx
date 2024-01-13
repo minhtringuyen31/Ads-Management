@@ -21,18 +21,32 @@ import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 
 const AssignRole = () => {
+  /**
+   * useState
+   */
   const [account, setAccount] = useState({});
 
+  /**
+   * useLocation
+   */
   const location = useLocation();
   const { state: id } = location;
   const accountId = id;
-  console.log("Account Id: ", accountId);
 
+  /**
+   * useNavigate
+   */
   const navigate = useNavigate();
+
   const handleAssignBtnClicked = () => {
-    navigate("/utils/assign_role", { state: accountId });
+    navigate("/utils/assign_role", { state: account });
   };
 
+  /**
+   *
+   * @param {*} role
+   * @returns
+   */
   const renderUserRole = (role) => {
     switch (role) {
       case "ward_officer":
@@ -45,6 +59,7 @@ const AssignRole = () => {
         return "";
     }
   };
+
   /**
    * useeEffect
    */
@@ -117,9 +132,27 @@ const AssignRole = () => {
               </Typography>
               {account.assigned_areaid !== "" &&
               account.assigned_areaid !== undefined ? (
-                <Typography fontSize={16} color="#374151" fontWeight="bold">
-                  {account.assigned_areaid.label}
-                </Typography>
+                <>
+                  <Typography fontSize={16} color="#374151" fontWeight="bold">
+                    {account.assigned_areaid.label}
+                  </Typography>
+                  <IconButton
+                    color="primary"
+                    aria-label="add to shopping cart"
+                    marginLeft={1}
+                    onClick={() => handleAssignBtnClicked()}
+                    sx={{
+                      transition: "outline 0.3s",
+                      "&:hover": {
+                        "& .label": {
+                          opacity: 1,
+                        },
+                      },
+                    }}
+                  >
+                    <CreateIcon />
+                  </IconButton>
+                </>
               ) : (
                 <>
                   <Typography
