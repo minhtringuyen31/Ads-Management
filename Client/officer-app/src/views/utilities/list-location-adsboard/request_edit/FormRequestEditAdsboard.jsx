@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { GetUser } from "store/auth/auth-config";
 import { Field, useFormik, FormikProvider } from "formik";
 import {
   TextField,
@@ -71,6 +72,7 @@ const FormFooterStyle = {
 const FormRequestEditAdsboard = () => {
   const navigate = useNavigate();
   const adsboard = useLocation();
+  const userID = GetUser()._id;
   const adsboardID = adsboard.state?.adsboardID;
   const [adsboardData, setAdsboardData] = useState({});
 
@@ -138,7 +140,11 @@ const FormRequestEditAdsboard = () => {
           const fetchedAdsboardData = response.data.data;
 
           setAdsboardData(fetchedAdsboardData);
-          formik.setFieldValue("boardID", fetchedAdsboardData._id ?? "");
+          formik.setFieldValue("id", fetchedAdsboardData._id ?? "");
+          formik.setFieldValue(
+            "location",
+            fetchedAdsboardData.location._id ?? ""
+          );
           formik.setFieldValue(
             "adsboard_type",
             fetchedAdsboardData.adsboard_type._id
@@ -199,11 +205,13 @@ const FormRequestEditAdsboard = () => {
     const formData = new FormData();
     formData.append("type", values.type);
     formData.append("newInformation[id]", values.id);
-    formData.append("newInformation[adsboard_type]", values.adsboard_type);
+    formData.append("newInformation[location]", values.location);
+    formData.append("newInformation[adsboard_type]", values.adsboard_type._id);
     formData.append("newInformation[width]", values.width);
     formData.append("newInformation[height]", values.height);
     formData.append("newInformation[contract_start_date]", values.start_date);
     formData.append("newInformation[contract_end_date]", values.end_date);
+    formData.append("newInformation[user_id]", userID);
     formData.append("reason", values.reason);
     values.image.forEach((file) =>
       formData.append("newInformation[image]", file)
@@ -215,6 +223,7 @@ const FormRequestEditAdsboard = () => {
   const formik = useFormik({
     initialValues: {
       id: adsboardData._id ?? "",
+      location: adsboardData.location ?? "",
       adsboard_type: adsboardData.adsboard_type ?? "",
       height: adsboardData.height ?? 0,
       width: adsboardData.width ?? 0,
@@ -307,6 +316,8 @@ const FormRequestEditAdsboard = () => {
     setExistingImages(Array.from(new Set(newexistingImages)));
     imageUploadRef.current.handleRemoveImageByUrl(imageToRemove);
   };
+
+  console.log("adsboard data: ", adsboardData);
 
   return (
     <>

@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { GetUser } from "store/auth/auth-config";
 import { Field, useFormik, FormikProvider } from "formik";
 import {
   TextField,
@@ -72,6 +73,7 @@ const planningOptions = [
 const FormRequestEditLocation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const userID = GetUser()._id;
   const locationID = location.state?.locationID;
   const [locationData, setLocationData] = useState({});
 
@@ -273,6 +275,7 @@ const FormRequestEditLocation = () => {
     formData.append("newInformation[location_type]", values.location_type);
     formData.append("newInformation[ads_type]", values.ads_type);
     formData.append("newInformation[is_planned]", values.is_planned);
+    formData.append("newInformation[user_id]", userID);
     values.image.forEach((file) =>
       formData.append("newInformation[image]", file)
     );

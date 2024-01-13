@@ -22,7 +22,7 @@ const LocationDetail = Loadable(
 const RequestEditLocation = Loadable(
   lazy(() =>
     import(
-      "../views/utilities/list-location-adsboard/location/FormRequestEditLocation"
+      "../views/utilities/list-location-adsboard/request_edit/FormRequestEditLocation"
     )
   )
 );
@@ -54,7 +54,7 @@ const AddAdsboardProvince = Loadable(
   )
 );
 const EditAdsboardProvince = Loadable(
-  lazy(() => 
+  lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/adsboard/EditAdsboardProvince"
     )
@@ -63,7 +63,7 @@ const EditAdsboardProvince = Loadable(
 const RequestEditAdsboard = Loadable(
   lazy(() =>
     import(
-      "../views/utilities/list-location-adsboard/adsboard/FormRequestEditAdsboard"
+      "../views/utilities/list-location-adsboard/request_edit/FormRequestEditAdsboard"
     )
   )
 );
@@ -97,7 +97,16 @@ const AuthorizeRequestDetail = Loadable(
 );
 const EditRequestList = Loadable(
   lazy(() =>
-    import("../views/utilities/list-location-adsboard/RequestEditList")
+    import(
+      "../views/utilities/list-location-adsboard/request_edit/RequestEditList"
+    )
+  )
+);
+const EditRequestDetail = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/request_edit/RequestEditDetail"
+    )
   )
 );
 
@@ -151,6 +160,10 @@ const MainRoutes = {
         {
           path: "edit_requests",
           element: <EditRequestList />,
+        },
+        {
+          path: "edit_request_detail",
+          element: <EditRequestDetail />,
         },
         {
           path: "authorize_requests",

@@ -16,7 +16,7 @@ const style = {
   p: 4,
 };
 
-const ModalAccept = ({ open, handleDisagree, handleAgree, title }) => {
+const ModalAccept = ({ open, handleDisagree, handleAgree, title, content }) => {
   return (
     <Modal
       open={open}
@@ -30,7 +30,7 @@ const ModalAccept = ({ open, handleDisagree, handleAgree, title }) => {
           {title}
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }} variant="h5">
-          Bạn chắc chắn muốn hủy yêu cầu cấp phép này?
+          {content}
         </Typography>
         <Box
           sx={{
