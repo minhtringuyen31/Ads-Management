@@ -36,7 +36,7 @@ dotenv.config();
 
 const app = express();
 const corsOptions = {
-  origin: "*" ,
+  origin: "14.225.192.121",
 };
 const server = http.createServer(app);
 const io = new Server(server, {
