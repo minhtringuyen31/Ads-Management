@@ -3,6 +3,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { divIcon, point } from "leaflet";
 import axiosClient from "../../axiosConfig/axiosClient";
 import { useMapEvents } from "react-leaflet";
 import SearchBar from "../Search/SearchBar";
@@ -11,6 +12,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import FindInPageIcon from "@mui/icons-material/FindInPage";
 import ReportForm from "../Report/ReportForm";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import "./style.css";
 
 // import dotenv from "dotenv";
 
@@ -97,11 +99,11 @@ const LocationMarker = ({
       if (type === "SEARCH") {
         console.log("Search Location", searchLocation);
         setPosition(searchLocation);
-        map.flyTo(searchLocation, map.getZoom() + 3);
+        map.flyTo(searchLocation, map.getZoom() + 1);
       } else {
         console.log("Curent Location", currentLocation);
         setPosition(currentLocation);
-        map.flyTo(currentLocation, map.getZoom() + 3);
+        map.flyTo(currentLocation, map.getZoom() + 1);
       }
     },
   });
@@ -154,39 +156,6 @@ const LocationMarker = ({
   );
 };
 
-// const MyLocationMarker = ({ currentLocation }) => {
-//   /**
-//    * useState
-//    */
-//   const [position, setPosition] = useState(null);
-
-//   /**
-//    * useMapEvents
-//    */
-//   const map = useMapEvents({
-//     locationfound: (e) => {
-//       console.log("My Location", currentLocation);
-//       setPosition(currentLocation);
-//       map.flyTo(currentLocation, map.getZoom() + 3);
-//     },
-//   });
-
-//   console.log("Cu: ", currentLocation);
-
-//   useEffect(() => {
-//     if (Object.keys(currentLocation).length !== 0) map.locate();
-//   }, [currentLocation]);
-
-//   console.log("Cu: ", currentLocation);
-//   console.log("Po: ", position);
-
-//   return position === null ? null : (
-//     <Marker position={position} icon={redMarkerIcon}>
-//       <Popup>You are here</Popup>
-//     </Marker>
-//   );
-// };
-
 const Map = ({
   setShape,
   openDrawer,
@@ -219,6 +188,22 @@ const Map = ({
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setModalOpen(true);
+  }, [selectedLocation]);
+
+  const createClusterCustomIcon = function (cluster) {
+    const count = cluster.getChildCount();
+    const size = count < 3 ? 40 : count < 5 ? 45 : 50;
+    const color = count < 3 ? "#06b6d4" : count < 5 ? "#14b8a6" : "#fb7185";
+
+    return new divIcon({
+      html: `<span class="cluster-icon" style="background-color: ${color}; width: ${size}px; height: ${size}px;">${count}</span>`,
+      className: "custom-marker-cluster",
+      iconSize: point(size, size, true),
+    });
+  };
+
   /**
    * @param {*} locationId
    */
@@ -231,10 +216,6 @@ const Map = ({
     setSelectedLocation(location);
     setModalOpen(true);
   };
-
-  useEffect(() => {
-    setModalOpen(true);
-  }, [selectedLocation]);
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -278,7 +259,6 @@ const Map = ({
       }
     }
   };
-
   return (
     <Box>
       <Box
@@ -297,7 +277,10 @@ const Map = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <MarkerClusterGroup>
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createClusterCustomIcon}
+          >
             {boardDisplayMode
               ? locationList.map((location) => (
                   <Marker
