@@ -222,8 +222,8 @@ const NotificationSection = () => {
                     <Grid item xs={12}>
                       <PerfectScrollbar
                         style={{
-                          height: '100%',
-                          maxHeight: 'calc(100vh - 300px)',
+                          height: 'auto',
+                          // maxHeight: 'calc(100vh - 300px)',
                           overflowX: 'hidden',
                         }}
                       >

@@ -227,11 +227,11 @@ const LicenAdsboardList = () => {
                 <TableCell sx={{ fontWeight: 'bold', width: '25%' }}>
                   Điểm đặt
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '20%' }}>
+                <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
                   Công ty
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '10%' }}>
-                  Người lên hệ
+                <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
+                  Người liên hệ
                 </TableCell>
                 <TableCell sx={{ fontWeight: 'bold', width: '15%' }}>
                   Bắt đầu hợp đồng

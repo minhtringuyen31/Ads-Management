@@ -18,7 +18,6 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { GetUser } from 'store/auth/auth-config';
 import ReportContext from 'store/report/report-context';
-import MainCard from 'ui-component/cards/MainCard';
 
 moment.locale('vi');
 
@@ -86,6 +85,8 @@ const NotificationList = ({ handleToggle }) => {
     }
   };
 
+  console.log('notificationList', notificationList);
+
   useEffect(() => {
     fetchDatas();
   }, []);
@@ -102,11 +103,11 @@ const NotificationList = ({ handleToggle }) => {
     <List
       sx={{
         width: '100%',
-        maxWidth: 400,
+        maxWidth: 500,
         py: 0,
         borderRadius: '10px',
         [theme.breakpoints.down('md')]: {
-          maxWidth: 400,
+          maxWidth: 500,
         },
         '& .MuiListItemSecondaryAction-root': {
           top: 22,
@@ -125,12 +126,13 @@ const NotificationList = ({ handleToggle }) => {
             key={notification._id}
             onClick={() => handleItemClicked(notification.content._id)}
           >
-            <MainCard>
+            {/* <MainCard> */}
+            <Box>
               <Grid container spacing={2} alignItems='center'>
                 <Grid
                   item
                   xs={12}
-                  lg={2}
+                  lg={1.5}
                   display='flex'
                   justifyContent='center'
                   alignItems='center'
@@ -139,9 +141,11 @@ const NotificationList = ({ handleToggle }) => {
                     <CircleNotifications fontSize='large' color='info' />
                   </ListItemIcon>
                 </Grid>
-                <Grid item xs={12} lg={10} container direction='column'>
+                <Grid item xs={12} lg={10.5} container direction='column'>
                   <Grid item>
-                    <Typography variant='h3'>{notification.title}</Typography>
+                    <Typography fontSize={14} fontWeight='bold'>
+                      {notification.title}
+                    </Typography>
                   </Grid>
                   <Box sx={{ height: '5px' }} />
                   <Grid item>
@@ -159,7 +163,13 @@ const NotificationList = ({ handleToggle }) => {
                     <Grid item xs={12} lg={12}>
                       <Typography variant='h6' color='GrayText'>
                         Người gửi:{' '}
-                        {notification.content.newInformation.user_id.fullname}
+                        {notification.type === 'report' &&
+                          notification.content.username}
+                        {notification.type === 'edit_request' &&
+                          (notification.content.newInformation.user_id
+                            ? notification.content.newInformation.user_id
+                                .fullname
+                            : 'Không có')}
                       </Typography>
                     </Grid>
                     <Box sx={{ height: '5px' }} />
@@ -178,7 +188,8 @@ const NotificationList = ({ handleToggle }) => {
                   </Grid>
                 </Grid>
               </Grid>
-            </MainCard>
+            </Box>
+            {/* </MainCard> */}
           </ListItemWrapper>
           <Divider />
         </>

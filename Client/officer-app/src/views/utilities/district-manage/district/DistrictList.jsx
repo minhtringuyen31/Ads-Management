@@ -5,11 +5,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
   Button,
-  FormControlLabel,
   Grid,
   IconButton,
   Paper,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -189,7 +187,7 @@ const EnhancedTable = (props) => {
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
+  const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const districtCtx = useContext(DistrictContext);
 
@@ -340,6 +338,7 @@ const EnhancedTable = (props) => {
           </Table>
         </TableContainer>
         <TablePagination
+          labelRowsPerPage='Số hàng:'
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
           count={props.rows.length}
@@ -349,10 +348,10 @@ const EnhancedTable = (props) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label='Dense padding'
-      />
+      /> */}
     </Box>
   );
 };
