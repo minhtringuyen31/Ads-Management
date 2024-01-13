@@ -299,19 +299,23 @@ const EnhancedTable = (props) => {
                     </TableCell>
                     <TableCell align='right'>
                       <IconButton
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           props.openEditModel(
                             row.id,
                             row.ward,
                             'ward',
                             props.districtId
-                          )
-                        }
+                          );
+                        }}
                       >
                         <EditIcon />
                       </IconButton>
                       <IconButton
-                        onClick={() => props.openDeleteModel(row.id, 'ward')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.openDeleteModel(row.id, 'ward');
+                        }}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -436,6 +440,8 @@ EnhancedTable.propTypes = {
 WardList.propTypes = {
   openAddModel: PropTypes.func.isRequired,
   openEditModel: PropTypes.func.isRequired,
+  openDeleteModel: PropTypes.func.isRequired,
+  triggleList: PropTypes.bool.isRequired,
 };
 
 export default WardList;

@@ -445,6 +445,8 @@ EnhancedTable.propTypes = {
 DistrictList.propTypes = {
   openAddModel: PropTypes.func.isRequired,
   openEditModel: PropTypes.func.isRequired,
+  openDeleteModel: PropTypes.func.isRequired,
+  triggleList: PropTypes.bool.isRequired,
 };
 
 export default DistrictList;
