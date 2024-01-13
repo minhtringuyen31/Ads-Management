@@ -201,17 +201,19 @@ const LicenAdsboardList = () => {
       )}
       <Scrollbar>
         <Box>
-          <Box style={styleBox}>
-            <span></span> {/* Phần trống bên trái */}
-            <Button
-              variant='contained'
-              color='primary'
-              endIcon={<AddIcon />}
-              onClick={handleNewLicense}
-            >
-              Cấp phép mới
-            </Button>
-          </Box>
+          {userRole !== 'province_officer' && (
+            <Box style={styleBox}>
+              <span></span> {/* Phần trống bên trái */}
+              <Button
+                variant='contained'
+                color='primary'
+                endIcon={<AddIcon />}
+                onClick={handleNewLicense}
+              >
+                Cấp phép mới
+              </Button>
+            </Box>
+          )}
           <Table>
             <TableHead
               sx={{
