@@ -104,7 +104,7 @@ const AuthorizeRequestController = {
 
 
       // Add by Quang Thanh to handle create new ads board when province update status "Completed"
-      if (updatedObject && updatedObject.status === "Completed") {
+      if (updatedObject && updatedObject.status === "completed") {
 
         const newAdsBoard = await AdsBoardService.create(updatedObject.new_ads_board);
         if (!newAdsBoard) {
