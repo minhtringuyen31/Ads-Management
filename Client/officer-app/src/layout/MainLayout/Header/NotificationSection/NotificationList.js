@@ -71,12 +71,12 @@ const NotificationList = ({ handleToggle }) => {
 
       if (user.userRole === 'province_officer') {
         const filterData = response.data.data.filter(
-          (item) => item.type !== 'report'
+          (item) => item.type === 'edit_request'
         );
         setNotificationList(filterData);
       } else {
         const filterData = response.data.data.filter(
-          (item) => item.type === 'report'
+          (item) => item.type !== 'edit_request'
         );
         setNotificationList(filterData);
       }
@@ -156,6 +156,8 @@ const NotificationList = ({ handleToggle }) => {
                         (notification.content.type === 'board'
                           ? 'Yêu cầu chỉnh sửa bảng quảng cáo'
                           : 'Yêu cầu chỉnh sửa địa điểm')}
+                      {notification.type === 'status_edit_request' &&
+                        'Trạng thái yêu cầu chỉnh sửa đã được thay đổi'}
                     </Typography>
                   </Grid>
                   <Box sx={{ height: '5px' }} />
@@ -165,6 +167,11 @@ const NotificationList = ({ handleToggle }) => {
                         Người gửi:{' '}
                         {notification.type === 'report' &&
                           notification.content.username}
+                        {notification.type === 'edit_request' &&
+                          (notification.content.newInformation.user_id
+                            ? notification.content.newInformation.user_id
+                                .fullname
+                            : 'Không có')}
                         {notification.type === 'edit_request' &&
                           (notification.content.newInformation.user_id
                             ? notification.content.newInformation.user_id
