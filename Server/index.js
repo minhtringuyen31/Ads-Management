@@ -26,21 +26,24 @@ import logRoute from "./routes/log.route.js";
 import { sendEmail } from "./utils/sendEmail.js";
 import SocketListener from "./socket/socket.js";
 import { Server } from "socket.io";
-import path from 'path';
+import path from "path";
 import { specs, swaggerUi } from "./configs/swagger.js";
+//import YAML from "yamljs";
+
+//const swaggerDocument = YAML.load("./app.yaml");
 const __dirname = path.resolve();
 dotenv.config();
 
 const app = express();
 const corsOptions = {
-  origin: "http://localhost:" + process.env.PORT,
+  origin: "*" ,
 };
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*", // Cho phép tất cả nguồn, hoặc chỉ định nguồn cụ thể
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 global.userList = {};
 
@@ -71,7 +74,7 @@ redisClient.ping((err, reply) => {
 // // Gọi hàm thực hiện các thao tác Redis
 // testRedisOperations();
 const initializeExpress = (app) => {
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, "public")));
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

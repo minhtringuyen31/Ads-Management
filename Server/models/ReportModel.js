@@ -6,14 +6,16 @@ const ReportSchema = new Schema(
     report_form: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Type',
+      ref: "Type",
     },
     coordinate: {
-      lat: { // x
+      lat: {
+        // x
         type: Number,
         required: false,
       },
-      lng: { // y
+      lng: {
+        // y
         type: Number,
         required: false,
       },
@@ -36,7 +38,7 @@ const ReportSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["location", "board", 'random'],
+      enum: ["location", "board", "random"],
       required: true,
     },
     location: {
@@ -76,17 +78,17 @@ const ReportSchema = new Schema(
     ward: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Ward',
+      ref: "Ward",
     },
     district: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: 'District',
+      ref: "District",
     },
     random: {
       type: Object,
       default: false,
-    }
+    },
   },
 
   {
