@@ -85,8 +85,6 @@ const NotificationList = ({ handleToggle }) => {
     }
   };
 
-  console.log('notificationList', notificationList);
-
   useEffect(() => {
     fetchDatas();
   }, []);
@@ -99,110 +97,115 @@ const NotificationList = ({ handleToggle }) => {
 
   const modifierNotificationList = notificationList.toReversed();
 
-  return (
-    <List
-      sx={{
-        width: '100%',
-        maxWidth: 500,
-        py: 0,
-        borderRadius: '10px',
-        [theme.breakpoints.down('md')]: {
+  const send = 'Người gửi';
+  const location = 'Địa điểm';
+  if (modifierNotificationList.length !== 0) {
+    console.log('notificationList', modifierNotificationList);
+    return (
+      <List
+        sx={{
+          width: '100%',
           maxWidth: 500,
-        },
-        '& .MuiListItemSecondaryAction-root': {
-          top: 22,
-        },
-        '& .MuiDivider-root': {
-          my: 0,
-        },
-        '& .list-container': {
-          pl: 7,
-        },
-      }}
-    >
-      {modifierNotificationList.map((notification, index) => (
-        <>
-          <ListItemWrapper
-            key={notification._id}
-            onClick={() => handleItemClicked(notification.content._id)}
-          >
-            {/* <MainCard> */}
-            <Box>
-              <Grid container spacing={2} alignItems='center'>
-                <Grid
-                  item
-                  xs={12}
-                  lg={1.5}
-                  display='flex'
-                  justifyContent='center'
-                  alignItems='center'
-                >
-                  <ListItemIcon>
-                    <CircleNotifications fontSize='large' color='info' />
-                  </ListItemIcon>
-                </Grid>
-                <Grid item xs={12} lg={10.5} container direction='column'>
-                  <Grid item>
-                    <Typography fontSize={14} fontWeight='bold'>
-                      {notification.title}
-                    </Typography>
+          py: 0,
+          borderRadius: '10px',
+          [theme.breakpoints.down('md')]: {
+            maxWidth: 500,
+          },
+          '& .MuiListItemSecondaryAction-root': {
+            top: 22,
+          },
+          '& .MuiDivider-root': {
+            my: 0,
+          },
+          '& .list-container': {
+            pl: 7,
+          },
+        }}
+      >
+        {modifierNotificationList.map((notification, index) => (
+          <>
+            <ListItemWrapper
+              key={notification._id}
+              onClick={() => handleItemClicked(notification.content._id)}
+            >
+              {/* <MainCard> */}
+              <Box>
+                <Grid container spacing={2} alignItems='center'>
+                  <Grid
+                    item
+                    xs={12}
+                    lg={1.5}
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
+                  >
+                    <ListItemIcon>
+                      <CircleNotifications fontSize='large' color='info' />
+                    </ListItemIcon>
                   </Grid>
-                  <Box sx={{ height: '5px' }} />
-                  <Grid item>
-                    <Typography variant='h5'>
-                      {notification.type === 'report' &&
-                        notification.content.report_form.label}
-                      {notification.type === 'edit_request' &&
-                        (notification.content.type === 'board'
-                          ? 'Yêu cầu chỉnh sửa bảng quảng cáo'
-                          : 'Yêu cầu chỉnh sửa địa điểm')}
-                      {notification.type === 'status_edit_request' &&
-                        'Trạng thái yêu cầu chỉnh sửa đã được thay đổi'}
-                    </Typography>
-                  </Grid>
-                  <Box sx={{ height: '5px' }} />
-                  <Grid item container direction='column'>
-                    <Grid item xs={12} lg={12}>
-                      <Typography variant='h6' color='GrayText'>
-                        Người gửi:{' '}
-                        {notification.type === 'report' &&
-                          notification.content.username}
-                        {notification.type === 'edit_request' &&
-                          (notification.content.newInformation.user_id
-                            ? notification.content.newInformation.user_id
-                                .fullname
-                            : 'Không có')}
-                        {notification.type === 'status_edit_request' &&
-                          (notification.content.newInformation.user_id
-                            ? notification.content.newInformation.user_id
-                                .fullname
-                            : 'Không có')}
+                  <Grid item xs={12} lg={10.5} container direction='column'>
+                    <Grid item>
+                      <Typography fontSize={14} fontWeight='bold'>
+                        {notification.title}
                       </Typography>
                     </Grid>
                     <Box sx={{ height: '5px' }} />
-                    <Grid
-                      item
-                      display='flex'
-                      justifyContent='flex-end'
-                      alignItems='end'
-                      xs={12}
-                      lg={12}
-                    >
-                      <Typography variant='h6' color='GrayText'>
-                        {moment.utc(notification.createdAt).fromNow()}
+                    <Grid item>
+                      <Typography variant='h5'>
+                        {notification.type === 'report' &&
+                          notification.content.report_form.label}
+                        {notification.type === 'edit_request' &&
+                          (notification.content.type === 'board'
+                            ? 'Yêu cầu chỉnh sửa bảng quảng cáo'
+                            : 'Yêu cầu chỉnh sửa địa điểm')}
+                        {notification.type === 'status_edit_request' &&
+                          'Trạng thái yêu cầu chỉnh sửa đã được thay đổi'}
                       </Typography>
+                    </Grid>
+                    <Box sx={{ height: '5px' }} />
+                    <Grid item container direction='column'>
+                      <Grid item xs={12} lg={12}>
+                        <Typography variant='h6' color='GrayText'>
+                          {notification.type === 'report' ? send : location}
+                          {notification.type === 'report' &&
+                            notification.content.username}
+                          {notification.type === 'edit_request' &&
+                          notification.content.type === 'board'
+                            ? notification.content.newInformation.location
+                                .display_name
+                            : notification.content.newInformation.display_name}
+                          {notification.type === 'status_edit_request' &&
+                          notification.content.type === 'board'
+                            ? notification.content.newInformation.location
+                                .display_name
+                            : notification.content.newInformation.display_name}
+                        </Typography>
+                      </Grid>
+                      <Box sx={{ height: '5px' }} />
+                      <Grid
+                        item
+                        display='flex'
+                        justifyContent='flex-end'
+                        alignItems='end'
+                        xs={12}
+                        lg={12}
+                      >
+                        <Typography variant='h6' color='GrayText'>
+                          {moment.utc(notification.createdAt).fromNow()}
+                        </Typography>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Box>
-            {/* </MainCard> */}
-          </ListItemWrapper>
-          <Divider />
-        </>
-      ))}
-    </List>
-  );
+              </Box>
+              {/* </MainCard> */}
+            </ListItemWrapper>
+            <Divider />
+          </>
+        ))}
+      </List>
+    );
+  }
 };
 
 export default NotificationList;
