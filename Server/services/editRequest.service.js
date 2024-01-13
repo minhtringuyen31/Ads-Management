@@ -47,10 +47,30 @@ const EditRequestService = {
           select: "label"
         }],
       }).populate({
+        path: "newInformation.location",
+        model: "Location", // Replace with the actual name of the Location model
+        populate: [{
+          path: "location_type",
+          model: "Type", // Replace with the actual name of the Location model
+          select: "label -__t"
+        }, {
+          path: "ward",
+          model: "Ward", // Replace with the actual name of the Location model
+          select: "label"
+        }, {
+          path: "ads_type",
+          model: "Type", // Replace with the actual name of the Location model
+          select: "label"
+        }, {
+          path: "district",
+          model: "District", // Replace with the a ctual name of the Location model
+          select: "label"
+        }],
+      }).populate({
         path: "newInformation.company",
         model: "Company", // Replace with the actual name of the Location model
       })
-      .exec();;
+      .exec();
   },
   // async getAll() {
   //   return await EditRequest.find();

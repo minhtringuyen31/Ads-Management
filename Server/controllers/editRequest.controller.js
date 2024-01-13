@@ -1,6 +1,9 @@
 import createError from "http-errors";
 import EditRequestService from "../services/editRequest.service.js";
 import NotificationService from "../services/notification.service.js";
+import AdsBoardService from "../services/ads_board.service.js";
+import LocationService from "../services/location.service.js";
+
 import UserService from "../services/user.service.js";
 const ModelName = "Edit Request";
 const modelname = "edit Request";
@@ -103,6 +106,34 @@ const EditRequestController = {
         id,
         updateData
       );
+
+      // Handle by Quang Thanh to update location and adsboard when province update status completed
+      if (updatedObject && updatedObject.status === "Completed" && updatedObject.type === 'board') {
+        const newAdsBoard = await AdsBoardService.update(updatedObject.newInformation.id, updatedObject.newInformation);
+        if (!newAdsBoard) {
+          if (req.files) {
+            req.files.forEach(file => {
+              cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                console.log(result, error);
+              });
+            });
+          }
+          return next(createError.BadRequest("AdsBoard not created"))
+        }
+      } else if (updatedObject && updatedObject.status === "Completed" && updatedObject.type === 'location') {
+        const newAdsBoard = await LocationService.update(updatedObject.newInformation.id, updatedObject.newInformation);
+        if (!newAdsBoard) {
+          if (req.files) {
+            req.files.forEach(file => {
+              cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                console.log(result, error);
+              });
+            });
+          }
+          return next(createError.BadRequest("Location not crreate"))
+        }
+      }
+      // End by Quang Thanh
 
       if (!updatedObject) {
         return next(

@@ -1,5 +1,7 @@
 import createError from "http-errors";
 import AuthorizeRequestService from "../services/authorizeRequest.service.js";
+import AdsBoardService from "../services/ads_board.service.js";
+
 const ModelName = "Authorize Request";
 const modelname = "authorize Request";
 import { v2 as cloudinary } from 'cloudinary';
@@ -94,10 +96,29 @@ const AuthorizeRequestController = {
       if (files) {
         updateData.image = files.map(file => file.path);
       }
+
       const updatedObject = await AuthorizeRequestService.update(
         id,
         updateData
       );
+
+
+      // Add by Quang Thanh to handle create new ads board when province update status "Completed"
+      if (updatedObject && updatedObject.status === "Completed") {
+
+        const newAdsBoard = await AdsBoardService.create(updatedObject.new_ads_board);
+        if (!newAdsBoard) {
+          if (req.files) {
+            req.files.forEach(file => {
+              cloudinary.uploader.destroy(extractPublicId(file.path), function (error, result) {
+                console.log(result, error);
+              });
+            });
+          }
+          return next(createError.BadRequest("AdsBoard not found"))
+        }
+      }
+      // End by Quang Thanh
 
       if (!updatedObject) {
         if (req.files) {

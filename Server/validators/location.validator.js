@@ -39,14 +39,6 @@ export const createLocationValidation = [
 ];
 
 export const updateLocationValidation = [
-  body("coordinate.lat")
-    .isNumeric()
-    .optional()
-    .withMessage("Latitude must be a number"),
-  body("coordinate.lng")
-    .isNumeric()
-    .optional()
-    .withMessage("Longitude must be a number"),
   body("display_name")
     .isString()
     .optional()
@@ -68,7 +60,6 @@ export const updateLocationValidation = [
     .isMongoId()
     .optional()
     .withMessage("Ads type must be a valid ObjectId"),
-  body("image").isArray().optional().withMessage("Image must be an array"),
   body("is_planned")
     .isBoolean()
     .optional()
