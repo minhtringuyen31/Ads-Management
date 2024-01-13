@@ -18,10 +18,10 @@ const EditRequestSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "completed", 'rejected', 'canceled'],
+      enum: ["pending", "completed", "rejected", "canceled"],
       default: "pending",
       required: true,
-    }
+    },
   },
 
   {
