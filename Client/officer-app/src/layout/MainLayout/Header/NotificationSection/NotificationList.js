@@ -97,8 +97,8 @@ const NotificationList = ({ handleToggle }) => {
 
   const modifierNotificationList = notificationList.toReversed();
 
-  const send = 'Người gửi';
-  const location = 'Địa điểm';
+  const send = 'Người gửi: ';
+  const location = 'Địa điểm: ';
   if (modifierNotificationList.length !== 0) {
     console.log('notificationList', modifierNotificationList);
     return (
@@ -169,16 +169,27 @@ const NotificationList = ({ handleToggle }) => {
                           {notification.type === 'report' ? send : location}
                           {notification.type === 'report' &&
                             notification.content.username}
+
                           {notification.type === 'edit_request' &&
-                          notification.content.type === 'board'
+                            notification.content.type === 'board' &&
+                            notification.content.newInformation
                             ? notification.content.newInformation.location
-                                .display_name
-                            : notification.content.newInformation.display_name}
+                              .display_name || "" : ""}
+                          {notification.type === 'edit_request' &&
+                            notification.content.type === 'location' &&
+                            notification.content.newInformation
+                            ? notification.content.newInformation.display_name || "" : ""}
+
                           {notification.type === 'status_edit_request' &&
-                          notification.content.type === 'board'
+                            notification.content.type === 'board' &&
+                            notification.content.newInformation
                             ? notification.content.newInformation.location
-                                .display_name
-                            : notification.content.newInformation.display_name}
+                              .display_name || "" : ""}
+                          {notification.type === 'status_edit_request' &&
+                            notification.content.type === 'location' &&
+                            notification.content.newInformation
+                            ? notification.content.newInformation.display_name || "" : ""}
+
                         </Typography>
                       </Grid>
                       <Box sx={{ height: '5px' }} />
