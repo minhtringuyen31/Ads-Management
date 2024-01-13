@@ -111,7 +111,7 @@ const Login = ({ ...others }) => {
         >
           <Box sx={{ mb: 2 }}>
             <Typography variant='subtitle1'>
-              Sign in with Email address
+              Đăng nhập với tài khoản của bạn
             </Typography>
           </Box>
         </Grid>
@@ -125,13 +125,13 @@ const Login = ({ ...others }) => {
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string()
-            .email('Must be a valid email')
+            .email('Email không hợp lệ')
             .max(255)
-            .required('Email is required'),
+            .required('Email không được để trống'),
           password: Yup.string()
             .max(255)
             .min(6, 'Mât khẩu phải có ít nhất 6 ký tự')
-            .required('Password is required'),
+            .required('Mật khẩu không được để trống'),
         })}
         // onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         //   try {
@@ -169,7 +169,7 @@ const Login = ({ ...others }) => {
               sx={{ ...theme.typography.customInput }}
             >
               <InputLabel htmlFor='outlined-adornment-email-login'>
-                Email Address / Username
+                Địa chỉ email
               </InputLabel>
               <OutlinedInput
                 id='outlined-adornment-email-login'
@@ -178,7 +178,7 @@ const Login = ({ ...others }) => {
                 name='email'
                 onBlur={handleBlur}
                 onChange={handleChange}
-                label='Email Address / Username'
+                label='Địa chỉ email'
                 inputProps={{}}
               />
               {touched.email && errors.email && (
@@ -197,7 +197,7 @@ const Login = ({ ...others }) => {
               sx={{ ...theme.typography.customInput }}
             >
               <InputLabel htmlFor='outlined-adornment-password-login'>
-                Password
+                Mật khẩu
               </InputLabel>
               <OutlinedInput
                 id='outlined-adornment-password-login'
@@ -219,7 +219,7 @@ const Login = ({ ...others }) => {
                     </IconButton>
                   </InputAdornment>
                 }
-                label='Password'
+                label='Mật khẩu'
                 inputProps={{}}
               />
               {touched.password && errors.password && (
@@ -265,7 +265,7 @@ const Login = ({ ...others }) => {
                 }}
               >
                 <Typography variant='subtitle1' color='secondary'>
-                  Forgot Password?
+                  Quên mật khẩu?
                 </Typography>
               </Button>
             </Stack>
@@ -281,7 +281,7 @@ const Login = ({ ...others }) => {
                   variant='contained'
                   color='secondary'
                 >
-                  Sign in
+                  Đăng nhập
                 </Button>
               </AnimateButton>
             </Box>

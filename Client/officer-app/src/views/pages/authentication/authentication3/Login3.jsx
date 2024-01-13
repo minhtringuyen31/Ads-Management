@@ -1,14 +1,11 @@
-import { Link } from "react-router-dom";
-
 // material-ui
-import { useTheme } from "@mui/material/styles";
-import { Divider, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 // project imports
-import AuthWrapper1 from "../AuthWrapper1";
-import AuthCardWrapper from "../AuthCardWrapper";
-import AuthLogin from "../auth-forms/AuthLogin";
-import Logo from "ui-component/Logo";
+import AuthCardWrapper from '../AuthCardWrapper';
+import AuthWrapper1 from '../AuthWrapper1';
+import AuthLogin from '../auth-forms/AuthLogin';
 
 // assets
 
@@ -16,35 +13,35 @@ import Logo from "ui-component/Logo";
 
 const Login = () => {
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <AuthWrapper1>
       <Grid
         container
-        direction="column"
-        justifyContent="flex-end"
-        sx={{ minHeight: "100vh" }}
+        direction='column'
+        justifyContent='flex-end'
+        sx={{ minHeight: '100vh' }}
       >
         <Grid item xs={12}>
           <Grid
             container
-            justifyContent="center"
-            alignItems="center"
-            sx={{ minHeight: "calc(100vh - 68px)" }}
+            justifyContent='center'
+            alignItems='center'
+            sx={{ minHeight: 'calc(100vh - 68px)' }}
           >
             <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
               <AuthCardWrapper>
                 <Grid
                   container
                   spacing={2}
-                  alignItems="center"
-                  justifyContent="center"
+                  alignItems='center'
+                  justifyContent='center'
                 >
                   <Grid item sx={{ mb: 3 }}>
                     <Typography
-                      fontWeight="bold"
-                      fontSize="clamp(1rem, 2rem, 2.25rem)"
+                      fontWeight='bold'
+                      fontSize='clamp(1rem, 2rem, 2.25rem)'
                       color={theme.palette.secondary.dark}
                       // onClick={() => navigate("/home")}
                       // sx={{
@@ -60,29 +57,29 @@ const Login = () => {
                   <Grid item xs={12}>
                     <Grid
                       container
-                      direction={matchDownSM ? "column-reverse" : "row"}
-                      alignItems="center"
-                      justifyContent="center"
+                      direction={matchDownSM ? 'column-reverse' : 'row'}
+                      alignItems='center'
+                      justifyContent='center'
                     >
                       <Grid item>
                         <Stack
-                          alignItems="center"
-                          justifyContent="center"
+                          alignItems='center'
+                          justifyContent='center'
                           spacing={1}
                         >
                           <Typography
                             color={theme.palette.secondary.main}
                             gutterBottom
-                            variant={matchDownSM ? "h3" : "h2"}
+                            variant={matchDownSM ? 'h3' : 'h2'}
                           >
-                            Admin Dashboard
+                            Chào mừng trở lại
                           </Typography>
                           <Typography
-                            variant="caption"
-                            fontSize="16px"
-                            textAlign={matchDownSM ? "center" : "inherit"}
+                            variant='caption'
+                            fontSize='16px'
+                            textAlign={matchDownSM ? 'center' : 'inherit'}
                           >
-                            Enter your credentials to continue
+                            Nhập thông tin để đăng nhập
                           </Typography>
                         </Stack>
                       </Grid>
@@ -98,8 +95,8 @@ const Login = () => {
                     <Grid
                       item
                       container
-                      direction="column"
-                      alignItems="center"
+                      direction='column'
+                      alignItems='center'
                       xs={12}
                     ></Grid>
                   </Grid>

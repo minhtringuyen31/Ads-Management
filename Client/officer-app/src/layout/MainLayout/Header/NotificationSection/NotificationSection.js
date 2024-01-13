@@ -223,7 +223,7 @@ const NotificationSection = () => {
                       <PerfectScrollbar
                         style={{
                           height: 'auto',
-                          // maxHeight: 'calc(100vh - 300px)',
+                          maxHeight: 'calc(100vh - 300px)',
                           overflowX: 'hidden',
                         }}
                       >

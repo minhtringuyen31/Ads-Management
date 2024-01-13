@@ -172,7 +172,7 @@ const NotificationList = ({ handleToggle }) => {
                             ? notification.content.newInformation.user_id
                                 .fullname
                             : 'Không có')}
-                        {notification.type === 'edit_request' &&
+                        {notification.type === 'status_edit_request' &&
                           (notification.content.newInformation.user_id
                             ? notification.content.newInformation.user_id
                                 .fullname
