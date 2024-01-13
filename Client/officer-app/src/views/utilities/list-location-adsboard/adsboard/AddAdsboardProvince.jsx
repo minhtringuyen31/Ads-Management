@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import instance from "axiosConfig/axios-config";
 import axios from "axios";
 import { Field, useFormik, FormikProvider } from "formik";
 import {
@@ -123,7 +124,7 @@ const AddAdsboardProvince = () => {
     const fetchDataLocation = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("http://14.225.192.121/locations");
+        const response = await instance.get("http://14.225.192.121/locations");
         if (response.status < 300) {
           setlocationInfoList(response.data.data);
           setIsLoading(false);

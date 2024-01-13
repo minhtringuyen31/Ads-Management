@@ -16,6 +16,7 @@ import {
 import TablePagination from "@mui/material/TablePagination";
 import { useTheme } from "@mui/material/styles";
 import axios from "axios";
+import instance from "axiosConfig/axios-config";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GetUser } from "store/auth/auth-config";
@@ -54,18 +55,18 @@ const LicenAdsboardList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://14.225.192.121/authorizeRequests",
+        const response = await instance.get(
+          "http://14.225.192.121/authorizeRequests"
         );
         let sortedData = response.data.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
 
         sortedData = sortedData.map((item, index) => ({
           ...item,
           id: index + 1,
           contract_start_date: formatDate(
-            item.new_ads_board.contract_start_date,
+            item.new_ads_board.contract_start_date
           ),
           contract_end_date: formatDate(item.new_ads_board.contract_end_date),
         }));
@@ -111,7 +112,7 @@ const LicenAdsboardList = () => {
           `http://14.225.192.121/authorizeRequest/${cancelId}`,
           {
             status: status,
-          },
+          }
         );
         setLicenList(
           licenList.map((request) => {
@@ -125,7 +126,7 @@ const LicenAdsboardList = () => {
             } else {
               return request;
             }
-          }),
+          })
         );
         console.log(respone);
       } catch (error) {
@@ -304,40 +305,7 @@ const LicenAdsboardList = () => {
                         // sx={{ borderRadius: "12px" }}
                       />
                     </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        startIcon={<DeleteOutlineOutlinedIcon />}
-                        sx={{
-                          fontWeight: "bold",
-                        }}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleOpenModalConfirm(row._id);
-                          // event.stopPropagation();
-                        }}
-                        disabled={
-                          row.status === "completed" ||
-                          row.status === "canceled" ||
-                          row.status === "rejected"
-                        }
-                      >
-                        Hủy
-                      </Button>
-                      <ModalAccept
-                        open={openModalConfirm}
-                        handleDisagree={(event) => {
-                          event.stopPropagation();
-                          setOpenModalConfirm(false);
-                        }}
-                        handleAgree={(event) => {
-                          event.stopPropagation();
-                          handleAgree();
-                        }}
-                        title={"Xác nhận"}
-                      />
-                    </TableCell>
+
                     {userRole === "province_officer" ? (
                       <>
                         <TableCell>

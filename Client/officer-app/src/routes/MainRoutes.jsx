@@ -10,114 +10,124 @@ const LocationManagement = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/location/LocationManagement"
-    ),
-  ),
+    )
+  )
 );
 const CategoryManage = Loadable(
-  lazy(() => import("../views/utilities/categories/CategoryManage")),
+  lazy(() => import("../views/utilities/categories/CategoryManage"))
 );
 const DistrictMangement = Loadable(
-  lazy(() => import("../views/utilities/district-manage/DistrictMangement")),
+  lazy(() => import("../views/utilities/district-manage/DistrictMangement"))
 );
 const LocationDetail = Loadable(
   lazy(() =>
-    import("../views/utilities/list-location-adsboard/location/LocationDetail"),
-  ),
+    import("../views/utilities/list-location-adsboard/location/LocationDetail")
+  )
 );
 const RequestEditLocation = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/request_edit/FormRequestEditLocation"
-    ),
-  ),
+    )
+  )
+);
+const AddLocationProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/AddLocationProvince"
+    )
+  )
+);
+const EditLocationProvince = Loadable(
+  lazy(() => import (
+      "../views/utilities/list-location-adsboard/location/EditLocationProvince"
+    
+  )
+  )
 );
 
 const BoardManagement = Loadable(
   lazy(() =>
-    import(
-      "../views/utilities/list-location-adsboard/adsboard/BoardManagement"
-    ),
-  ),
+    import("../views/utilities/list-location-adsboard/adsboard/BoardManagement")
+  )
 );
 const AddAdsboardProvince = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/adsboard/AddAdsboardProvince"
-    ),
-  ),
+    )
+  )
 );
 const EditAdsboardProvince = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/adsboard/EditAdsboardProvince"
-    ),
-  ),
+    )
+  )
 );
 const RequestEditAdsboard = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/request_edit/FormRequestEditAdsboard"
-    ),
-  ),
+    )
+  )
 );
 
 const LicenAdsboardList = Loadable(
-  lazy(() =>
-    import("../views/utilities/list-licen-adsboard/LicenAdsboardList"),
-  ),
+  lazy(() => import("../views/utilities/list-licen-adsboard/LicenAdsboardList"))
 );
 
 const Home = Loadable(lazy(() => import("../views/dashboard/DashboardHome")));
 
 const FormAddLicenAdsboard = Loadable(
   lazy(() =>
-    import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard"),
-  ),
+    import("../views/utilities/list-licen-adsboard/FormAddLicenAdsboard")
+  )
 );
 const ReportList = Loadable(
-  lazy(() => import("../views/utilities/report-manage/report-list/ReportList")),
+  lazy(() => import("../views/utilities/report-manage/report-list/ReportList"))
 );
 const ReportDetail = Loadable(
   lazy(() =>
-    import("../views/utilities/report-manage/report-list/ReportDetail"),
-  ),
+    import("../views/utilities/report-manage/report-list/ReportDetail")
+  )
 );
 const AuthorizeRequestList = Loadable(
   lazy(() =>
-    import("../views/utilities/authorize_request/AuthorizeRequestList"),
-  ),
+    import("../views/utilities/authorize_request/AuthorizeRequestList")
+  )
 );
 const AuthorizeRequestDetail = Loadable(
   lazy(() =>
-    import("../views/utilities/authorize_request/AuthorizeRequestDetail"),
-  ),
+    import("../views/utilities/authorize_request/AuthorizeRequestDetail")
+  )
 );
 const EditRequestList = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/request_edit/RequestEditList"
-    ),
-  ),
+    )
+  )
 );
 const EditRequestDetail = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/request_edit/RequestEditDetail"
-    ),
-  ),
+    )
+  )
 );
 const ChangePassword = Loadable(
   lazy(() =>
-    import("../views/pages/authentication/change-password/ChangePassword"),
-  ),
+    import("../views/pages/authentication/change-password/ChangePassword")
+  )
 );
 
 const ReportMap = Loadable(
-  lazy(() => import("../views/utilities/report-manage/report-map/ReportMap")),
+  lazy(() => import("../views/utilities/report-manage/report-map/ReportMap"))
 );
 
 const UserProfile = Loadable(
-  lazy(() => import("../views/utilities/profile/UserProfile")),
+  lazy(() => import("../views/utilities/profile/UserProfile"))
 );
 
 const MainRoutes = {
@@ -143,6 +153,14 @@ const MainRoutes = {
           path: "location/request_edit_form",
           element: <RequestEditLocation />,
         },
+        {
+          path: "location/new_location",
+          element: <AddLocationProvince />,
+        },
+        {
+          path: "location/edit_location",
+          element: <EditLocationProvince />
+        },
       ],
     },
     {
@@ -151,6 +169,18 @@ const MainRoutes = {
         {
           path: "adsboards",
           element: <BoardManagement />,
+        },
+        {
+          path: "adsboard/request_edit_form",
+          element: <RequestEditAdsboard />,
+        },
+        {
+          path: "adsboard/new_adsboard",
+          element: <AddAdsboardProvince />,
+        },
+        {
+          path: "adsboard/edit_adsboard",
+          element: <EditAdsboardProvince />,
         },
       ],
     },
