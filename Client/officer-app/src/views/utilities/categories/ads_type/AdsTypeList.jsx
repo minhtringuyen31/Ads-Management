@@ -1,13 +1,14 @@
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
+
 import {
   Box,
-  Checkbox,
-  FormControlLabel,
+  Button,
+  Grid,
   IconButton,
   Paper,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -26,12 +27,12 @@ import useHttp from 'hooks/use-http';
 import { getAllAdsType } from 'lib/api';
 import PropTypes from 'prop-types';
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, key, ads) => {
+const createData = (id, number, key, ads) => {
   return {
     id,
+    number,
     key,
     ads,
   };
@@ -67,16 +68,22 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
+    id: 'number',
+    numeric: false,
+    disablePadding: false,
+    label: 'STT',
+  },
+  {
     id: 'adstype',
     numeric: false,
     disablePadding: true,
-    label: 'Loại quảng cáo',
+    label: 'Tên',
   },
   {
     id: 'detail',
     numeric: true,
     disablePadding: false,
-    label: 'Chi tiết',
+    label: '',
   },
 ];
 
@@ -96,17 +103,6 @@ const EnhancedTableHead = (props) => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -166,7 +162,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Các loại quảng cáo
+          Các loại quảng cáo
         </Typography>
       )}
 
@@ -192,7 +188,7 @@ const EnhancedTable = (props) => {
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
+  const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
@@ -263,7 +259,7 @@ const EnhancedTable = (props) => {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 150 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
@@ -290,16 +286,7 @@ const EnhancedTable = (props) => {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        onClick={(event) => handleClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
                       component='th'
                       id={labelId}
@@ -309,11 +296,22 @@ const EnhancedTable = (props) => {
                       {row.ads}
                     </TableCell>
                     <TableCell align='right'>
-                      <Link to='/utils/report/detail'>
-                        <IconButton>
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.handleEditOpen('adstype', row.id, row.ads);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.handleDeleteOpen(row.id, 'adstype');
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 );
@@ -331,6 +329,7 @@ const EnhancedTable = (props) => {
           </Table>
         </TableContainer>
         <TablePagination
+          labelRowsPerPage='Số hàng:'
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
           count={props.rows.length}
@@ -340,15 +339,20 @@ const EnhancedTable = (props) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label='Dense padding'
-      />
+      /> */}
     </Box>
   );
 };
 
-const AdsTypeList = () => {
+const AdsTypeList = ({
+  triggleList,
+  handleAddOpen,
+  handleEditOpen,
+  handleDeleteOpen,
+}) => {
   const {
     sendRequest,
     status,
@@ -358,12 +362,12 @@ const AdsTypeList = () => {
 
   useEffect(() => {
     sendRequest();
-  }, [sendRequest]);
+  }, [sendRequest, triggleList]);
 
   const rows = useMemo(() => {
     if (loadedAdsType) {
-      return loadedAdsType.map((ads) => {
-        return createData(ads._id, ads.key, ads.label);
+      return loadedAdsType.map((ads, index) => {
+        return createData(ads._id, index + 1, ads.key, ads.label);
       });
     }
   }, [loadedAdsType]);
@@ -378,9 +382,23 @@ const AdsTypeList = () => {
 
   if (status === 'completed' && rows !== null) {
     return (
-      <MainCard>
-        <EnhancedTable rows={rows} />
-      </MainCard>
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={12} display='flex' justifyContent='flex-end'>
+          <Button onClick={() => handleAddOpen('adstype')} variant='outlined'>
+            <AddCircleOutlineIcon />
+            Thêm
+          </Button>
+        </Grid>
+        <Grid item xs={12} lg={12}>
+          <MainCard>
+            <EnhancedTable
+              rows={rows}
+              handleEditOpen={handleEditOpen}
+              handleDeleteOpen={handleDeleteOpen}
+            />
+          </MainCard>
+        </Grid>
+      </Grid>
     );
   }
 };

@@ -51,7 +51,7 @@ const ReportStatistic = () => {
     if (report.type === "board") {
       return report.board.location.district.label;
     } else {
-      return report.location.district.label;
+      return report.random.address.suburd;
     }
   };
 
@@ -59,7 +59,7 @@ const ReportStatistic = () => {
     if (report.type === "board") {
       return report.board.location.ward.label;
     } else {
-      return report.location.ward.label;
+      return report.random.address.quarter;
     }
   };
 

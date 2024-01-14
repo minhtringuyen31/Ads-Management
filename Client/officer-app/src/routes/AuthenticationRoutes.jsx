@@ -1,26 +1,33 @@
-import React from "react";
-
 //Project import
-import Loadable from "ui-component/Loadable";
-import AnthenLayout from "../layout/AuthenLayout/AuthenLayout";
-import { lazy } from "react";
+import { lazy } from 'react';
+import Loadable from 'ui-component/Loadable';
+import AnthenLayout from '../layout/AuthenLayout/AuthenLayout';
 
 // login option  routing
 const AuthLogin3 = Loadable(
-  lazy(() => import("../views/pages/authentication/authentication3/Login3"))
+  lazy(() => import('../views/pages/authentication/authentication3/Login3'))
+);
+const ForgotPassword = Loadable(
+  lazy(() =>
+    import('../views/pages/authentication/forgot-password/ForgotPassword')
+  )
 );
 
 const AuthenRoutes = {
-  path: "/",
+  path: '/',
   element: <AnthenLayout />,
   children: [
     {
-      path: "/login",
+      path: '/login',
       element: <AuthLogin3 />,
     },
     {
-      path: "/registry",
-      element: "",
+      path: '/forgot-password',
+      element: <ForgotPassword />,
+    },
+    {
+      path: '/registry',
+      element: '',
     },
   ],
 };

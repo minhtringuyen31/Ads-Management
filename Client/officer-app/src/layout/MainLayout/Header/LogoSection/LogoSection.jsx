@@ -9,6 +9,7 @@ import config from "config";
 import Logo from "./Logo";
 import { MENU_OPEN } from "store/actions";
 import { useTheme } from "@mui/material/styles";
+import { GetUser } from "store/auth/auth-config";
 
 // ==============================|| MAIN LOGO ||============================== //
 
@@ -17,6 +18,20 @@ const LogoSection = () => {
   const theme = useTheme();
   const defaultId = 1;
   const dispatch = useDispatch();
+  const role = GetUser().userRole;
+
+  const renderLogo = (role) => {
+    switch (role) {
+      case "province_officer":
+        return "Cán bộ Sở";
+      case "district_officer":
+        return "Cán bộ Quận";
+      case "ward_officer":
+        return "Cán bộ Phường";
+      default:
+        return "";
+    }
+  };
   return (
     <ButtonBase
       disableRipple
@@ -37,7 +52,7 @@ const LogoSection = () => {
         //   },
         // }}
       >
-        RideNow
+        {renderLogo(role)}
       </Typography>
     </ButtonBase>
   );

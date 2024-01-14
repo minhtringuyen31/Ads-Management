@@ -54,7 +54,7 @@ const LocationDetailCard = ({ locationDetailData }) => {
     <>
       <Card className="card">
         <Box className="card__box">
-          <CardContent className="card__box__content">
+          <CardContent className="card__box__content" >
             <Typography
               component="div"
               variant="h4"
@@ -93,12 +93,12 @@ const LocationDetailCard = ({ locationDetailData }) => {
               onClick={handleOpenMapModal}
               className="card__box__content__typo"
             >
-              Bản đồ
+              Xem trên bản đồ
               <MapIcon />
             </Link>
-            <Button variant="contained" sx={{ marginTop: "16px" }}>
+            {/* <Button variant="contained" sx={{ marginTop: "16px" }}>
               Yêu cầu chỉnh sửa
-            </Button>
+            </Button> */}
           </CardContent>
         </Box>
         <SlideImages

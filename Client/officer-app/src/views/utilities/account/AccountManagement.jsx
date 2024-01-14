@@ -53,9 +53,24 @@ const AccountManagement = () => {
   };
 
   const renderAssignedArea = (area) => {
-    return area.assigned_areaid && area.assigned_areaid !== undefined
-      ? area.assigned_areaid.label
-      : "Chưa phân khu vực";
+    // return area.assigned_areaid && area.assigned_areaid !== undefined
+    //   ? area.assigned_areaid.label
+    //   : "Chưa phân khu vực";
+
+    if (area.assigned_areaid && area.assigned_areaid !== undefined) {
+      switch (area.userRole) {
+        case "ward_officer":
+          return `${area.assigned_areaid.label}/${area.assigned_areaid.district.label}`;
+        case "district_officer":
+          return `${area.assigned_areaid.label}`;
+        case "province_officer":
+          return `${area.assigned_areaid.label}`;
+        default:
+          return "";
+      }
+    } else {
+      return "Chưa phân khu vực";
+    }
   };
 
   useEffect(() => {

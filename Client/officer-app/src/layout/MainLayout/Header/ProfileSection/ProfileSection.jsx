@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // material-ui
 import {
@@ -10,6 +10,7 @@ import {
   Chip,
   ClickAwayListener,
   Divider,
+  Grid,
   List,
   ListItemButton,
   ListItemIcon,
@@ -18,33 +19,35 @@ import {
   Popper,
   Stack,
   Typography,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 // third-party
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import PerfectScrollbar from "react-perfect-scrollbar";
 
 // project imports
-import MainCard from 'ui-component/cards/MainCard';
-import Transitions from 'ui-component/extended/Transitions';
+import MainCard from "ui-component/cards/MainCard";
+import Transitions from "ui-component/extended/Transitions";
 // import UpgradePlanCard from "./UpgradePlanCard";
-import User1 from 'assets/images/user.png';
+import User1 from "assets/images/user.png";
 
 // assets
-import { IconLogout, IconSettings } from '@tabler/icons';
-import { AuthenticationActions } from 'redux/auth/authentication-slice';
-import { AuthorizationActions } from 'redux/auth/authorization-slice';
+import { IconLogout, IconSettings, IconUser } from "@tabler/icons";
+import { AuthenticationActions } from "redux/auth/authentication-slice";
+import { AuthorizationActions } from "redux/auth/authorization-slice";
+import { GetUser, RemoveToken, RemoveUser } from "store/auth/auth-config";
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+  const user = GetUser();
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [sdm, setSdm] = useState(true);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
@@ -52,10 +55,21 @@ const ProfileSection = () => {
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
+
+  let roleText;
+  if (user.userRole === "province_officer") {
+    roleText = "Sở Văn hóa và Thông tin";
+  } else if (user.userRole === "district_officer") {
+    roleText = "Cán bộ Quận";
+  } else {
+    roleText = "Cán bộ Phường";
+  }
   const handleLogout = async () => {
     dispatch(AuthenticationActions.logout());
     dispatch(AuthorizationActions.removeAuthorization());
-    window.location.href = '/admin_dashboard/login';
+    RemoveToken();
+    RemoveUser();
+    window.location.href = "/admin_dashboard/login";
   };
 
   const handleClose = (event) => {
@@ -65,11 +79,11 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  const handleListItemClick = (event, index, route = '') => {
+  const handleListItemClick = (event, index, route = "") => {
     setSelectedIndex(index);
     handleClose(event);
 
-    if (route && route !== '') {
+    if (route && route !== "") {
       navigate(route);
     }
   };
@@ -90,54 +104,54 @@ const ProfileSection = () => {
     <>
       <Chip
         sx={{
-          height: '48px',
-          alignItems: 'center',
-          borderRadius: '27px',
-          transition: 'all .2s ease-in-out',
+          height: "48px",
+          alignItems: "center",
+          borderRadius: "27px",
+          transition: "all .2s ease-in-out",
           borderColor: theme.palette.primary.light,
           backgroundColor: theme.palette.primary.light,
           '&[aria-controls="menu-list-grow"], &:hover': {
             borderColor: theme.palette.primary.main,
             background: `${theme.palette.primary.main}!important`,
             color: theme.palette.primary.light,
-            '& svg': {
+            "& svg": {
               stroke: theme.palette.primary.light,
             },
           },
-          '& .MuiChip-label': {
+          "& .MuiChip-label": {
             lineHeight: 0,
           },
         }}
         icon={
           <Avatar
-            src={User1}
+            src={user.avatar || User1}
             sx={{
               ...theme.typography.mediumAvatar,
-              margin: '8px 0 8px 8px !important',
-              cursor: 'pointer',
+              margin: "8px 0 8px 8px !important",
+              cursor: "pointer",
             }}
             ref={anchorRef}
-            aria-controls={open ? 'menu-list-grow' : undefined}
-            aria-haspopup='true'
-            color='inherit'
+            aria-controls={open ? "menu-list-grow" : undefined}
+            aria-haspopup="true"
+            color="inherit"
           />
         }
         label={
           <IconSettings
             stroke={1.5}
-            size='1.5rem'
+            size="1.5rem"
             color={theme.palette.primary.main}
           />
         }
-        variant='outlined'
+        variant="outlined"
         ref={anchorRef}
-        aria-controls={open ? 'menu-list-grow' : undefined}
-        aria-haspopup='true'
+        aria-controls={open ? "menu-list-grow" : undefined}
+        aria-haspopup="true"
         onClick={handleToggle}
-        color='primary'
+        color="primary"
       />
       <Popper
-        placement='bottom-end'
+        placement="bottom-end"
         open={open}
         anchorEl={anchorRef.current}
         role={undefined}
@@ -146,7 +160,7 @@ const ProfileSection = () => {
         popperOptions={{
           modifiers: [
             {
-              name: 'offset',
+              name: "offset",
               options: {
                 offset: [0, 14],
               },
@@ -167,63 +181,41 @@ const ProfileSection = () => {
                 >
                   <Box sx={{ p: 2 }}>
                     <Stack>
-                      <Stack direction='row' spacing={0.5} alignItems='center'>
-                        <Typography variant='h4'>Good Morning,</Typography>
+                      <Stack direction="row" spacing={0.5} alignItems="center">
+                        <Typography variant="h4">Chào buổi sáng,</Typography>
                         <Typography
-                          component='span'
-                          variant='h4'
-                          sx={{ fontWeight: 400 }}
+                          component="span"
+                          variant="h4"
+                          sx={{ fontWeight: 400, marginLeft: 2 }}
                         >
-                          Admin
+                          {user.fullname}
                         </Typography>
                       </Stack>
-                      <Typography variant='subtitle2'>Project Admin</Typography>
+                      <Typography variant="subtitle2">{roleText}</Typography>
                     </Stack>
-                    {/* <OutlinedInput
-                      sx={{ width: "100%", pr: 1, pl: 2, my: 2 }}
-                      id="input-search-profile"
-                      value={value}
-                      onChange={(e) => setValue(e.target.value)}
-                      placeholder="Search profile options"
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <IconSearch
-                            stroke={1.5}
-                            size="1rem"
-                            color={theme.palette.grey[500]}
-                          />
-                        </InputAdornment>
-                      }
-                      aria-describedby="search-helper-text"
-                      inputProps={{
-                        "aria-label": "weight",
-                      }}
-                    /> */}
+
                     <Divider />
                   </Box>
                   <PerfectScrollbar
                     style={{
-                      height: '100%',
-                      maxHeight: 'calc(100vh - 250px)',
-                      overflowX: 'hidden',
+                      height: "100%",
+                      maxHeight: "calc(100vh - 250px)",
+                      overflowX: "hidden",
                     }}
                   >
                     <Box sx={{ p: 2 }}>
-                      {/* <UpgradePlanCard /> */}
-                      {/* <Divider /> */}
-
                       <List
-                        component='nav'
+                        component="nav"
                         sx={{
-                          width: '100%',
+                          width: "100%",
                           maxWidth: 350,
                           minWidth: 300,
                           backgroundColor: theme.palette.background.paper,
-                          borderRadius: '10px',
-                          [theme.breakpoints.down('md')]: {
-                            minWidth: '100%',
+                          borderRadius: "10px",
+                          [theme.breakpoints.down("md")]: {
+                            minWidth: "100%",
                           },
-                          '& .MuiListItemButton-root': {
+                          "& .MuiListItemButton-root": {
                             mt: 0.5,
                           },
                         }}
@@ -234,27 +226,7 @@ const ProfileSection = () => {
                           }}
                           selected={selectedIndex === 0}
                           onClick={(event) =>
-                            handleListItemClick(event, 0, '#')
-                          }
-                        >
-                          <ListItemIcon>
-                            <IconSettings stroke={1.5} size='1.3rem' />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Typography variant='body2'>
-                                Account Settings
-                              </Typography>
-                            }
-                          />
-                        </ListItemButton>
-                        {/* <ListItemButton
-                          sx={{
-                            borderRadius: `${customization.borderRadius}px`,
-                          }}
-                          selected={selectedIndex === 1}
-                          onClick={(event) =>
-                            handleListItemClick(event, 1, "#")
+                            handleListItemClick(event, 0, "/utils/profile")
                           }
                         >
                           <ListItemIcon>
@@ -269,36 +241,51 @@ const ProfileSection = () => {
                               >
                                 <Grid item>
                                   <Typography variant="body2">
-                                    Social Profile
+                                    Thông tin cá nhân
                                   </Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Chip
-                                    label="02"
-                                    size="small"
-                                    sx={{
-                                      bgcolor: theme.palette.warning.dark,
-                                      color: theme.palette.background.default,
-                                    }}
-                                  />
                                 </Grid>
                               </Grid>
                             }
                           />
-                        </ListItemButton> */}
+                        </ListItemButton>
                         <ListItemButton
                           sx={{
                             borderRadius: `${customization.borderRadius}px`,
                           }}
-                          selected={selectedIndex === 4}
-                          onClick={handleLogout}
+                          selected={selectedIndex === 1}
+                          onClick={(event) =>
+                            handleListItemClick(
+                              event,
+                              1,
+                              "/utils/profile/change_password",
+                            )
+                          }
                         >
                           <ListItemIcon>
-                            <IconLogout stroke={1.5} size='1.3rem' />
+                            <IconSettings stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
                           <ListItemText
                             primary={
-                              <Typography variant='body2'>Logout</Typography>
+                              <Typography variant="body2">
+                                Đổi mật khẩu
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+
+                        <ListItemButton
+                          sx={{
+                            borderRadius: `${customization.borderRadius}px`,
+                          }}
+                          selected={selectedIndex === 2}
+                          onClick={handleLogout}
+                        >
+                          <ListItemIcon>
+                            <IconLogout stroke={1.5} size="1.3rem" />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Typography variant="body2">Đăng xuất</Typography>
                             }
                           />
                         </ListItemButton>

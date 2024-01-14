@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
-  Checkbox,
+  Chip,
   FormControlLabel,
   IconButton,
   Paper,
@@ -20,19 +20,26 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import useHttp from 'hooks/use-http';
-import { getAllWards } from 'lib/api';
+import { getAllReports } from 'lib/api';
+import moment from 'moment';
 import PropTypes from 'prop-types';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import ReportContext from 'store/report/report-context';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, ward) => {
+const createData = (id, number, time, name, email, report_type, status) => {
   return {
     id,
-    ward,
+    number,
+    time,
+    name,
+    email,
+    report_type,
+    status,
   };
 };
 
@@ -66,10 +73,40 @@ function getComparator(order, orderBy) {
 
 const headCells = [
   {
-    id: 'ward',
+    id: 'number',
+    numeric: false,
+    disablePadding: false,
+    label: 'STT',
+  },
+  {
+    id: 'time',
     numeric: false,
     disablePadding: true,
-    label: 'Tên phường',
+    label: 'Ngày gửi',
+  },
+  {
+    id: 'name',
+    numeric: false,
+    disablePadding: false,
+    label: 'Tên người gửi',
+  },
+  {
+    id: 'email',
+    numeric: false,
+    disablePadding: false,
+    label: 'Email',
+  },
+  {
+    id: 'report_type',
+    numeric: false,
+    disablePadding: false,
+    label: 'Loại báo cáo',
+  },
+  {
+    id: 'status',
+    numeric: false,
+    disablePadding: false,
+    label: 'Tình trạng',
   },
   {
     id: 'detail',
@@ -80,6 +117,7 @@ const headCells = [
 ];
 
 const EnhancedTableHead = (props) => {
+  const theme = useTheme();
   const {
     onSelectAllClick,
     order,
@@ -93,19 +131,13 @@ const EnhancedTableHead = (props) => {
   };
 
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        backgroundColor: theme.palette.primary.light,
+      }}
+    >
       <TableRow>
-        <TableCell padding='checkbox'>
-          <Checkbox
-            color='primary'
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
+        {/* <TableCell padding='checkbox'>STT</TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -165,7 +197,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Phường
+          Danh sách Báo cáo
         </Typography>
       )}
 
@@ -187,6 +219,7 @@ function EnhancedTableToolbar(props) {
 }
 
 const EnhancedTable = (props) => {
+  const reportCtx = useContext(ReportContext);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
@@ -228,6 +261,10 @@ const EnhancedTable = (props) => {
     setSelected(newSelected);
   };
 
+  const handleReportDetail = (id) => {
+    reportCtx.setReportDetail(id);
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -256,6 +293,16 @@ const EnhancedTable = (props) => {
     [order, orderBy, page, rowsPerPage, props.rows]
   );
 
+  const getReportType = (report_type) => {
+    if (report_type === 'denounce') {
+      return 'Báo cáo vi phạm';
+    } else if (report_type === 'suggest') {
+      return 'Đóng góp ý kiến';
+    } else {
+      return 'Giải đáp thắc mắc';
+    }
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -282,34 +329,40 @@ const EnhancedTable = (props) => {
                 return (
                   <TableRow
                     hover
-                    role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding='checkbox'>
-                      <Checkbox
-                        color='primary'
-                        onClick={(event) => handleClick(event, row.id)}
-                        checked={isItemSelected}
-                        inputProps={{
-                          'aria-labelledby': labelId,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell align='left'>{row.number}</TableCell>
                     <TableCell
                       component='th'
                       id={labelId}
                       scope='row'
                       padding='none'
                     >
-                      {row.ward}
+                      {moment.utc(row.time).format('DD-MM-YYYY')}
+                    </TableCell>
+                    <TableCell align='left'>{row.name}</TableCell>
+                    <TableCell align='left'>{row.email}</TableCell>
+                    <TableCell align='left'>
+                      {getReportType(row.report_type)}
+                    </TableCell>
+                    <TableCell align='left'>
+                      <Chip
+                        label={
+                          row.status === 'completed'
+                            ? 'Đã giải quyết'
+                            : 'Chưa giải quyết'
+                        }
+                        color={row.status === 'completed' ? 'success' : 'error'}
+                        variant='outlined'
+                      />
                     </TableCell>
                     <TableCell align='right'>
                       <Link to='/utils/report/detail'>
-                        <IconButton>
+                        <IconButton onClick={() => handleReportDetail(row.id)}>
                           <EditIcon />
                         </IconButton>
                       </Link>
@@ -347,25 +400,41 @@ const EnhancedTable = (props) => {
   );
 };
 
-const WardList = () => {
+const ReportListTable = () => {
   const {
     sendRequest,
     status,
-    data: loadedWards,
+    data: loadedReports,
     error,
-  } = useHttp(getAllWards, true);
+  } = useHttp(getAllReports, true);
 
   useEffect(() => {
     sendRequest();
   }, [sendRequest]);
 
+  const getAddress = (report) => {
+    if (report.type === 'board') {
+      return report.board.location.address;
+    } else {
+      return report.location.address;
+    }
+  };
+
   const rows = useMemo(() => {
-    if (loadedWards) {
-      return loadedWards.map((ward) => {
-        return createData(ward._id, ward.label);
+    if (loadedReports) {
+      return loadedReports.map((report, index) => {
+        return createData(
+          report._id,
+          index + 1,
+          report.createdAt,
+          report.username,
+          report.email,
+          report.report_form,
+          report.status
+        );
       });
     }
-  }, [loadedWards]);
+  }, [loadedReports]);
 
   if (error) {
     return <div>Có lỗi xảy ra</div>;
@@ -401,4 +470,4 @@ EnhancedTable.propTypes = {
   rows: PropTypes.array.isRequired,
 };
 
-export default WardList;
+export default ReportListTable;

@@ -45,17 +45,21 @@ const AdsBoardBox = (props) => {
               width: '100%',
             }}
           />
-          <Typography variant='h4'>{props.data.company.name}</Typography>
-          <Typography>
-            Địa chỉ:{' '}
-            <span
-              style={{
-                fontWeight: 'bold',
-              }}
-            >
-              {props.data.company.address}
-            </span>
-          </Typography>
+          {props.data.company && (
+            <>
+              <Typography variant='h4'>{props.data.company.name}</Typography>
+              <Typography>
+                Địa chỉ:{' '}
+                <span
+                  style={{
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {props.data.company.address}
+                </span>
+              </Typography>
+            </>
+          )}
           <Typography>
             Ngày đăng ký:{' '}
             <span
@@ -63,7 +67,11 @@ const AdsBoardBox = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              {moment.utc(props.data.contract_start_date).format('DD/MM/YYYY')}
+              {props.data.contract_start_date
+                ? moment
+                    .utc(props.data.contract_start_date)
+                    .format('DD/MM/YYYY')
+                : 'Chưa có'}
             </span>
           </Typography>
           <Typography>
@@ -73,7 +81,9 @@ const AdsBoardBox = (props) => {
                 fontWeight: 'bold',
               }}
             >
-              {moment.utc(props.data.contract_end_date).format('DD/MM/YYYY')}
+              {props.data.contract_end_date
+                ? moment.utc(props.data.contract_end_date).format('DD/MM/YYYY')
+                : 'Chưa có'}
             </span>
           </Typography>
         </Box>

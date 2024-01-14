@@ -1,5 +1,6 @@
 const accessConstant = 'access_token';
 const refreshConstant = 'refresh_token';
+const userConstant = 'user';
 
 export const GetRefreshToken = () => {
   return localStorage.getItem(refreshConstant);
@@ -15,13 +16,18 @@ export const StoreToken = ({ accessToken, refreshToken }) => {
 };
 
 export const RemoveToken = () => {
-  localStorage.clear();
+  localStorage.removeItem(accessConstant);
+  localStorage.removeItem(refreshConstant);
 };
 
 export const StoreUser = (user) => {
-  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem(userConstant, JSON.stringify(user));
 };
 
 export const GetUser = () => {
-  return JSON.parse(localStorage.getItem('user'));
+  return JSON.parse(localStorage.getItem(userConstant));
+};
+
+export const RemoveUser = () => {
+  localStorage.removeItem(userConstant);
 };

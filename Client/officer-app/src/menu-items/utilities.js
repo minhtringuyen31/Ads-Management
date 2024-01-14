@@ -1,19 +1,26 @@
 // assets
 import {
+  IconClipboardText,
+  IconList,
+  IconLocation,
+  IconMap2,
+  IconMapPins,
   IconPalette,
   IconShadow,
   IconTypography,
   IconWindmill,
-  IconLocation,
+  IconMapPin,
 } from "@tabler/icons";
 
 // constant
 const icons = {
+  IconList,
+  IconMapPins,
   IconTypography,
   IconPalette,
   IconShadow,
   IconWindmill,
-  IconLocation,
+  IconMapPin,
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -21,31 +28,32 @@ const icons = {
 const utilities = {
   province_officer: {
     id: "province_utilities",
-    title: "Utilities",
+    title: "",
     type: "group",
     children: [
       {
         id: "districts",
-        title: "Danh sách quận",
+        title: "Danh sách quận, phường",
         type: "item",
-        url: "/utils/districts",
-        icon: icons.IconTypography,
+        url: "/utils/district/list",
+        icon: icons.IconMapPins,
         breadcrumbs: false,
       },
       {
-        id: "wards",
-        title: "Danh sách quận",
+        id: "category",
+        title: "Danh sách các danh mục",
         type: "item",
-        url: "/utils/wards",
-        icon: icons.IconPalette,
+        url: "/utils/category/list",
+        icon: icons.IconList,
         breadcrumbs: false,
       },
+
       {
         id: "location",
         title: "Danh sách điểm đặt",
         type: "item",
         url: "/utils/locations",
-        icon: icons.IconLocation,
+        icon: icons.IconMapPin,
         breadcrumbs: false,
       },
       {
@@ -58,17 +66,9 @@ const utilities = {
       },
       {
         id: "location_edit_requests",
-        title: "Danh sách yêu cầu chỉnh sửa điểm đặt",
+        title: "Danh sách yêu cầu chỉnh sửa",
         type: "item",
-        url: "/utils/location_edit_requests",
-        icon: icons.IconPalette,
-        breadcrumbs: false,
-      },
-      {
-        id: "board_edit_requests",
-        title: "Danh sách yêu cầu chỉnh sửa bảng quảng cáo",
-        type: "item",
-        url: "/utils/board_edit_requests",
+        url: "/utils/edit_requests",
         icon: icons.IconPalette,
         breadcrumbs: false,
       },
@@ -77,8 +77,6 @@ const utilities = {
         title: "Danh sách cấp phép",
         type: "item",
         url: "/utils/authorize_requests",
-        icon: icons.IconPalette,
-        breadcrumbs: false,
       },
       {
         id: "area_assignment",
@@ -116,7 +114,7 @@ const utilities = {
         title: "Danh sách điểm đặt",
         type: "item",
         url: "/utils/locations",
-        icon: icons.IconTypography,
+        icon: icons.IconMapPin,
         breadcrumbs: false,
       },
       {
@@ -128,10 +126,26 @@ const utilities = {
         breadcrumbs: false,
       },
       {
+        id: "report-map",
+        title: "Bản đồ báo cáo",
+        type: "item",
+        url: "/utils/report/map",
+        icon: icons.IconMap2,
+        breadcrumbs: false,
+      },
+      {
         id: "report",
         title: "Danh sách báo cáo",
         type: "item",
-        url: "/utils/reports",
+        url: "/utils/report/list",
+        icon: icons.IconClipboardText,
+        breadcrumbs: false,
+      },
+      {
+        id: "location_edit_requests",
+        title: "Danh sách yêu cầu chỉnh sửa",
+        type: "item",
+        url: "/utils/edit_requests",
         icon: icons.IconPalette,
         breadcrumbs: false,
       },
@@ -155,7 +169,7 @@ const utilities = {
         title: "Danh sách điểm đặt",
         type: "item",
         url: "/utils/locations",
-        icon: icons.IconTypography,
+        icon: icons.IconMapPin,
         breadcrumbs: false,
       },
       {
@@ -167,10 +181,26 @@ const utilities = {
         breadcrumbs: false,
       },
       {
+        id: "report-map",
+        title: "Bản đồ báo cáo",
+        type: "item",
+        url: "/utils/report/map",
+        icon: icons.IconMap2,
+        breadcrumbs: false,
+      },
+      {
         id: "report",
         title: "Danh sách báo cáo",
         type: "item",
-        url: "/utils/reports",
+        url: "/utils/report/list",
+        icon: icons.IconPalette,
+        breadcrumbs: false,
+      },
+      {
+        id: "location_edit_requests",
+        title: "Danh sách yêu cầu chỉnh sửa",
+        type: "item",
+        url: "/utils/edit_requests",
         icon: icons.IconPalette,
         breadcrumbs: false,
       },

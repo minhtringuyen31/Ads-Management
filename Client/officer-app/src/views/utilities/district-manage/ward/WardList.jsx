@@ -1,12 +1,14 @@
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
+
 import {
   Box,
-  FormControlLabel,
+  Button,
+  Grid,
   IconButton,
   Paper,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -19,26 +21,20 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import useHttp from 'hooks/use-http';
-import { getAllReports } from 'lib/api';
-import moment from 'moment';
+import { getWardsByDistrictId } from 'lib/api';
 import PropTypes from 'prop-types';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import ReportContext from 'store/report/report-context';
+import DistrictContext from 'store/district/district-context';
 import MainCard from 'ui-component/cards/MainCard';
 
-const createData = (id, number, time, name, email, report_type, status) => {
+const createData = (id, number, ward) => {
   return {
     id,
     number,
-    time,
-    name,
-    email,
-    report_type,
-    status,
+    ward,
   };
 };
 
@@ -78,45 +74,20 @@ const headCells = [
     label: 'STT',
   },
   {
-    id: 'time',
+    id: 'ward',
     numeric: false,
     disablePadding: true,
-    label: 'Ngày gửi',
-  },
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Tên người gửi',
-  },
-  {
-    id: 'email',
-    numeric: false,
-    disablePadding: false,
-    label: 'Email',
-  },
-  {
-    id: 'report_type',
-    numeric: false,
-    disablePadding: false,
-    label: 'Loại báo cáo',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Tình trạng',
+    label: 'Tên phường',
   },
   {
     id: 'detail',
     numeric: true,
     disablePadding: false,
-    label: 'Chi tiết',
+    label: '',
   },
 ];
 
 const EnhancedTableHead = (props) => {
-  const theme = useTheme();
   const {
     onSelectAllClick,
     order,
@@ -130,13 +101,8 @@ const EnhancedTableHead = (props) => {
   };
 
   return (
-    <TableHead
-      sx={{
-        backgroundColor: theme.palette.primary.light,
-      }}
-    >
+    <TableHead>
       <TableRow>
-        {/* <TableCell padding='checkbox'>STT</TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -196,7 +162,7 @@ function EnhancedTableToolbar(props) {
           id='tableTitle'
           component='div'
         >
-          Danh sách Báo cáo
+          Danh sách phường của {props.districtName}
         </Typography>
       )}
 
@@ -218,12 +184,11 @@ function EnhancedTableToolbar(props) {
 }
 
 const EnhancedTable = (props) => {
-  const reportCtx = useContext(ReportContext);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
+  const [dense, setDense] = useState(true);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
@@ -260,10 +225,6 @@ const EnhancedTable = (props) => {
     setSelected(newSelected);
   };
 
-  const handleReportDetail = (id) => {
-    reportCtx.setReportDetail(id);
-  };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -292,23 +253,16 @@ const EnhancedTable = (props) => {
     [order, orderBy, page, rowsPerPage, props.rows]
   );
 
-  const getReportType = (report_type) => {
-    if (report_type === 'denounce') {
-      return 'Báo cáo vi phạm';
-    } else if (report_type === 'suggest') {
-      return 'Đóng góp ý kiến';
-    } else {
-      return 'Giải đáp thắc mắc';
-    }
-  };
-
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          districtName={props.districtName}
+        />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 150 }}
             aria-labelledby='tableTitle'
             size={dense ? 'small' : 'medium'}
           >
@@ -328,7 +282,6 @@ const EnhancedTable = (props) => {
                 return (
                   <TableRow
                     hover
-                    role='checkbox'
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={row.id}
@@ -342,24 +295,30 @@ const EnhancedTable = (props) => {
                       scope='row'
                       padding='none'
                     >
-                      {moment.utc(row.time).format('DD-MM-YYYY')}
-                    </TableCell>
-                    <TableCell align='left'>{row.name}</TableCell>
-                    <TableCell align='left'>{row.email}</TableCell>
-                    <TableCell align='left'>
-                      {getReportType(row.report_type)}
-                    </TableCell>
-                    <TableCell align='left'>
-                      {row.status === 'solved'
-                        ? 'Đã giải quyết'
-                        : 'Chưa giải quyết'}
+                      {row.ward}
                     </TableCell>
                     <TableCell align='right'>
-                      <Link to='/utils/report/detail'>
-                        <IconButton onClick={() => handleReportDetail(row.id)}>
-                          <EditIcon />
-                        </IconButton>
-                      </Link>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.openEditModel(
+                            row.id,
+                            row.ward,
+                            'ward',
+                            props.districtId
+                          );
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          props.openDeleteModel(row.id, 'ward');
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 );
@@ -377,6 +336,7 @@ const EnhancedTable = (props) => {
           </Table>
         </TableContainer>
         <TablePagination
+          labelRowsPerPage='Số hàng:'
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
           count={props.rows.length}
@@ -386,49 +346,40 @@ const EnhancedTable = (props) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label='Dense padding'
-      />
+      /> */}
     </Box>
   );
 };
 
-const ReportListTable = () => {
+const WardList = ({
+  openAddModel,
+  openEditModel,
+  triggleList,
+  openDeleteModel,
+}) => {
+  const districtCtx = useContext(DistrictContext);
+
   const {
     sendRequest,
     status,
-    data: loadedReports,
+    data: loadedWardsByDistrict,
     error,
-  } = useHttp(getAllReports, true);
+  } = useHttp(getWardsByDistrictId, true);
 
   useEffect(() => {
-    sendRequest();
-  }, [sendRequest]);
-
-  const getAddress = (report) => {
-    if (report.type === 'board') {
-      return report.board.location.address;
-    } else {
-      return report.location.address;
-    }
-  };
+    sendRequest(districtCtx.districtId);
+  }, [sendRequest, districtCtx.districtId, triggleList]);
 
   const rows = useMemo(() => {
-    if (loadedReports) {
-      return loadedReports.map((report, index) => {
-        return createData(
-          report._id,
-          index + 1,
-          report.createdAt,
-          report.username,
-          report.email,
-          report.report_form,
-          report.status
-        );
+    if (loadedWardsByDistrict) {
+      return loadedWardsByDistrict.map((ward, index) => {
+        return createData(ward._id, index + 1, ward.label);
       });
     }
-  }, [loadedReports]);
+  }, [loadedWardsByDistrict]);
 
   if (error) {
     return <div>Có lỗi xảy ra</div>;
@@ -440,9 +391,27 @@ const ReportListTable = () => {
 
   if (status === 'completed' && rows !== null) {
     return (
-      <MainCard>
-        <EnhancedTable rows={rows} />
-      </MainCard>
+      <Grid container spacing={2}>
+        <Grid item xs={12} lg={12} display='flex' justifyContent='flex-end'>
+          <Button
+            onClick={() => openAddModel('ward', districtCtx.districtId)}
+            variant='outlined'
+          >
+            <AddCircleOutlineIcon />
+            Thêm
+          </Button>
+        </Grid>
+        <Grid item xs={12} lg={12}>
+          <MainCard>
+            <EnhancedTable
+              rows={rows}
+              districtName={districtCtx.districtName}
+              openEditModel={openEditModel}
+              openDeleteModel={openDeleteModel}
+            />
+          </MainCard>
+        </Grid>
+      </Grid>
     );
   }
 };
@@ -458,10 +427,21 @@ EnhancedTableHead.propTypes = {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  districtName: PropTypes.string.isRequired,
 };
 
 EnhancedTable.propTypes = {
   rows: PropTypes.array.isRequired,
+  districtName: PropTypes.string.isRequired,
+  openEditModel: PropTypes.func.isRequired,
+  districtId: PropTypes.string.isRequired,
 };
 
-export default ReportListTable;
+WardList.propTypes = {
+  openAddModel: PropTypes.func.isRequired,
+  openEditModel: PropTypes.func.isRequired,
+  openDeleteModel: PropTypes.func.isRequired,
+  triggleList: PropTypes.bool.isRequired,
+};
+
+export default WardList;

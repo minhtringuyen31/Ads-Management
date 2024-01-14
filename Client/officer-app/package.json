@@ -50,6 +50,7 @@
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "simplebar-react": "^3.2.4",
+    "socket.io-client": "^4.7.4",
     "yup": "^0.32.11"
   },
   "scripts": {

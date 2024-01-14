@@ -23,10 +23,9 @@ const ReportResolution = () => {
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
     const day = date.getDate();
-    const month = date.getMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
 
-    // Đảm bảo dạng dd/mm/yyyy với hai chữ số cho ngày và tháng
     const formattedDate = `${day < 10 ? "0" : ""}${day}/${
       month < 10 ? "0" : ""
     }${month}/${year}`;

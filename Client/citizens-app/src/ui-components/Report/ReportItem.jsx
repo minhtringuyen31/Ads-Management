@@ -124,7 +124,7 @@ const ReportItem = ({ item }) => {
             <Box flex="flex" flexDirection="column" marginLeft="10px">
               <Typography>{item.username}</Typography>
               <Typography fontSize={12} color="#70757a">
-                5 ngày trước {<TimeAgo timestamp={item.createdAt} />}
+                {<TimeAgo timestamp={item.createdAt} />}
               </Typography>
             </Box>
           </Box>

@@ -1,8 +1,8 @@
-import axios from 'axios';
-import instance from 'axiosConfig/axios-config';
-import { GetRefreshToken } from 'store/auth/auth-config';
+import axios from "axios";
+import instance from "axiosConfig/axios-config";
+import { GetRefreshToken } from "store/auth/auth-config";
 
-const rootApi = 'http://webadvance.software';
+export const rootApi = "http://webadvance.software";
 
 // Locations API
 export const getAllLocations = async () => {
@@ -10,13 +10,13 @@ export const getAllLocations = async () => {
     const response = await instance.get(`${rootApi}/locations`);
     const locationsData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return locationsData.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -25,13 +25,13 @@ export const getLocationDetail = async (id) => {
     const response = await instance.get(`${rootApi}/location/${id}`);
     const locationData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return locationData.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -41,13 +41,28 @@ export const getAllDistricts = async () => {
     const response = await instance.get(`${rootApi}/districts`);
     const data = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return data.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
+  }
+};
+
+export const getWardsByDistrictId = async (id) => {
+  try {
+    const response = await instance.get(`${rootApi}/getWardsOfDistrict/${id}`);
+    const data = response.data;
+
+    if (response.statusText === "OK") {
+      return data.data;
+    } else {
+      throw new Error("Could not fetch data.");
+    }
+  } catch (error) {
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -57,13 +72,13 @@ export const getAllWards = async () => {
     const response = await instance.get(`${rootApi}/wards`);
     const data = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return data.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -73,13 +88,13 @@ export const getAllAdsType = async () => {
     const response = await instance.get(`${rootApi}/adstypes`);
     const data = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return data.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -89,13 +104,13 @@ export const getAllLocationType = async () => {
     const response = await instance.get(`${rootApi}/locationtypes`);
     const data = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return data.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -105,13 +120,13 @@ export const getAllAdsBoardType = async () => {
     const response = await instance.get(`${rootApi}/adsboardtypes`);
     const data = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return data.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -121,13 +136,28 @@ export const getAllReports = async () => {
     const response = await instance.get(`${rootApi}/reports`);
     const reportsData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return reportsData.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
+  }
+};
+
+export const getAllReportByLocation = async () => {
+  try {
+    const response = await instance.get(`${rootApi}/reportGroup`);
+    const reportsData = response.data;
+
+    if (response.statusText === "OK") {
+      return reportsData.data;
+    } else {
+      throw new Error("Could not fetch data.");
+    }
+  } catch (error) {
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -136,14 +166,14 @@ export const getReportDetail = async (id) => {
     const response = await instance.get(`${rootApi}/report/${id}`);
     const reportsData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       console.log(reportsData.data);
       return reportsData.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -153,13 +183,13 @@ export const getAllAdsBoards = async () => {
     const response = await instance.get(`${rootApi}/adsboards`);
     const data = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -173,16 +203,16 @@ export const refreshToken = async () => {
 
     const tokenData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return {
         newAccessToken: tokenData.accessToken,
         newRefreshToken: tokenData.refreshToken,
       };
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -196,13 +226,13 @@ export const login = async ({ loginCredential, password }) => {
 
     const authData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return authData;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };
 
@@ -213,12 +243,12 @@ export const getAllAuthorizeRequest = async () => {
 
     const authData = response.data;
 
-    if (response.statusText === 'OK') {
+    if (response.statusText === "OK") {
       return authData.data;
     } else {
-      throw new Error('Could not fetch data.');
+      throw new Error("Could not fetch data.");
     }
   } catch (error) {
-    throw new Error('Request failed: ' + error.message);
+    throw new Error("Request failed: " + error.message);
   }
 };

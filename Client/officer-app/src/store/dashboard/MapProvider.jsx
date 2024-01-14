@@ -48,16 +48,6 @@ const mapReducer = (state, action) => {
 const MapProvider = (props) => {
   const [mapState, dispatchMapAction] = useReducer(mapReducer, defaultMapState);
 
-  // const setZoomToMap = (data) => {
-  //   dispatchMapAction({ type: 'ZOOM', data: data });
-  // };
-  // const setLocationDetailData = (data) => {
-  //   dispatchMapAction({ type: 'LOCATE', data: data });
-  // };
-  // const removeLocationDetailData = () => {
-  //   dispatchMapAction({ type: 'REMOVE' });
-  // };
-
   const setZoomToMap = useCallback(
     (data) => {
       dispatchMapAction({ type: 'ZOOM', data: data });
@@ -75,14 +65,6 @@ const MapProvider = (props) => {
   const removeLocationDetailData = useCallback(() => {
     dispatchMapAction({ type: 'REMOVE' });
   }, [dispatchMapAction]);
-
-  // const mapContext = {
-  //   location: mapState.location,
-  //   locationDetail: mapState.locationDetail,
-  //   setZoom: setZoomToMap,
-  //   setLocationDetail: setLocationDetailData,
-  //   removeLocationDetail: removeLocationDetailData,
-  // };
 
   const mapContext = useMemo(
     () => ({

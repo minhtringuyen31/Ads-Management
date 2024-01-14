@@ -13,9 +13,8 @@ const LocationDetail = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const respone = await axios.get(
-          `http://14.225.192.121/location/${locationID}`
-        );
+        const respone = await axios.get(`
+          http://14.225.192.121/location/${locationID}`);
         setLocationDetailData(respone.data.data);
         setAdboards(respone.data.data.adsboards);
       } catch (error) {

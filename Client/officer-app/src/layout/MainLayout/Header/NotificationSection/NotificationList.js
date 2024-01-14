@@ -1,30 +1,25 @@
 // material-ui
-import { useTheme, styled } from "@mui/material/styles";
+import { CircleNotifications } from "@mui/icons-material";
 import {
-  Avatar,
-  Button,
-  Card,
-  CardContent,
-  Chip,
+  Box,
   Divider,
   Grid,
   List,
-  ListItem,
-  ListItemAvatar,
-  ListItemSecondaryAction,
-  ListItemText,
-  Stack,
+  ListItemIcon,
   Typography,
 } from "@mui/material";
+import { styled, useTheme } from "@mui/material/styles";
 
 // assets
-import {
-  IconBrandTelegram,
-  IconBuildingStore,
-  IconMailbox,
-  IconPhoto,
-} from "@tabler/icons";
-import User1 from "../../../../assets/images/users/user-round.svg";
+import instance from "axiosConfig/axios-config";
+import moment from "moment";
+import "moment/locale/vi";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { GetUser } from "store/auth/auth-config";
+import ReportContext from "store/report/report-context";
+
+moment.locale("vi");
 
 // styles
 const ListItemWrapper = styled("div")(({ theme }) => ({
@@ -39,9 +34,12 @@ const ListItemWrapper = styled("div")(({ theme }) => ({
 }));
 
 // ==============================|| NOTIFICATION LIST ITEM ||============================== //
-
-const NotificationList = () => {
+const NotificationList = ({ handleToggle }) => {
+  const reportCtx = useContext(ReportContext);
+  const user = GetUser();
   const theme = useTheme();
+  const [notificationList, setNotificationList] = useState([]);
+  const navigate = useNavigate();
 
   const chipSX = {
     height: 24,
@@ -67,248 +65,174 @@ const NotificationList = () => {
     height: 28,
   };
 
-  return (
-    <List
-      sx={{
-        width: "100%",
-        maxWidth: 330,
-        py: 0,
-        borderRadius: "10px",
-        [theme.breakpoints.down("md")]: {
-          maxWidth: 300,
-        },
-        "& .MuiListItemSecondaryAction-root": {
-          top: 22,
-        },
-        "& .MuiDivider-root": {
-          my: 0,
-        },
-        "& .list-container": {
-          pl: 7,
-        },
-      }}
-    >
-      {/* <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar alt="John Doe" src={User1} />
-          </ListItemAvatar>
-          <ListItemText primary="John Doe" />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              It is a long established fact that a reader will be distracted
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Unread" sx={chipErrorSX} />
-              </Grid>
-              <Grid item>
-                <Chip label="New" sx={chipWarningSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar
-              sx={{
-                color: theme.palette.success.dark,
-                backgroundColor: theme.palette.success.light,
-                border: "none",
-                borderColor: theme.palette.success.main,
-              }}
+  const fetchDatas = async () => {
+    try {
+      const response = await instance.get("/notifications");
+
+      if (user.userRole === "province_officer") {
+        const filterData = response.data.data.filter(
+          (item) => item.type === "edit_request",
+        );
+        setNotificationList(filterData);
+      } else {
+        const filterData = response.data.data.filter(
+          (item) => item.type !== "edit_request",
+        );
+        setNotificationList(filterData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDatas();
+  }, []);
+
+  const handleItemClicked = (notification) => {
+    console.log("Notify Item clicked: ", notification.content._id);
+    const requestEditID = notification.content._id;
+    if (user.userRole === "province_officer") {
+      navigate("/utils/edit_request_detail", { state: { requestEditID } });
+    } else {
+      if (notification.type === "status_edit_request") {
+        navigate("/utils/locations");
+      } else {
+        reportCtx.setReportDetail(notification.content._id);
+        handleToggle();
+        navigate("/utils/report/detail");
+      }
+    }
+  };
+
+  const modifierNotificationList = notificationList.toReversed();
+
+  const send = "Người gửi: ";
+  const location = "Địa điểm: ";
+  if (modifierNotificationList.length !== 0) {
+    console.log("notificationList", modifierNotificationList);
+    return (
+      <List
+        sx={{
+          width: "100%",
+          maxWidth: 500,
+          py: 0,
+          borderRadius: "10px",
+          [theme.breakpoints.down("md")]: {
+            maxWidth: 500,
+          },
+          "& .MuiListItemSecondaryAction-root": {
+            top: 22,
+          },
+          "& .MuiDivider-root": {
+            my: 0,
+          },
+          "& .list-container": {
+            pl: 7,
+          },
+        }}
+      >
+        {modifierNotificationList.map((notification, index) => (
+          <>
+            <ListItemWrapper
+              key={notification._id}
+              // onClick={() => handleItemClicked(notification.content._id)}
+              onClick={() => handleItemClicked(notification)}
             >
-              <IconBuildingStore stroke={1.5} size="1.3rem" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="subtitle1">
-                Store Verification Done
-              </Typography>
-            }
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              We have successfully received your request.
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Unread" sx={chipErrorSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar
-              sx={{
-                color: theme.palette.primary.dark,
-                backgroundColor: theme.palette.primary.light,
-                border: "none",
-                borderColor: theme.palette.primary.main,
-              }}
-            >
-              <IconMailbox stroke={1.5} size="1.3rem" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={
-              <Typography variant="subtitle1">Check Your Mail.</Typography>
-            }
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              All done! Now check your inbox as you&apos;re in for a sweet
-              treat!
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  disableElevation
-                  endIcon={<IconBrandTelegram stroke={1.5} size="1.3rem" />}
-                >
-                  Mail
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar alt="John Doe" src={User1} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Typography variant="subtitle1">John Doe</Typography>}
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography component="span" variant="subtitle2">
-              Uploaded two file on &nbsp;
-              <Typography component="span" variant="h6">
-                21 Jan 2020
-              </Typography>
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item xs={12}>
-                <Card
-                  sx={{
-                    backgroundColor: theme.palette.secondary.light,
-                  }}
-                >
-                  <CardContent>
-                    <Grid container direction="column">
-                      <Grid item xs={12}>
-                        <Stack direction="row" spacing={2}>
-                          <IconPhoto stroke={1.5} size="1.3rem" />
-                          <Typography variant="subtitle1">demo.jpg</Typography>
-                        </Stack>
+              {/* <MainCard> */}
+              <Box>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid
+                    item
+                    xs={12}
+                    lg={1.5}
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <ListItemIcon>
+                      <CircleNotifications fontSize="large" color="info" />
+                    </ListItemIcon>
+                  </Grid>
+                  <Grid item xs={12} lg={10.5} container direction="column">
+                    <Grid item>
+                      <Typography fontSize={14} fontWeight="bold">
+                        {notification.title}
+                      </Typography>
+                    </Grid>
+                    <Box sx={{ height: "5px" }} />
+                    <Grid item>
+                      <Typography variant="h5">
+                        {notification.type === "report" &&
+                          notification.content.report_form.label}
+                        {notification.type === "edit_request" &&
+                          (notification.content.type === "board"
+                            ? "Yêu cầu chỉnh sửa bảng quảng cáo"
+                            : "Yêu cầu chỉnh sửa địa điểm")}
+                        {notification.type === "status_edit_request" &&
+                          "Trạng thái yêu cầu chỉnh sửa đã được thay đổi"}
+                      </Typography>
+                    </Grid>
+                    <Box sx={{ height: "5px" }} />
+                    <Grid item container direction="column">
+                      <Grid item xs={12} lg={12}>
+                        <Typography variant="h6" color="GrayText">
+                          {notification.type === "report" ? send : location}
+                          {notification.type === "report" &&
+                            notification.content.username}
+
+                          {notification.type === "edit_request" &&
+                          notification.content.type === "board" &&
+                          notification.content.newInformation
+                            ? notification.content.newInformation.location
+                                .display_name || ""
+                            : ""}
+                          {notification.type === "edit_request" &&
+                          notification.content.type === "location" &&
+                          notification.content.newInformation
+                            ? notification.content.newInformation
+                                .display_name || ""
+                            : ""}
+
+                          {notification.type === "status_edit_request" &&
+                          notification.content.type === "board" &&
+                          notification.content.newInformation
+                            ? notification.content.newInformation.location
+                                .display_name || ""
+                            : ""}
+                          {notification.type === "status_edit_request" &&
+                          notification.content.type === "location" &&
+                          notification.content.newInformation
+                            ? notification.content.newInformation
+                                .display_name || ""
+                            : ""}
+                        </Typography>
+                      </Grid>
+                      <Box sx={{ height: "5px" }} />
+                      <Grid
+                        item
+                        display="flex"
+                        justifyContent="flex-end"
+                        alignItems="end"
+                        xs={12}
+                        lg={12}
+                      >
+                        <Typography variant="h6" color="GrayText">
+                          {moment.utc(notification.createdAt).fromNow()}
+                        </Typography>
                       </Grid>
                     </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper>
-      <Divider />
-      <ListItemWrapper>
-        <ListItem alignItems="center">
-          <ListItemAvatar>
-            <Avatar alt="John Doe" src={User1} />
-          </ListItemAvatar>
-          <ListItemText
-            primary={<Typography variant="subtitle1">John Doe</Typography>}
-          />
-          <ListItemSecondaryAction>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs={12}>
-                <Typography variant="caption" display="block" gutterBottom>
-                  2 min ago
-                </Typography>
-              </Grid>
-            </Grid>
-          </ListItemSecondaryAction>
-        </ListItem>
-        <Grid container direction="column" className="list-container">
-          <Grid item xs={12} sx={{ pb: 2 }}>
-            <Typography variant="subtitle2">
-              It is a long established fact that a reader will be distracted
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid container>
-              <Grid item>
-                <Chip label="Confirmation of Account." sx={chipSuccessSX} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemWrapper> */}
-    </List>
-  );
+                  </Grid>
+                </Grid>
+              </Box>
+              {/* </MainCard> */}
+            </ListItemWrapper>
+            <Divider />
+          </>
+        ))}
+      </List>
+    );
+  }
 };
 
 export default NotificationList;

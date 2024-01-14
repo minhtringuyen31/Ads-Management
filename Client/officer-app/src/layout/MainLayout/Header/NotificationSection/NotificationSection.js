@@ -1,36 +1,38 @@
-import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react";
 
 // material-ui
-import { useTheme } from "@mui/material/styles";
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   ButtonBase,
   CardActions,
-  Chip,
   ClickAwayListener,
   Divider,
   Grid,
+  IconButton,
   Paper,
   Popper,
   Stack,
-  TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 // third-party
-import PerfectScrollbar from "react-perfect-scrollbar";
 
 // project imports
 import MainCard from "ui-component/cards/MainCard";
 import Transitions from "ui-component/extended/Transitions";
-import NotificationList from "./NotificationList";
 
 // assets
+import { MarkEmailRead } from "@mui/icons-material";
 import { IconBell } from "@tabler/icons";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { SocketContext } from "socket/SocketProvider";
+import { GetUser } from "store/auth/auth-config";
+import NotificationList from "./NotificationList";
 
 // notification status options
 const status = [
@@ -55,8 +57,13 @@ const status = [
 // ==============================|| NOTIFICATION ||============================== //
 
 const NotificationSection = () => {
+  const socket = useContext(SocketContext);
+  const user = GetUser();
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [notifications, setNotifications] = useState([]);
+  const [notificationList, setNotificationList] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -84,8 +91,33 @@ const NotificationSection = () => {
     prevOpen.current = open;
   }, [open]);
 
+  useEffect(() => {
+    if (user.userRole === "province_officer") {
+      console.log("Province: ", socket);
+      socket.on("new_edit_request", (data) => {
+        console.log(data);
+        setNotifications((prev) => [...prev, data]);
+      });
+    } else {
+      console.log("Ward/Distrit: ", socket);
+      socket.on("new_notification", (data) => {
+        console.log(data);
+        setNotifications((prev) => [...prev, data]);
+      });
+
+      socket.on("new_status_edit_request", (data) => {
+        console.log("New Status edit Request: ", data);
+        setNotifications((prev) => [...prev, data]);
+      });
+    }
+  }, [socket, user.userRole]);
+
   const handleChange = (event) => {
     if (event?.target.value) setValue(event?.target.value);
+  };
+
+  const handleReadAll = () => {
+    setNotifications([]);
   };
 
   return (
@@ -99,29 +131,35 @@ const NotificationSection = () => {
           },
         }}
       >
-        <ButtonBase sx={{ borderRadius: "12px" }}>
-          <Avatar
-            variant="rounded"
-            sx={{
-              ...theme.typography.commonAvatar,
-              ...theme.typography.mediumAvatar,
-              transition: "all .2s ease-in-out",
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
-              '&[aria-controls="menu-list-grow"],&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light,
-              },
-            }}
-            ref={anchorRef}
-            aria-controls={open ? "menu-list-grow" : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-            color="inherit"
-          >
-            <IconBell stroke={1.5} size="1.3rem" />
-          </Avatar>
-        </ButtonBase>
+        <Badge
+          badgeContent={notifications.length}
+          overlap="circular"
+          color="secondary"
+        >
+          <ButtonBase sx={{ borderRadius: "12px" }}>
+            <Avatar
+              variant="rounded"
+              sx={{
+                ...theme.typography.commonAvatar,
+                ...theme.typography.mediumAvatar,
+                transition: "all .2s ease-in-out",
+                background: theme.palette.secondary.light,
+                color: theme.palette.secondary.dark,
+                '&[aria-controls="menu-list-grow"],&:hover': {
+                  background: theme.palette.secondary.dark,
+                  color: theme.palette.secondary.light,
+                },
+              }}
+              ref={anchorRef}
+              aria-controls={open ? "menu-list-grow" : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              color="inherit"
+            >
+              <IconBell stroke={1.5} size="1.3rem" />
+            </Avatar>
+          </ButtonBase>
+        </Badge>
       </Box>
       <Popper
         placement={matchesXs ? "bottom" : "bottom-end"}
@@ -167,7 +205,7 @@ const NotificationSection = () => {
                         <Grid item>
                           <Stack direction="row" spacing={2}>
                             <Typography variant="subtitle1">
-                              All Notification
+                              Thông báo
                             </Typography>
                             {/* <Chip
                               size="small"
@@ -179,7 +217,51 @@ const NotificationSection = () => {
                             /> */}
                           </Stack>
                         </Grid>
+                        <Grid item>
+                          <IconButton onClick={handleReadAll}>
+                            <MarkEmailRead />
+                          </IconButton>
+                        </Grid>
                       </Grid>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <PerfectScrollbar
+                        style={{
+                          height: "auto",
+                          maxHeight: "calc(100vh - 300px)",
+                          overflowX: "hidden",
+                        }}
+                      >
+                        <Grid container direction="column" spacing={2}>
+                          {/* <Grid item xs={12}>
+                            <Box sx={{ px: 2, pt: 0.25 }}>
+                              <TextField
+                                id='outlined-select-currency-native'
+                                select
+                                fullWidth
+                                value={value}
+                                onChange={handleChange}
+                                SelectProps={{
+                                  native: true,
+                                }}
+                              >
+                                {status.map((option) => (
+                                  <option
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </option>
+                                ))}
+                              </TextField>
+                            </Box>
+                          </Grid> */}
+                          <Grid item xs={12} p={0}>
+                            <Divider sx={{ my: 0 }} />
+                          </Grid>
+                        </Grid>
+                        <NotificationList handleToggle={handleToggle} />
+                      </PerfectScrollbar>
                     </Grid>
                   </Grid>
                   <Divider />

@@ -12,11 +12,10 @@ import {
 } from '@mui/material';
 import useHttp from 'hooks/use-http';
 import { getReportDetail } from 'lib/api';
-import { Fragment, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ReportContext from 'store/report/report-context';
 import MainCard from 'ui-component/cards/MainCard';
-import { reportTestData } from 'views/dashboard/DashboardData/data';
-import Form from './Form';
+import ReportForm from './ReportForm';
 
 const ReportDetail = () => {
   const reportCtx = useContext(ReportContext);
@@ -65,7 +64,7 @@ const ReportDetail = () => {
   }
 
   if (status === 'completed') {
-    console.log(status, loadedReportDetail);
+    console.log(loadedReportDetail);
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} lg={formOpen.lg1}>
@@ -91,22 +90,32 @@ const ReportDetail = () => {
               }}
               cols={1}
             >
-              <ImageListItem key={1}>
-                <img
-                  alt='test1'
-                  srcSet={`${reportTestData.reports[0].images[0]}`}
-                  src={`${reportTestData.reports[0].images[0]}`}
-                  loading='lazy'
-                />
-              </ImageListItem>
-              <ImageListItem key={2}>
-                <img
-                  alt='test2'
-                  srcSet={`${reportTestData.reports[0].images[1]}`}
-                  src={`${reportTestData.reports[0].images[1]}`}
-                  loading='lazy'
-                />
-              </ImageListItem>
+              {loadedReportDetail.image.length === 0 && (
+                <MainCard
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                  }}
+                >
+                  <Typography>
+                    Không có hình ảnh được gửi kèm báo cáo
+                  </Typography>
+                </MainCard>
+              )}
+              {loadedReportDetail.image.map((image, index) => {
+                return (
+                  <ImageListItem key={index}>
+                    <img
+                      alt='test1'
+                      srcSet={`${image}`}
+                      src={`${image}`}
+                      loading='lazy'
+                    />
+                  </ImageListItem>
+                );
+              })}
             </ImageList>
           </MainCard>
         </Grid>
@@ -114,12 +123,12 @@ const ReportDetail = () => {
           <MainCard>
             <Box sx={{ p: 3 }}>
               <Grid container spacing={3} sx={{ height: '10vh' }}>
-                <Grid item xs={12} lg={6}>
+                <Grid item xs={6} lg={6}>
                   <Typography variant='h4' gutterBottom>
                     Nội dung báo cáo
                   </Typography>
                 </Grid>
-                <Grid item xs={12} lg={6} container justifyContent='flex-end'>
+                <Grid item xs={6} lg={6} container justifyContent='flex-end'>
                   <Button
                     variant='contained'
                     color='primary'
@@ -128,7 +137,6 @@ const ReportDetail = () => {
                       '&:hover': {
                         backgroundColor: '#115293',
                       },
-                      padding: '10px',
                       fontSize: '16px',
                       fontWeight: 'bold',
                       borderRadius: '5px',
@@ -146,50 +154,47 @@ const ReportDetail = () => {
                   Thông tin người gửi
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Họ tên: {reportTestData.reports[0].username}
+                  Họ tên: {loadedReportDetail.username}
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Email: {reportTestData.reports[0].email}
+                  Email: {loadedReportDetail.email}
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Số điện thoại: {reportTestData.reports[0].phone_number}
+                  Số điện thoại: {loadedReportDetail.phone_number}
                 </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant='h6' color='primary' gutterBottom>
                   Thông tin báo cáo
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Loại báo cáo: {reportTestData.reports[0].report_form}
+                  Loại báo cáo: {loadedReportDetail.report_form.label}
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Địa chỉ: {reportTestData.reports[0].related_to}
+                  Địa chỉ:{' '}
+                  {loadedReportDetail.type === 'location'
+                    ? loadedReportDetail.location.address
+                    : loadedReportDetail.board.location.address}
                 </Typography>
                 <Typography variant='subtitle1'>
-                  Báo cáo liên quan đến: {reportTestData.reports[0].type}
-                </Typography>
-
-                <Typography variant='subtitle1'>
-                  Operation: {reportTestData.reports[0].operation}
+                  Hình thức:{' '}
+                  {loadedReportDetail.type === 'location'
+                    ? 'Báo cáo địa điểm'
+                    : 'Báo cáo bảng quảng cáo'}
                 </Typography>
                 <Typography variant='subtitle1'>
                   Thời gian gửi:{' '}
-                  {new Date(
-                    reportTestData.reports[0].created_at
-                  ).toLocaleString()}
+                  {new Date(loadedReportDetail.createdAt).toLocaleString()}
                 </Typography>
                 <Divider sx={{ my: 2 }} />
                 <Typography variant='h6' color='primary' gutterBottom>
                   Nội dung
                 </Typography>
                 <Typography variant='body1' gutterBottom>
-                  {reportTestData.reports[0].report_content
-                    .split('\n')
-                    .map((line) => (
-                      <Fragment key={line}>
-                        {line}
-                        <br />
-                      </Fragment>
-                    ))}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: loadedReportDetail.report_content,
+                    }}
+                  ></div>
                 </Typography>
               </Box>
             </Box>
@@ -230,7 +235,11 @@ const ReportDetail = () => {
                     Form phản hồi
                   </Typography>
                   <br />
-                  <Form />
+                  <ReportForm
+                    operation={loadedReportDetail.operation}
+                    reportStatus={loadedReportDetail.status}
+                    reportId={loadedReportDetail._id}
+                  />
                 </Grid>
               </Grid>
             </MainCard>

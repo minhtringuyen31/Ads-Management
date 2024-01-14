@@ -93,6 +93,19 @@ const AssignRole = () => {
     }
   };
 
+  const renderAssignedArea = (area) => {
+    switch (area.userRole) {
+      case "ward_officer":
+        return `${area.assigned_areaid.label}/${area.assigned_areaid.district.label}`;
+      case "district_officer":
+        return `${area.assigned_areaid.label}`;
+      case "province_officer":
+        return `${area.assigned_areaid.label}`;
+      default:
+        return "";
+    }
+  };
+
   /**
    * useEffect
    */
@@ -182,7 +195,8 @@ const AssignRole = () => {
               {account.assigned_areaid !== "" &&
               account.assigned_areaid !== undefined ? (
                 <Typography fontSize={16} color="#374151" fontWeight="bold">
-                  {account.assigned_areaid.label}
+                  {/* {account.assigned_areaid.label} */}
+                  {renderAssignedArea(account)}
                 </Typography>
               ) : (
                 <>

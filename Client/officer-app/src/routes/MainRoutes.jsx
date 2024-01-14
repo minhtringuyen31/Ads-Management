@@ -1,8 +1,8 @@
 import { lazy } from "react";
 
 import Loadable from "ui-component/Loadable";
-import CategoryManage from "views/utilities/categories/CategoryManage";
 import MainLayout from "../layout/MainLayout/MainLayout";
+import { GetUser } from "store/auth/auth-config";
 
 // import LocationDetail from "views/utilities/LocationDetail";
 
@@ -14,6 +14,12 @@ const LocationManagement = Loadable(
     ),
   ),
 );
+const CategoryManage = Loadable(
+  lazy(() => import("../views/utilities/categories/CategoryManage")),
+);
+const DistrictMangement = Loadable(
+  lazy(() => import("../views/utilities/district-manage/DistrictMangement")),
+);
 const LocationDetail = Loadable(
   lazy(() =>
     import("../views/utilities/list-location-adsboard/location/LocationDetail"),
@@ -22,7 +28,7 @@ const LocationDetail = Loadable(
 const RequestEditLocation = Loadable(
   lazy(() =>
     import(
-      "../views/utilities/list-location-adsboard/location/FormRequestEditLocation"
+      "../views/utilities/list-location-adsboard/request_edit/FormRequestEditLocation"
     ),
   ),
 );
@@ -31,6 +37,43 @@ const BoardManagement = Loadable(
   lazy(() =>
     import(
       "../views/utilities/list-location-adsboard/adsboard/BoardManagement"
+    ),
+  ),
+);
+const AddAdsboardProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/adsboard/AddAdsboardProvince"
+    ),
+  ),
+);
+const AddLocationProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/AddLocationProvince"
+    ),
+  ),
+);
+const EditAdsboardProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/adsboard/EditAdsboardProvince"
+    ),
+  ),
+);
+
+const EditLocationProvince = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/location/EditLocationProvince"
+    ),
+  ),
+);
+
+const RequestEditAdsboard = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/request_edit/FormRequestEditAdsboard"
     ),
   ),
 );
@@ -49,10 +92,12 @@ const FormAddLicenAdsboard = Loadable(
   ),
 );
 const ReportList = Loadable(
-  lazy(() => import("../views/utilities/report-manage/ReportList")),
+  lazy(() => import("../views/utilities/report-manage/report-list/ReportList")),
 );
 const ReportDetail = Loadable(
-  lazy(() => import("../views/utilities/report-manage/ReportDetail")),
+  lazy(() =>
+    import("../views/utilities/report-manage/report-list/ReportDetail"),
+  ),
 );
 const AuthorizeRequestList = Loadable(
   lazy(() =>
@@ -89,13 +134,45 @@ const ReportResolution = Loadable(
   lazy(() => import("../views/utilities/Statistic/ReportResolution")),
 );
 
+const EditRequestList = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/request_edit/RequestEditList"
+    ),
+  ),
+);
+const EditRequestDetail = Loadable(
+  lazy(() =>
+    import(
+      "../views/utilities/list-location-adsboard/request_edit/RequestEditDetail"
+    ),
+  ),
+);
+const ChangePassword = Loadable(
+  lazy(() =>
+    import("../views/pages/authentication/change-password/ChangePassword"),
+  ),
+);
+
+const ReportMap = Loadable(
+  lazy(() => import("../views/utilities/report-manage/report-map/ReportMap")),
+);
+
+const UserProfile = Loadable(
+  lazy(() => import("../views/utilities/profile/UserProfile")),
+);
+
 const MainRoutes = {
   path: "/",
   element: <MainLayout />,
   children: [
     {
-      path: "dashboard",
+      path: "map",
       element: <Home />,
+    },
+    {
+      path: "dashboard",
+      element: <StatisticReport />,
     },
     {
       path: "utils",
@@ -112,6 +189,10 @@ const MainRoutes = {
           path: "location/request_edit_form",
           element: <RequestEditLocation />,
         },
+        {
+          path: "profile",
+          element: <UserProfile />,
+        },
       ],
     },
     {
@@ -120,6 +201,26 @@ const MainRoutes = {
         {
           path: "adsboards",
           element: <BoardManagement />,
+        },
+        {
+          path: "adsboard/new_adsboard",
+          element: <AddAdsboardProvince />,
+        },
+        {
+          path: "location/edit_location",
+          element: <EditLocationProvince />,
+        },
+        {
+          path: "location/new_location",
+          element: <AddLocationProvince />,
+        },
+        {
+          path: "adsboard/edit_adsboard",
+          element: <EditAdsboardProvince />,
+        },
+        {
+          path: "adsboard/request_edit_form",
+          element: <RequestEditAdsboard />,
         },
       ],
     },
@@ -135,6 +236,20 @@ const MainRoutes = {
           element: <FormAddLicenAdsboard />,
         },
         {
+          path: "edit_requests",
+          element: <EditRequestList />,
+        },
+        {
+          path: "edit_request_detail",
+          element: <EditRequestDetail />,
+        },
+      ],
+    },
+
+    {
+      path: "utils",
+      children: [
+        {
           path: "report",
           children: [
             {
@@ -144,6 +259,10 @@ const MainRoutes = {
             {
               path: "detail",
               element: <ReportDetail />,
+            },
+            {
+              path: "map",
+              element: <ReportMap />,
             },
           ],
         },
@@ -157,6 +276,15 @@ const MainRoutes = {
           ],
         },
         {
+          path: "district",
+          children: [
+            {
+              path: "list",
+              element: <DistrictMangement />,
+            },
+          ],
+        },
+        {
           path: "authorize",
           children: [
             {
@@ -166,6 +294,15 @@ const MainRoutes = {
             {
               path: "detail",
               element: <AuthorizeRequestDetail />,
+            },
+          ],
+        },
+        {
+          path: "profile",
+          children: [
+            {
+              path: "change_password",
+              element: <ChangePassword />,
             },
           ],
         },

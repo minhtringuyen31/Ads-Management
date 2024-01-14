@@ -1,14 +1,11 @@
-import { Link } from "react-router-dom";
-
 // material-ui
-import { useTheme } from "@mui/material/styles";
 import { Divider, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 // project imports
-import AuthWrapper1 from "../AuthWrapper1";
 import AuthCardWrapper from "../AuthCardWrapper";
+import AuthWrapper1 from "../AuthWrapper1";
 import AuthLogin from "../auth-forms/AuthLogin";
-import Logo from "ui-component/Logo";
 
 // assets
 
@@ -54,10 +51,10 @@ const Login = () => {
                       //   },
                       // }}
                     >
-                      RideNow
+                      Quản lý quảng cáo
                     </Typography>
                   </Grid>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <Grid
                       container
                       direction={matchDownSM ? "column-reverse" : "row"}
@@ -66,28 +63,28 @@ const Login = () => {
                     >
                       <Grid item>
                         <Stack
-                          alignItems="center"
-                          justifyContent="center"
+                          alignItems='center'
+                          justifyContent='center'
                           spacing={1}
                         >
                           <Typography
                             color={theme.palette.secondary.main}
                             gutterBottom
-                            variant={matchDownSM ? "h3" : "h2"}
+                            variant={matchDownSM ? 'h3' : 'h2'}
                           >
-                            Admin Dashboard
+                            Chào mừng trở lại
                           </Typography>
                           <Typography
-                            variant="caption"
-                            fontSize="16px"
-                            textAlign={matchDownSM ? "center" : "inherit"}
+                            variant='caption'
+                            fontSize='16px'
+                            textAlign={matchDownSM ? 'center' : 'inherit'}
                           >
-                            Enter your credentials to continue
+                            Nhập thông tin để đăng nhập
                           </Typography>
                         </Stack>
                       </Grid>
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12}>
                     <AuthLogin />
                   </Grid>

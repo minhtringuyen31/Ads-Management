@@ -78,8 +78,9 @@ const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
         </Box>
         <Divider sx={{ color: "black" }} />
         <Box
-          //   width="90%"
+          width="100%"
           height="88%"
+          // maxHeight="400px"
           display="flex"
           flexDirection="column"
           //   padding={2}
@@ -152,7 +153,7 @@ const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
             </Box>
           </Box>
           <Box>
-            <ImageList sx={{ width: "100%", height: "auto" }} cols={2}>
+            <ImageList sx={{ width: "100%", height: "200px" }} cols={2}>
               {report.image.map((item, index) => (
                 <ImageListItem key={index}>
                   <img
@@ -227,7 +228,7 @@ const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
               </Box>
             </>
           ) : (
-            <>Báo cáo chưa được xử lý</>
+            <Box margin={2}>Báo cáo chưa được xử lý</Box>
           )}
         </Box>
       </Box>

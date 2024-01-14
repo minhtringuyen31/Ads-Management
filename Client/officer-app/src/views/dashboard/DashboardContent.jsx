@@ -1,11 +1,10 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 import MapContext from 'store/dashboard/map-context';
 import MainCard from 'ui-component/cards/MainCard';
 import LocationDetailBox from './location-view/LocationDetailBox';
 import MapBox from './map-view/MapBox';
-import ReportReviewBox from './report-view/ReportReviewBox';
 
 const DashboardContent = () => {
   const mapCtx = useContext(MapContext);
@@ -27,7 +26,21 @@ const DashboardContent = () => {
               {mapCtx.locationDetail ? (
                 <LocationDetailBox />
               ) : (
-                <ReportReviewBox />
+                <Grid
+                  item
+                  xs={12}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100%',
+                    minHeight: '75vh',
+                  }}
+                >
+                  <Typography variant='h4'>
+                    Chọn một địa điểm để xem thông tin
+                  </Typography>
+                </Grid>
               )}
             </MainCard>
           </Grid>
