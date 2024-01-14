@@ -10,7 +10,16 @@ import {
   IconTypography,
   IconWindmill,
   IconMapPin,
+  IconArtboard,
+  IconAt,
 } from "@tabler/icons";
+import PortraitIcon from "@mui/icons-material/Portrait";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import MapsHomeWorkOutlinedIcon from "@mui/icons-material/MapsHomeWorkOutlined";
+import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
+import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
+import AirplayOutlinedIcon from "@mui/icons-material/AirplayOutlined";
+import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
 // constant
 const icons = {
@@ -61,7 +70,7 @@ const utilities = {
         title: "Danh sách bảng quảng cáo",
         type: "item",
         url: "/utils/adsboards",
-        icon: icons.IconPalette,
+        icon: AirplayOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -77,13 +86,14 @@ const utilities = {
         title: "Danh sách cấp phép",
         type: "item",
         url: "/utils/authorize_requests",
+        icon: AssignmentTurnedInOutlinedIcon,
       },
       {
         id: "area_assignment",
         title: "Phân công khu vực",
         type: "item",
         url: "/utils/area_assignment",
-        icon: icons.IconPalette,
+        icon: MapsHomeWorkOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -91,7 +101,7 @@ const utilities = {
         title: "Quản lí tài khoản",
         type: "item",
         url: "utils/account_management",
-        icon: icons.IconPalette,
+        icon: PortraitIcon,
         breadcrumbs: false,
       },
       {
@@ -99,14 +109,14 @@ const utilities = {
         title: "Thống kê báo cáo",
         type: "item",
         url: "/utils/statistic",
-        icon: icons.IconPalette,
+        icon: AutoGraphIcon,
         breadcrumbs: false,
       },
     ],
   },
   district_officer: {
     id: "district_utilities",
-    title: "Utilities",
+    title: "",
     type: "group",
     children: [
       {
@@ -122,7 +132,7 @@ const utilities = {
         title: "Danh sách bảng quảng cáo",
         type: "item",
         url: "/utils/adsboards",
-        icon: icons.IconPalette,
+        icon: AirplayOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -138,7 +148,7 @@ const utilities = {
         title: "Danh sách báo cáo",
         type: "item",
         url: "/utils/report/list",
-        icon: icons.IconClipboardText,
+        icon: ReportGmailerrorredOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -154,14 +164,14 @@ const utilities = {
         title: "Danh sách cấp phép",
         type: "item",
         url: "/utils/authorize_requests",
-        icon: icons.IconPalette,
+        icon: AssignmentTurnedInOutlinedIcon,
         breadcrumbs: false,
       },
     ],
   },
   ward_officer: {
     id: "ward_utilities",
-    title: "Utilities",
+    title: "",
     type: "group",
     children: [
       {
@@ -177,7 +187,7 @@ const utilities = {
         title: "Danh sách bảng quảng cáo",
         type: "item",
         url: "/utils/adsboards",
-        icon: icons.IconPalette,
+        icon: AirplayOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -185,7 +195,7 @@ const utilities = {
         title: "Bản đồ báo cáo",
         type: "item",
         url: "/utils/report/map",
-        icon: icons.IconMap2,
+        icon: MapOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -193,7 +203,7 @@ const utilities = {
         title: "Danh sách báo cáo",
         type: "item",
         url: "/utils/report/list",
-        icon: icons.IconPalette,
+        icon: ReportGmailerrorredOutlinedIcon,
         breadcrumbs: false,
       },
       {
@@ -209,7 +219,7 @@ const utilities = {
         title: "Danh sách cấp phép",
         type: "item",
         url: "/utils/authorize_requests",
-        icon: icons.IconPalette,
+        icon: AssignmentTurnedInOutlinedIcon,
         breadcrumbs: false,
       },
     ],

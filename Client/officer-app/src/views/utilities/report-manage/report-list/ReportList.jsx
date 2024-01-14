@@ -1,6 +1,6 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import FilterListIcon from "@mui/icons-material/FilterList";
 import {
   Box,
   Chip,
@@ -19,17 +19,17 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
-import { visuallyHidden } from '@mui/utils';
-import useHttp from 'hooks/use-http';
-import { getAllReports } from 'lib/api';
-import moment from 'moment';
-import PropTypes from 'prop-types';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import ReportContext from 'store/report/report-context';
-import MainCard from 'ui-component/cards/MainCard';
+} from "@mui/material";
+import { alpha, useTheme } from "@mui/material/styles";
+import { visuallyHidden } from "@mui/utils";
+import useHttp from "hooks/use-http";
+import { getAllReports } from "lib/api";
+import moment from "moment";
+import PropTypes from "prop-types";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import ReportContext from "store/report/report-context";
+import MainCard from "ui-component/cards/MainCard";
 
 const createData = (id, number, time, name, email, report_type, status) => {
   return {
@@ -66,53 +66,53 @@ function stableSort(array, comparator) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
 const headCells = [
   {
-    id: 'number',
+    id: "number",
     numeric: false,
     disablePadding: false,
-    label: 'STT',
+    label: "STT",
   },
   {
-    id: 'time',
+    id: "time",
     numeric: false,
     disablePadding: true,
-    label: 'Ngày gửi',
+    label: "Ngày gửi",
   },
   {
-    id: 'name',
+    id: "name",
     numeric: false,
     disablePadding: false,
-    label: 'Tên người gửi',
+    label: "Tên người gửi",
   },
   {
-    id: 'email',
+    id: "email",
     numeric: false,
     disablePadding: false,
-    label: 'Email',
+    label: "Email",
   },
   {
-    id: 'report_type',
+    id: "report_type",
     numeric: false,
     disablePadding: false,
-    label: 'Loại báo cáo',
+    label: "Loại báo cáo",
   },
   {
-    id: 'status',
+    id: "status",
     numeric: false,
     disablePadding: false,
-    label: 'Tình trạng',
+    label: "Tình trạng",
   },
   {
-    id: 'detail',
+    id: "detail",
     numeric: true,
     disablePadding: false,
-    label: 'Chi tiết',
+    label: "Chi tiết",
   },
 ];
 
@@ -141,19 +141,19 @@ const EnhancedTableHead = (props) => {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box component='span' sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                <Box component="span" sx={visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -176,39 +176,39 @@ function EnhancedTableToolbar(props) {
           bgcolor: (theme) =>
             alpha(
               theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
+              theme.palette.action.activatedOpacity,
             ),
         }),
       }}
     >
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
-          color='inherit'
-          variant='subtitle1'
-          component='div'
+          sx={{ flex: "1 1 100%" }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
         >
           {numSelected} selected
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant='h4'
-          id='tableTitle'
-          component='div'
+          sx={{ flex: "1 1 100%" }}
+          variant="h4"
+          id="tableTitle"
+          component="div"
         >
           Danh sách Báo cáo
         </Typography>
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title='Delete'>
+        <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title='Filter list'>
+        <Tooltip title="Filter list">
           <IconButton>
             <FilterListIcon />
           </IconButton>
@@ -220,16 +220,16 @@ function EnhancedTableToolbar(props) {
 
 const EnhancedTable = (props) => {
   const reportCtx = useContext(ReportContext);
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('calories');
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -255,7 +255,7 @@ const EnhancedTable = (props) => {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selected.slice(selectedIndex + 1),
       );
     }
     setSelected(newSelected);
@@ -288,30 +288,30 @@ const EnhancedTable = (props) => {
     () =>
       stableSort(props.rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage, props.rows]
+    [order, orderBy, page, rowsPerPage, props.rows],
   );
 
   const getReportType = (report_type) => {
-    if (report_type === 'denounce') {
-      return 'Báo cáo vi phạm';
-    } else if (report_type === 'suggest') {
-      return 'Đóng góp ý kiến';
+    if (report_type === "denounce") {
+      return "Báo cáo vi phạm";
+    } else if (report_type === "suggest") {
+      return "Đóng góp ý kiến";
     } else {
-      return 'Giải đáp thắc mắc';
+      return "Giải đáp thắc mắc";
     }
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
-            aria-labelledby='tableTitle'
-            size={dense ? 'small' : 'medium'}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -333,35 +333,35 @@ const EnhancedTable = (props) => {
                     tabIndex={-1}
                     key={row.id}
                     selected={isItemSelected}
-                    sx={{ cursor: 'pointer' }}
+                    sx={{ cursor: "pointer" }}
                   >
-                    <TableCell align='left'>{row.number}</TableCell>
+                    <TableCell align="left">{row.number}</TableCell>
                     <TableCell
-                      component='th'
+                      component="th"
                       id={labelId}
-                      scope='row'
-                      padding='none'
+                      scope="row"
+                      padding="none"
                     >
-                      {moment.utc(row.time).format('DD-MM-YYYY')}
+                      {moment.utc(row.time).format("DD-MM-YYYY")}
                     </TableCell>
-                    <TableCell align='left'>{row.name}</TableCell>
-                    <TableCell align='left'>{row.email}</TableCell>
-                    <TableCell align='left'>
+                    <TableCell align="left">{row.name}</TableCell>
+                    <TableCell align="left">{row.email}</TableCell>
+                    <TableCell align="left">
                       {getReportType(row.report_type)}
                     </TableCell>
-                    <TableCell align='left'>
+                    <TableCell align="left">
                       <Chip
                         label={
-                          row.status === 'completed'
-                            ? 'Đã giải quyết'
-                            : 'Chưa giải quyết'
+                          row.status === "completed"
+                            ? "Đã giải quyết"
+                            : "Chưa giải quyết"
                         }
-                        color={row.status === 'completed' ? 'success' : 'error'}
-                        variant='outlined'
+                        color={row.status === "completed" ? "success" : "error"}
+                        variant="outlined"
                       />
                     </TableCell>
-                    <TableCell align='right'>
-                      <Link to='/utils/report/detail'>
+                    <TableCell align="right">
+                      <Link to="/utils/report/detail">
                         <IconButton onClick={() => handleReportDetail(row.id)}>
                           <EditIcon />
                         </IconButton>
@@ -384,7 +384,7 @@ const EnhancedTable = (props) => {
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
-          component='div'
+          component="div"
           count={props.rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -394,7 +394,7 @@ const EnhancedTable = (props) => {
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label='Dense padding'
+        label="Dense padding"
       />
     </Box>
   );
@@ -413,10 +413,10 @@ const ReportListTable = () => {
   }, [sendRequest]);
 
   const getAddress = (report) => {
-    if (report.type === 'board') {
+    if (report.type === "board") {
       return report.board.location.address;
     } else {
-      return report.location.address;
+      return report.random.address;
     }
   };
 
@@ -430,7 +430,7 @@ const ReportListTable = () => {
           report.username,
           report.email,
           report.report_form,
-          report.status
+          report.status,
         );
       });
     }
@@ -440,11 +440,11 @@ const ReportListTable = () => {
     return <div>Có lỗi xảy ra</div>;
   }
 
-  if (status === 'pending') {
+  if (status === "pending") {
     return <div>Đang tải dữ liệu</div>;
   }
 
-  if (status === 'completed' && rows !== null) {
+  if (status === "completed" && rows !== null) {
     return (
       <MainCard>
         <EnhancedTable rows={rows} />
@@ -457,7 +457,7 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };

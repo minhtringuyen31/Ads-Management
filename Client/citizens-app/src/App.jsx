@@ -57,7 +57,10 @@ function App() {
   const [isPopperOpen, setPopperOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [center, setCenter] = useState({ lat: 10.823099, lng: 106.629662 });
+  const [center, setCenter] = useState({
+    lat: 10.762864207654058,
+    lng: 106.68180584907533,
+  });
 
   /**
    * @return {void}

@@ -37,9 +37,9 @@ const validateSchema = Yup.object().shape({
  * Default Input Value
  */
 const initialValues = {
-  fullname: "Nguyễn Văn A",
-  email: "nva@gmail.com",
-  phoneNumber: "093773333",
+  fullname: "",
+  email: "",
+  phoneNumber: "",
   reportType: "",
   content: "",
   image: [],

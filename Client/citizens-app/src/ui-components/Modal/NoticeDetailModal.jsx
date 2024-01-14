@@ -69,11 +69,14 @@ const NoticeDetailModal = ({ report, isModalOpen, handleCloseModal }) => {
           textAlign="center"
         >
           <Typography fontSize={20} fontWeight="bold" color="#475569">
-            Sân bay Quốc tế Tân Sơn Nhất
+            {report.type === "board"
+              ? report.board.adsboard_type.label
+              : report.random.name}
           </Typography>
           <Typography fontSize={12} color="#70757a">
-            Sân bay Quốc tế Tân Sơn Nhất, Hẻm 417/23/46 Quang Trung, Phường 10,
-            Quận Gò Vấp, Thành phố Hồ Chí Minh, 71409, Việt Nam
+            {report.type === "board"
+              ? report.board.location.address
+              : report.random.display_name}
           </Typography>
         </Box>
         <Divider sx={{ color: "black" }} />
