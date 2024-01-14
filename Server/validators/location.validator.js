@@ -9,8 +9,8 @@ export const handleValidationErrors = (req, res, next) => {
 };
 
 export const createLocationValidation = [
-  body("coordinate.lat").isNumeric().withMessage("Latitude must be a number"),
-  body("coordinate.lng").isNumeric().withMessage("Longitude must be a number"),
+  // body("coordinate.lat").isNumeric().withMessage("Latitude must be a number"),
+  // body("coordinate.lng").isNumeric().withMessage("Longitude must be a number"),
   body("display_name")
     .isString()
     .optional()
