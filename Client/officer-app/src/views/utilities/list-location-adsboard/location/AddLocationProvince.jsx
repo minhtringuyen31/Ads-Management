@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "axiosConfig/axios-config";
 import axios from "axios";
+import * as Yup from "yup";
 import { rootApi } from "lib/api";
 import { Field, useFormik, FormikProvider } from "formik";
 import {
@@ -142,7 +143,23 @@ const AddLocationProvince = () => {
       const center = calculateCenter(locationInfoList);
       setMapCenter(center);
     }
-  }, [locationInfoList]);
+
+    //Mới thêm (!!!)
+    if (locationInfoClick.display_name) {
+      formik.setFieldValue("address", locationInfoClick.display_name);
+    }
+  }, [locationInfoClick.display_name, locationInfoList]);
+  //Mới thêm (!!!)
+  useEffect(() => {
+    if (selectedLoctionType) {
+      formik.setFieldValue("location_type", selectedLoctionType);
+    }
+  }, [selectedLoctionType]);
+  useEffect(() => {
+    if (selectedAdsType) {
+      formik.setFieldValue("ads_type", selectedAdsType);
+    }
+  }, [selectedAdsType]);
 
   // Fetch location types
   useEffect(() => {
@@ -200,6 +217,15 @@ const AddLocationProvince = () => {
       ads_type: "",
       image: [],
     },
+    validationSchema: Yup.object({
+      address: Yup.string().required("Điểm đặt không được để trống"),
+      display_name: Yup.string().required("Tên hiển thị không được để trống"),
+      location_type: Yup.object().required("Loại điểm đặt không được để trống"),
+      ads_type: Yup.object().required("Loại quảng cáo không được để trống"),
+      // image: Yup.array()
+      //   .required("Vui lòng tải lên ít nhất một hình ảnh")
+      //   .min(1, "Vui lòng tải lên ít nhất một hình ảnh"),
+    }),
     onSubmit: async (values, { resetForm }) => {
       setIsLoading(true);
       values.coordinate.lat = locationInfoClick.lat;
@@ -282,10 +308,14 @@ const AddLocationProvince = () => {
               <Box style={FormBodyItemContentStyle}>
                 <Field
                   component={TextField}
-                  required
+                  // required
                   name="address"
                   label="Điểm đặt (click here)"
                   value={locationInfoClick.display_name}
+                  //Mới thêm (!!!)
+                  // value={
+                  //   formik.values.address || locationInfoClick.display_name
+                  // }
                   defaultValue=""
                   style={{
                     width: "100%",
@@ -298,6 +328,10 @@ const AddLocationProvince = () => {
                     shrink: true,
                   }}
                   onClick={openMapModal}
+                  error={
+                    formik.touched.address && Boolean(formik.errors.address)
+                  }
+                  helperText={formik.touched.address && formik.errors.address}
                 />
                 {mapCenter && (
                   <MapNew
@@ -329,6 +363,13 @@ const AddLocationProvince = () => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  error={
+                    formik.touched.display_name &&
+                    Boolean(formik.errors.display_name)
+                  }
+                  helperText={
+                    formik.touched.display_name && formik.errors.display_name
+                  }
                 />
 
                 <Box>
@@ -345,11 +386,19 @@ const AddLocationProvince = () => {
                     name="location_type"
                     renderInput={(params) => (
                       <TextField
-                        required
+                        // required
                         {...params}
                         label="Loại điểm đặt"
                         variant="outlined"
                         style={{ width: "100%" }}
+                        error={
+                          formik.touched.location_type &&
+                          Boolean(formik.errors.location_type)
+                        }
+                        helperText={
+                          formik.touched.location_type &&
+                          formik.errors.location_type
+                        }
                       />
                     )}
                   ></Autocomplete>
@@ -369,11 +418,18 @@ const AddLocationProvince = () => {
                     name="ads_type"
                     renderInput={(params) => (
                       <TextField
-                        required
+                        // required
                         {...params}
                         label="Loại quảng cáo"
                         variant="outlined"
                         style={{ width: "100%" }}
+                        error={
+                          formik.touched.ads_type &&
+                          Boolean(formik.errors.ads_type)
+                        }
+                        helperText={
+                          formik.touched.ads_type && formik.errors.ads_type
+                        }
                       />
                     )}
                   ></Autocomplete>

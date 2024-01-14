@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import instance from "axiosConfig/axios-config";
 import axios from "axios";
 import { Field, useFormik, FormikProvider } from "formik";
+import * as Yup from "yup";
 import {
   TextField,
   Button,
@@ -142,7 +143,17 @@ const AddAdsboardProvince = () => {
       const center = calculateCenter(locationInfoList);
       setMapCenter(center);
     }
-  }, [locationInfoList]);
+
+    if (locationInfoClick.display_name) {
+      formik.setFieldValue("_id", locationInfoClick.display_name);
+    }
+  }, [locationInfoClick.display_name, locationInfoList]);
+  //Mới thêm (!!!)
+  useEffect(() => {
+    if (selectedAdsBoardType) {
+      formik.setFieldValue("adsboardInfo.adsboard_type", selectedAdsBoardType);
+    }
+  }, [selectedAdsBoardType]);
 
   //Adsboard
   useEffect(() => {
@@ -189,6 +200,7 @@ const AddAdsboardProvince = () => {
 
     return formData;
   };
+
   const formik = useFormik({
     initialValues: {
       _id: "",
@@ -209,6 +221,33 @@ const AddAdsboardProvince = () => {
         email: "",
       },
     },
+
+    validationSchema: Yup.object().shape({
+      _id: Yup.string().required("Điểm đặt là bắt buộc"),
+      // Thêm các quy tắc validation cho các trường khác ở đây
+      adsboardInfo: Yup.object().shape({
+        adsboard_type: Yup.object().required("Loại bảng quảng cáo là bắt buộc"),
+        height: Yup.number()
+          .required("Chiều cao là bắt buộc")
+          .positive("Chiều cao phải là số dương"),
+        width: Yup.number()
+          .required("Chiều rộng là bắt buộc")
+          .positive("Chiều rộng phải là số dương"),
+        
+      }),
+      companyInfo: Yup.object().shape({
+        name: Yup.string().required("Tên công ty là bắt buộc"),
+        address: Yup.string().required("Địa chỉ công ty là bắt buộc"),
+        namePeople: Yup.string().required(
+          "Tên người liên lạc không được bỏ trống"
+        ),
+        phoneNumber: Yup.string().required("Số điện thoại không được bỏ trống"),
+        email: Yup.string()
+          .email("Email không hợp lệ")
+          .required("Email không được bỏ trống"),
+      }),
+    }),
+
     onSubmit: async (values, { resetForm }) => {
       values._id = locationInfoClick._id || "";
       values.adsboardInfo.adsboard_type = selectedAdsBoardType._id;
@@ -238,6 +277,7 @@ const AddAdsboardProvince = () => {
       }
     },
   });
+
   return (
     <>
       {isLoading && (
@@ -283,8 +323,8 @@ const AddAdsboardProvince = () => {
               <Box style={FormBodyItemContentStyle}>
                 <Field
                   component={TextField}
-                  required
-                  name="address"
+                  // required
+                  name="_id"
                   label="Điểm đặt (click here)"
                   value={locationInfoClick.display_name}
                   defaultValue=""
@@ -299,6 +339,8 @@ const AddAdsboardProvince = () => {
                     shrink: true,
                   }}
                   onClick={openMapModal}
+                  error={formik.touched._id && Boolean(formik.errors._id)}
+                  helperText={formik.touched._id && formik.errors._id}
                 />
                 {mapCenter && (
                   <MapBox
@@ -312,7 +354,7 @@ const AddAdsboardProvince = () => {
                   />
                 )}
                 <TextField
-                  required
+                  // required
                   id="outlined-required"
                   label="Địa chỉ"
                   value={locationInfoClick.address}
@@ -337,7 +379,7 @@ const AddAdsboardProvince = () => {
                   }}
                 >
                   <TextField
-                    required
+                    // required
                     id="outlined-required"
                     label="Loại vị trí"
                     value={locationInfoClick.location_type?.label}
@@ -353,7 +395,7 @@ const AddAdsboardProvince = () => {
                     }}
                   />
                   <TextField
-                    required
+                    // required
                     id="outlined-required"
                     label="Hình thức quảng cáo"
                     value={locationInfoClick.ads_type?.label}
@@ -393,11 +435,19 @@ const AddAdsboardProvince = () => {
                     name="adsboardInfo.adsboard_type"
                     renderInput={(params) => (
                       <TextField
-                        required
+                        // required
                         {...params}
                         label="Loại bảng quảng cáo"
                         variant="outlined"
                         style={{ width: "100%" }}
+                        error={
+                          formik.touched.adsboardInfo?.adsboard_type &&
+                          Boolean(formik.errors.adsboardInfo?.adsboard_type)
+                        }
+                        helperText={
+                          formik.touched.adsboardInfo?.adsboard_type &&
+                          formik.errors.adsboardInfo?.adsboard_type
+                        }
                       />
                     )}
                   />
@@ -415,22 +465,38 @@ const AddAdsboardProvince = () => {
                     component={TextField}
                     name="adsboardInfo.height"
                     onChange={formik.handleChange}
-                    required
+                    // required
                     id="adsboardInfo.height"
                     label="Chiều cao"
                     defaultValue=""
                     style={{ width: "50%" }}
+                    error={
+                      formik.touched.adsboardInfo?.height &&
+                      Boolean(formik.errors.adsboardInfo?.height)
+                    }
+                    helperText={
+                      formik.touched.adsboardInfo?.height &&
+                      formik.errors.adsboardInfo?.height
+                    }
                   />
 
                   <Field
                     component={TextField}
                     name="adsboardInfo.width"
                     onChange={formik.handleChange}
-                    required
+                    // required
                     id="adsboardInfo.width"
                     label="Chiều rộng"
                     defaultValue=""
                     style={{ width: "50%" }}
+                    error={
+                      formik.touched.adsboardInfo?.width &&
+                      Boolean(formik.errors.adsboardInfo?.width)
+                    }
+                    helperText={
+                      formik.touched.adsboardInfo?.width &&
+                      formik.errors.adsboardInfo?.width
+                    }
                   />
                 </Box>
 
@@ -443,7 +509,7 @@ const AddAdsboardProvince = () => {
                 >
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      required
+                      // required
                       label="Bắt đầu hợp đồng"
                       sx={{
                         width: 1 / 2,
@@ -464,7 +530,7 @@ const AddAdsboardProvince = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Kết thúc hợp đồng"
-                      required
+                      // required
                       sx={{
                         width: 1 / 2,
                       }}
@@ -502,21 +568,37 @@ const AddAdsboardProvince = () => {
               <Box style={FormBodyItemContentStyle}>
                 <Field
                   component={TextField}
-                  required
+                  // required
                   label="Tên công ty"
                   defaultValue=""
                   name="companyInfo.name"
                   onChange={formik.handleChange}
                   id="companyInfo.name"
+                  error={
+                    formik.touched.companyInfo?.name &&
+                    Boolean(formik.errors.companyInfo?.name)
+                  }
+                  helperText={
+                    formik.touched.companyInfo?.name &&
+                    formik.errors.companyInfo?.name
+                  }
                 />
                 <Field
                   component={TextField}
-                  required
+                  // required
                   label="Địa chỉ công ty"
                   defaultValue=""
                   name="companyInfo.address"
                   onChange={formik.handleChange}
                   id="companyInfo.address"
+                  error={
+                    formik.touched.companyInfo?.address &&
+                    Boolean(formik.errors.companyInfo?.address)
+                  }
+                  helperText={
+                    formik.touched.companyInfo?.address &&
+                    formik.errors.companyInfo?.address
+                  }
                 />
 
                 <TextareaAutosize
@@ -541,17 +623,25 @@ const AddAdsboardProvince = () => {
 
                 <Field
                   component={TextField}
-                  required
+                  // required
                   label="Tên người liên lạc"
                   defaultValue=""
                   name="companyInfo.namePeople"
                   onChange={formik.handleChange}
                   id="companyInfo.namePeople"
+                  error={
+                    formik.touched.companyInfo?.namePeople &&
+                    Boolean(formik.errors.companyInfo?.namePeople)
+                  }
+                  helperText={
+                    formik.touched.companyInfo?.namePeople &&
+                    formik.errors.companyInfo?.namePeople
+                  }
                 />
                 <Box style={{ display: "flex", gap: "1rem" }}>
                   <Field
                     component={TextField}
-                    required
+                    // required
                     label="Số điện thoại"
                     defaultValue=""
                     style={{
@@ -560,10 +650,18 @@ const AddAdsboardProvince = () => {
                     name="companyInfo.phoneNumber"
                     onChange={formik.handleChange}
                     id="companyInfo.phoneNumber"
+                    error={
+                      formik.touched.companyInfo?.phoneNumber &&
+                      Boolean(formik.errors.companyInfo?.phoneNumber)
+                    }
+                    helperText={
+                      formik.touched.companyInfo?.phoneNumber &&
+                      formik.errors.companyInfo?.phoneNumber
+                    }
                   />
                   <Field
                     component={TextField}
-                    required
+                    // required
                     label="Email"
                     defaultValue=""
                     style={{
@@ -572,6 +670,14 @@ const AddAdsboardProvince = () => {
                     name="companyInfo.email"
                     onChange={formik.handleChange}
                     id="companyInfo.email"
+                    error={
+                      formik.touched.companyInfo?.email &&
+                      Boolean(formik.errors.companyInfo?.email)
+                    }
+                    helperText={
+                      formik.touched.companyInfo?.email &&
+                      formik.errors.companyInfo?.email
+                    }
                   />
                 </Box>
               </Box>

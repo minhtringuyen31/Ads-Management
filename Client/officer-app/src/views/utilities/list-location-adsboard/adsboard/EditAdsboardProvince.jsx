@@ -141,7 +141,7 @@ const FormRequestEditAdsboard = () => {
           formik.setFieldValue("_id", fetchedAdsboardData._id ?? "");
           formik.setFieldValue(
             "adsboard_type",
-            fetchedAdsboardData.adsboard_type._id
+            fetchedAdsboardData.adsboard_type._id ?? ""
           );
           formik.setFieldValue("height", fetchedAdsboardData.height ?? "");
           formik.setFieldValue("width", fetchedAdsboardData.width ?? "");
