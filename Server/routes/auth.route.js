@@ -34,8 +34,8 @@ const router = express.Router();
  *                 password:
  *                   type: string
  *               example:
- *                 loginCredential: ward_officer@gmail.com
- *                 password: "1"
+ *                 loginCredential: thienkhn113@gmail.com
+ *                 password: "111111"
  *       responses:
  *         '200':
  *           description: Successful login
