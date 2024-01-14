@@ -118,7 +118,7 @@ const EditRequestController = {
         const data = await NotificationService.create(newNotification);
         const newAdsBoard = await AdsBoardService.update(updatedObject.newInformation.id, updatedObject.newInformation);
         // Send socket to client 
-        // global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
+        global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
         if (!newAdsBoard) {
           if (req.files) {
             req.files.forEach(file => {
@@ -131,7 +131,7 @@ const EditRequestController = {
         }
       } else if (updatedObject && updatedObject.status === "completed" && updatedObject.type === 'location') {
         const newAdsBoard = await LocationService.update(updatedObject.newInformation.id, updatedObject.newInformation);
-        // global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
+        global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
 
         if (!newAdsBoard) {
           if (req.files) {
