@@ -107,6 +107,7 @@ const EditRequestController = {
         updateData
       );
 
+
       // Handle by Quang Thanh to update location and adsboard when province update status completed
       if (updatedObject && updatedObject.status === "completed" && updatedObject.type === 'board') {
         const newNotification = {
@@ -115,10 +116,11 @@ const EditRequestController = {
           content: updatedObject,
           type: "status_edit_request",
         };
+        console.log(updatedObject);
         const data = await NotificationService.create(newNotification);
         const newAdsBoard = await AdsBoardService.update(updatedObject.newInformation.id, updatedObject.newInformation);
         // Send socket to client 
-        // global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
+        global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
         if (!newAdsBoard) {
           if (req.files) {
             req.files.forEach(file => {
@@ -130,8 +132,18 @@ const EditRequestController = {
           return next(createError.BadRequest("AdsBoard not created"))
         }
       } else if (updatedObject && updatedObject.status === "completed" && updatedObject.type === 'location') {
+        const newNotification = {
+          title: "Yêu cầu cấp phép của bạn đã được duyệt",
+          subtitle: "",
+          content: updatedObject,
+          type: "status_edit_request",
+        };
+        console.log(updatedObject);
+
+        const data = await NotificationService.create(newNotification);
         const newAdsBoard = await LocationService.update(updatedObject.newInformation.id, updatedObject.newInformation);
-        // global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
+        global.io.to(updatedObject.newInformation.user_id.toString()).emit("new_status_edit_request", data);
+        // test
 
         if (!newAdsBoard) {
           if (req.files) {
