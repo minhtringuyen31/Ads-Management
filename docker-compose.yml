@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  mailservice:
+    build:
+      context: ./MailService
+    ports:
+      - "5002:5002"
+
+  server:
+    build:
+      context: ./Server
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mailservice
+
+  citizens-app:
+    build:
+      context: ./client/citizens-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+  officer-app:
+    build:
+      context: ./client/officer-app
+    ports:
+      - "3001:3001"
+    depends_on:
+      - server
