@@ -8,7 +8,7 @@ const SocketListener = {
             console.log('A user connected with socket id:', socket.id);
 
             // Giả sử cán bộ phường/quận gửi thông tin này khi kết nối
-            const { ward, district, clientId, province } = socket.handshake.query;
+            const { ward, district, clientId, province, user_id } = socket.handshake.query;
             console.log("Đang kết nối với cán bộ phường/quận")
             console.log(ward, district, clientId, province, user_id);
             global.userList[clientId] = socket.id;
