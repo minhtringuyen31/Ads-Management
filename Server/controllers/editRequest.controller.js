@@ -139,6 +139,7 @@ const EditRequestController = {
           type: "status_edit_request",
         };
         console.log(updatedObject);
+        // update
 
         const data = await NotificationService.create(newNotification);
         const newAdsBoard = await LocationService.update(updatedObject.newInformation.id, updatedObject.newInformation);
