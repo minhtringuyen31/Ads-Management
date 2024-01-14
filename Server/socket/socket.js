@@ -24,7 +24,7 @@ const SocketListener = {
                 socket.join(province);
             }
             if (user_id) {
-                socket.join(province);
+                socket.join(user_id);
             }
 
 
