@@ -1,10 +1,11 @@
 import express from 'express';
 import Notification from '../controllers/notification.controller.js';
+import authenticate from '../middlewares/authenticate.js';
 
 const router = express.Router();
 
 // Đọc danh sách tất cả các đối tượng Location
-router.get('/notifications', Notification.getAll);
+router.get('/notifications', authenticate, Notification.getAll);
 
 // // Đọc một Location cụ thể bằng ID
 router.get('/notification/:id', Notification.getDetail);
