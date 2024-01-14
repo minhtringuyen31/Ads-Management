@@ -36,7 +36,7 @@ dotenv.config();
 
 const app = express();
 const corsOptions = {
-  origin: "http://14.225.192.121", // hoặc "https://14.225.192.121" tùy vào giao thức bạn đang sử dụng
+  origin: "*", // hoặc "https://14.225.192.121" tùy vào giao thức bạn đang sử dụng
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
@@ -79,7 +79,7 @@ redisClient.ping((err, reply) => {
 // testRedisOperations();
 const initializeExpress = (app) => {
   app.use(express.static(path.join(__dirname, "public")));
-  app.use(cors());
+  app.use(cors(corsOptions));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(morgan("combined", { stream: logger.stream }));
