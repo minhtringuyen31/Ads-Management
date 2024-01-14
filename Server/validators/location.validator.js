@@ -16,21 +16,25 @@ export const createLocationValidation = [
     .optional()
     .withMessage("Display name must be a string"),
   body("address")
-    .isString()
+    .isString().optional()
     .withMessage("Address is required and must be a string"),
   body("ward")
+    .optional()
     .isMongoId()
     .withMessage("Ward is required and must be a valid ObjectId"),
   body("district")
+    .optional()
     .isMongoId()
     .withMessage("District is required and must be a valid ObjectId"),
   body("location_type")
+    .optional()
     .isMongoId()
     .withMessage("Location type is required and must be a valid ObjectId"),
   body("ads_type")
+    .optional()
     .isMongoId()
     .withMessage("Ads type is required and must be a valid ObjectId"),
-  body("image").isArray().withMessage("Image is required and must be an array"),
+  body("image").isArray().optional().withMessage("Image is required and must be an array"),
   body("is_planned")
     .isBoolean()
     .optional()
