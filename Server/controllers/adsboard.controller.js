@@ -66,7 +66,7 @@ const AdsBoardController = {
         try {
 
             const data = req.body
-
+            console.log("data", data)
             const files = req.files;
             if (files) {
                 data.image = files.map(file => file.path);

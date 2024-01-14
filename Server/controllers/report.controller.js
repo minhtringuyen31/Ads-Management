@@ -183,7 +183,9 @@ const ReportController = {
       const reportData = JSON.parse(JSON.stringify(req.body));
       // Add by Quang Thanh to handle save record when type = random location
       if (reportData.type === "random") {
-        const randomData = reportData.random;
+        const data = reportData.random;
+        const randomData = JSON.parse(data);
+        console.log("randomData", randomData)
         const districtLabelRadomData = randomData.address.suburb;
         const wardLabelRadomData = randomData.address.quarter;
         let district_id = "";
