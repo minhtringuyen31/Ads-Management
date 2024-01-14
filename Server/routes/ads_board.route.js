@@ -256,7 +256,6 @@ router.get("/adsboard/:id", AdsBoardController.getDetail);
 // // Tạo mới một Location
 router.post(
   "/adsboard",
-  createAdsBoardValidation,
   uploadCloud.array("image"),
   AdsBoardController.create
 );
