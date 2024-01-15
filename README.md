@@ -1,4 +1,4 @@
-# Advertising Management Application
+# Advertising Panel Management Application
 
 **Authors**: [Tri Nguyen](https://github.com/minhtringuyen31), [Thanh Bui](https://github.com/buiquangthanhcode), [Thien Thai](https://github.com/thienhk15), [Duong Pham](https://github.com/ThaiDuong2002), [Thao Nguyen](https://github.com/thaomin69)
 
@@ -39,6 +39,8 @@ Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
 Explore folder `MailService` `Server`  
 Install packages `npm install`  
 Runs the app in the development mode `npm start`  
+MailService run in [http://localhost:5002](http://localhost:5002)  
+Server run in [http://localhost:5002](http://localhost:5001)  
 In addition, it is also posible to explore [https://webadvance.sofware](https://webadvance.sofware) || [Swagger UI](https://webadvance.software/api-docs/)
 
 ## What You're Getting
