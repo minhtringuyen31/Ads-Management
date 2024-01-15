@@ -4,10 +4,12 @@
 
 ## Introduction
 
+![AdsManagement](https://res.cloudinary.com/dgsrxvev1/image/upload/v1705337224/see9wkvos6nrdbleanty.png)  
 This is an application designed to streamline and enhance the management of advertising boards throughout City X. This platform caters to the needs of residents, local officials at the ward and district levels, as well as the Department of Culture and Sports, providing a transparent and efficient system for overseeing the city's advertising landscape.
 
 ### For Residents
 
+![Residents](https://res.cloudinary.com/dgsrxvev1/image/upload/v1705337224/o6a45u8vjmajohfml47k.png)  
 The app features a user-friendly homepage with an interactive map showcasing approved advertising locations in City X. Residents can easily access detailed information about these locations, including addresses, zones, types of locations, advertising formats, and images of advertising boards. Additionally, users can view specific details about each advertising board, such as type, size, images, and contract expiration dates. Residents also have the capability to report any issues related to advertising boards or specific locations on the map.
 
 ### For Ward and District Officials
@@ -16,6 +18,7 @@ Local officials can efficiently manage information about advertising locations a
 
 ### For Department of Culture and Sports Officials:
 
+![Residents](https://res.cloudinary.com/dgsrxvev1/image/upload/v1705337224/uj5nwlz9azqp7aor7p9p.png)  
 Officials at the department level have comprehensive control over the entire system, including lists of districts, wards, types of advertising, and advertising locations. They can access statistics on reports and their processing status from lower levels. Account creation and area assignment for management purposes are easily administered.
 
 ## Installation
