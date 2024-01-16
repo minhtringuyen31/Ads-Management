@@ -25,14 +25,14 @@ Officials at the department level have comprehensive control over the entire sys
 
 ### Resident Application (React + Vite)
 
-Explore folder `Client/citizens-app`
+Explore folder `Client/citizens-app`  
 Install packages `npm install`  
 Runs the app in the development mode `npm start`  
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 ### Officials Application (React + CRA)
 
-Explore folder `Client/officer-app`
+Explore folder `Client/officer-app`  
 Install packages `npm install`  
 Runs the app in the development mode `npm run dev`  
 Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
