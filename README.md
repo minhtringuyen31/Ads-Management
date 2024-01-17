@@ -192,6 +192,95 @@ Client
                         ├── ReprotItem.jsx
                         └── ReportList.jsx
 ```
+**Server**
+
+```base
+officer-app
+    ├── .gitignore
+    ├── Dockerfile
+    ├── index.js
+    ├── package.json
+    ├── public
+    │   ├── favicon.ico
+    │   ├── index.html
+    │   ├── manifest.json
+    │   └── robots.txt
+    │── helper
+    │   ├── dto.js
+    │   ├── errorHandler.js
+    │   └── filter.js
+    │── public
+    │   ├── log.css
+    │   ├── log.html
+    │   └── log.js
+    │── messae-broker
+    │   ├── consumer.js
+    │   ├── publisher.js
+    │   └── rabbitmq.js
+    │── controllers
+    │   ├── adsboard.controller.js
+    │   ├── adsboardtype.controller.js
+    │   ├── adstype.controller.js
+    │   ├── auth.controller.js
+    │   ├── authorizeRequest.controller.js
+    │   ├── company.controller.js
+    │   ├── district.controller.js
+    │   ├── editRequest.controller.js
+    │   ├── location.controller.js
+    │   ├── locationType.controller.js
+    │   ├── notification.controller.js
+    │   ├── report.controller.js
+    │   ├── reportType.controller.js
+    │   ├── user.controller.js
+    │   └── ward.js
+    │── middlewares
+    │   ├── authenticate.js
+    │   ├── authorize.js
+    │   └── uploader.js
+    │── models
+    │   ├── AdsBoardModel.js
+    │   ├── AuthorizeRequestModel.js
+    │   ├── CompanyModel.js
+    │   ├── DistrictModel.js
+    │   ├── EditRequest.js
+    │   ├── LocationModel.js
+    │   ├── NotificationModel.js
+    │   ├── RefreshTokenModel.js
+    │   ├── ReportModel.js
+    │   ├── TypeModel.js
+    │   ├── UserModel.js
+    │   └── WardModel.js
+    │── routes
+    │── services
+    │── socket
+    │   └── socket.js
+    │── utils
+    │   ├── hash.js
+    │   ├── jwtUtils.js
+    │   ├── logger.js
+    │   ├── sendEmail.js
+    │   ├── socket.js
+    │   └── utils.js
+    └── validators
+        ├── adsBorad.validator.js
+        ├── location.validator.js
+        ├── repot.validator.js
+        └── user.validator.js
+```
+
+**MailService**
+
+```base
+officer-app
+    ├── .gitignore
+    ├── index.js
+    ├── package.json
+    ├── sendMail.js
+    └── messae-broker
+        ├── consumer.js
+        ├── publisher.js
+        └── rabbitmq.js
+```
 
 ### API
 
