@@ -195,7 +195,7 @@ Client
 **Server**
 
 ```base
-officer-app
+Server
     ├── .gitignore
     ├── Dockerfile
     ├── index.js
@@ -271,7 +271,7 @@ officer-app
 **MailService**
 
 ```base
-officer-app
+MailService
     ├── .gitignore
     ├── index.js
     ├── package.json
